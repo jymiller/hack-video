@@ -1,0 +1,301 @@
+<title>The Thursday Stack — Vendor Analysis</title>
+
+<style>
+  :root {
+    --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA;
+    --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16;  --hot-bg:#F8E5DC;
+    --warn:#8A6512; --warn-bg:#F6EDD8;
+    --disp:"Futura","Avenir Next Condensed","Avenir Next",system-ui,sans-serif;
+    --body:"Avenir Next","Avenir",-apple-system,"Segoe UI",sans-serif;
+    --mono:"SF Mono","IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+      --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+      --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  }
+  :root[data-theme="dark"] { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+    --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+    --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  :root[data-theme="light"] { --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA; --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16; --hot-bg:#F8E5DC; --warn:#8A6512; --warn-bg:#F6EDD8; }
+
+  * { box-sizing:border-box; }
+  .sheet { background:var(--ground); color:var(--ink); font-family:var(--body);
+           font-size:16.5px; line-height:1.6; padding:0 20px 96px; }
+  .wrap { max-width:920px; margin:0 auto; }
+  .col { max-width:64ch; }
+
+  .mast { padding:52px 0 22px; border-bottom:3px solid var(--ink); margin-bottom:32px; }
+  .strip { font-family:var(--mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+           color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px 18px; margin-bottom:20px; }
+  h1 { font-family:var(--disp); font-size:clamp(32px,5.4vw,52px); line-height:1.04; font-weight:500;
+       letter-spacing:.005em; margin:0 0 16px; text-transform:uppercase; text-wrap:balance; }
+  .standfirst { font-size:19px; line-height:1.5; color:var(--ink-soft); margin:0; max-width:57ch; }
+
+  section { margin-top:54px; }
+  h2 { font-family:var(--disp); font-size:26px; font-weight:500; letter-spacing:.02em;
+       text-transform:uppercase; margin:0 0 14px; }
+  .kicker { font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+            color:var(--ink-soft); margin:0 0 9px; }
+  p { margin:0 0 15px; }
+  strong { font-weight:600; }
+  code { font-family:var(--mono); font-size:.86em; background:var(--rule-soft); padding:1px 5px; }
+
+  .rule { border-left:4px solid var(--edge); background:var(--card); padding:18px 20px; margin-top:22px; }
+  .rule b { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+            color:var(--edge); display:block; margin-bottom:8px; font-weight:600; }
+  .rule p { margin:0; font-size:16px; }
+
+  /* vendor cards */
+  .v { border:1px solid var(--rule); background:var(--card); margin-top:20px; }
+  .v.keep { border-left:5px solid var(--edge); }
+  .v.cond { border-left:5px solid var(--warn); }
+  .v.cut  { border-left:5px solid var(--hot); }
+  .vhead { display:flex; flex-wrap:wrap; align-items:baseline; gap:12px; padding:18px 22px 0; }
+  .vhead h3 { font-family:var(--disp); font-size:24px; font-weight:500; text-transform:uppercase;
+              letter-spacing:.02em; margin:0; }
+  .vhead .verdict { font-family:var(--mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase;
+                    padding:4px 9px; font-weight:600; }
+  .keep .verdict { background:var(--edge-bg); color:var(--edge); }
+  .cond .verdict { background:var(--warn-bg); color:var(--warn); }
+  .cut .verdict  { background:var(--hot-bg);  color:var(--hot); }
+  .vhead .what { font-size:14.5px; color:var(--ink-soft); width:100%; margin-top:2px; }
+  .vbody { padding:16px 22px 20px; }
+  .vbody dl { margin:0; display:grid; gap:13px; }
+  .vbody dt { font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase;
+              color:var(--ink-soft); }
+  .vbody dd { margin:3px 0 0; font-size:15.5px; line-height:1.5; }
+  .vbody dd.moment { font-weight:600; }
+  .facts { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .facts span { font-family:var(--mono); font-size:11px; border:1px solid var(--rule);
+                padding:5px 9px; color:var(--ink-soft); background:var(--ground); }
+  .facts span.alert { border-color:var(--hot); color:var(--hot); font-weight:600; }
+
+  /* wire format */
+  .wire { margin-top:22px; border:1px solid var(--rule); background:var(--card); padding:18px;
+          overflow-x:auto; }
+  .wire pre { margin:0; font-family:var(--mono); font-size:11.5px; line-height:1.7;
+              white-space:pre; color:var(--ink); }
+  .wire .cmt { color:var(--ink-soft); }
+
+  .warnbox { border:2px solid var(--hot); background:var(--card); padding:20px 22px; margin-top:24px; }
+  .warnbox b { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+               color:var(--hot); display:block; margin-bottom:8px; font-weight:600; }
+  .warnbox p { margin:0 0 12px; font-size:16px; }
+  .warnbox p:last-child { margin:0; }
+
+  .fork { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--rule);
+          border:1px solid var(--rule); margin-top:22px; }
+  @media (max-width:700px) { .fork { grid-template-columns:1fr; } }
+  .fork > div { background:var(--card); padding:20px 22px; }
+  .fork h4 { font-family:var(--disp); font-size:19px; font-weight:500; text-transform:uppercase;
+             letter-spacing:.02em; margin:0 0 8px; }
+  .fork .a h4 { color:var(--edge); }
+  .fork .b h4 { color:var(--ink-soft); }
+  .fork p { margin:0; font-size:15.5px; }
+
+  .todo { list-style:none; padding:0; margin:22px 0 0; display:grid; gap:10px; }
+  .todo li { border:1px solid var(--rule); background:var(--card); padding:14px 16px;
+             display:grid; grid-template-columns:26px 1fr; gap:14px; align-items:start; }
+  .todo .b { font-family:var(--mono); font-size:12px; color:var(--ink-soft); padding-top:2px; }
+  .todo b { font-weight:600; }
+  .todo span.d { display:block; color:var(--ink-soft); font-size:14.5px; margin-top:3px; line-height:1.45; }
+
+  footer { margin-top:60px; padding-top:16px; border-top:1px solid var(--rule);
+           font-family:var(--mono); font-size:11px; letter-spacing:.05em; color:var(--ink-soft); }
+</style>
+
+<div class="sheet">
+<div class="wrap">
+
+  <header class="mast">
+    <div class="strip">
+      <span>Campaign Desk</span>
+      <span>Vendor pass</span>
+      <span>Thu 30 July · 3h30m build</span>
+    </div>
+    <h1>The Thursday stack</h1>
+    <p class="standfirst">Five sponsors, none of them in the library. Judged by the desk’s own test:
+      can you point at it doing a distinct thing on screen?</p>
+  </header>
+
+  <section>
+    <div class="rule">
+      <b>The vendor test, unchanged</b>
+      <p>A vendor earns a slot only if somebody can point at it doing a <strong>distinct thing on
+        screen</strong>. Not a capability — an event. Every vendor costs integration time that would
+        otherwise be build time, and with 3h30m that trade is brutal. A sponsor prize never argues one
+        back in.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">The one you asked about</p>
+
+    <div class="v keep">
+      <div class="vhead">
+        <h3>TwelveLabs</h3>
+        <span class="verdict">Use · the centre of the build</span>
+        <span class="what">Video understanding — indexes video and makes it searchable across what is seen, heard and said</span>
+      </div>
+      <div class="vbody">
+        <dl>
+          <div><dt>What it actually does</dt><dd>Two models. <strong>Marengo</strong> is the encoder — it turns video into embeddings you can search. <strong>Pegasus</strong> is the video-language model — it answers questions about a clip in words. You create an index, upload video, wait for it to process, then query it.</dd></div>
+          <div><dt>The three modalities</dt><dd><strong>Visual</strong> — actions, objects, events, brand logos, and <strong>text on screen through OCR</strong>. <strong>Audio</strong> — ambient sound, music, effects. <strong>Transcription</strong> — the spoken words. The OCR is the part that makes our reconciliation possible, and it is not the obvious reason to reach for this product.</dd></div>
+          <div><dt>Watchable moment</dt><dd class="moment">The agent jumps the playhead to the exact second the evidence appears — 04:12, the reporter says the number, and the lower third confirms it. The video scrubs itself to the proof.</dd></div>
+          <div><dt>Why that passes</dt><dd>It is an event, not a capability. A stranger sees a video seek itself to a moment somebody just asked about, and understands instantly that the machine watched it. Nothing needs captioning.</dd></div>
+          <div><dt>Needs</dt><dd>An account and an API key. No credit card for the free tier.</dd></div>
+        </dl>
+        <div class="facts">
+          <span>Free: 600 min total</span>
+          <span>indexing + analysis + segmentation share the 600</span>
+          <span>Paid: $0.042/min index</span>
+          <span>$4 per 1,000 searches</span>
+          <span class="alert">Free index data cleared after 90 days</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="warnbox">
+      <b>Two things about TwelveLabs that could cost the day</b>
+      <p><strong>Model slugs drift, and one already has.</strong> Marengo 2.7 was sunset on 30 March
+        2026 — you can no longer index or search with it. This is trap 11 in the desk’s own handoff:
+        pull the model list before trusting a slug. Copying a code sample off a blog post written last
+        year is a live way to lose an hour on Thursday.</p>
+      <p><strong>Indexing time is still the number we do not have.</strong> 600 free minutes is
+        comfortably enough for four news clips. How long those minutes take to <em>process</em> is the
+        open question, and it is the single most likely way a 3h30m build ends with nothing on screen.
+        One clip indexed and timed tonight settles it.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">The rest of the stack</p>
+    <h2>And the one nobody expects to be a problem</h2>
+
+    <div class="v cond">
+      <div class="vhead">
+        <h3>Neo4j</h3>
+        <span class="verdict">Conditional</span>
+        <span class="what">The graph database the findings are written into</span>
+      </div>
+      <div class="vbody">
+        <dl>
+          <div><dt>The problem</dt><dd>You know what it is, so I will only flag the trap. <strong>A graph blooming on screen is a chart redrawing</strong>, which this desk refuses outright — it needs a caption to be understood and it is indistinguishable from any network diagram in any demo. Judges have seen a hundred of them.</dd></div>
+          <div><dt>Watchable moment</dt><dd class="moment">A single path lighting up, one hop at a time, from a night in December to a ratio in a bond covenant — with each hop named aloud as it fires.</dd></div>
+          <div><dt>Why the distinction matters</dt><dd>The subject is the <em>path</em>, not the graph. A path is a story with a direction and an ending. A graph is wallpaper. This is the same conclusion the desk reached about DataHub’s lineage view yesterday, and it holds here for the same reason.</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="v cond">
+      <div class="vhead">
+        <h3>Strands Agents</h3>
+        <span class="verdict">Conditional · use it anyway</span>
+        <span class="what">AWS’s open-source agent SDK — Python and TypeScript, model-agnostic, MCP built in</span>
+      </div>
+      <div class="vbody">
+        <dl>
+          <div><dt>What it is</dt><dd>AWS’s answer to CrewAI. You define a model, some tools and a prompt; it runs the reasoning loop, tool calls and conversation state. Native Bedrock integration but it works with Anthropic, OpenAI and Gemini too, so nothing is locked. Multi-agent patterns and OpenTelemetry tracing are built in.</dd></div>
+          <div><dt>Watchable moment</dt><dd class="moment">None. A framework is invisible by nature, and by the vendor test alone it would be cut.</dd></div>
+          <div><dt>Why it stays anyway</dt><dd><strong>Because AWS is hosting and judging.</strong> This is the same logic as “Use of DataHub” being the first criterion on 10 August — at a sponsor event, using the sponsor’s framework is scored whether or not anyone can see it. It also speaks MCP, which is how it would reach Neo4j.</dd></div>
+        </dl>
+        <div class="facts"><span>Open source</span><span>Python + TypeScript</span><span>MCP native</span><span>~6,500 GitHub stars</span></div>
+      </div>
+    </div>
+
+    <div class="v keep">
+      <div class="vhead">
+        <h3>OpenAI</h3>
+        <span class="verdict">Use — but for the voice</span>
+        <span class="what">The reasoning layer over the graph</span>
+      </div>
+      <div class="vbody">
+        <dl>
+          <div><dt>As reasoning</dt><dd>Invisible. Nobody can point at a model thinking, and on the vendor test alone that is a cut.</dd></div>
+          <div><dt>As voice</dt><dd class="moment">It speaks the finding out loud over the footage. That <em>is</em> the watchable moment — the one this desk has actually won on, and the channel almost nobody at a video hackathon will use.</dd></div>
+          <div><dt>The trap</dt><dd>Text-to-speech fails silently. A bad voice id returns HTTP 200 and produces nothing, or the wrong voice. Hash the output and listen to it — never trust the status code. This is a paid-for lesson in the desk’s record.</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="v cut">
+      <div class="vhead">
+        <h3>AWS</h3>
+        <span class="verdict">Cut as a vendor · it is the venue</span>
+        <span class="what">Host, and the Builder Loft is the room</span>
+      </div>
+      <div class="vbody">
+        <dl>
+          <div><dt>Watchable moment</dt><dd>None. Infrastructure is invisible by definition, and a console screenshot is not an event.</dd></div>
+          <div><dt>How it earns its place instead</dt><dd>Through Strands, which is AWS’s. Adding Bedrock or a hosted deployment on top would cost build time for something no judge sees — and at 3h30m that is the trade we cannot afford.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">The decision this forces</p>
+    <h2>Strands or CrewAI</h2>
+    <div class="fork">
+      <div class="a">
+        <h4>Strands</h4>
+        <p>The sponsor’s own framework, at the sponsor’s own venue, judged by their people. MCP native,
+          so Neo4j and TwelveLabs both reachable. The cost is that it is new to us and the learning
+          happens inside a 3h30m window.</p>
+      </div>
+      <div class="b">
+        <h4>CrewAI</h4>
+        <p>What the desk already runs, with every trap already paid for — the listener bug, the
+          provider routing, the model pinning. Faster and safer, and invisible to a judge either way,
+          but it uses none of the sponsor’s stack.</p>
+      </div>
+    </div>
+    <div class="col">
+      <p style="margin-top:18px">The honest read: <strong>learn Strands tonight, not Thursday.</strong>
+        An hour on Wednesday building a hello-world agent with one tool decides it. If that hour goes
+        badly, CrewAI is the fallback and nothing is lost.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">For the library</p>
+    <h2>Five lines to add</h2>
+    <div class="col">
+      <p><code>VERIFIED</code> is deliberately blank on all five. Nobody here has run any of them, so
+        by the desk’s own rule these are stale and their verdicts read as unknown. They are claims to
+        check, not evidence — exactly as DataHub’s line was left.</p>
+    </div>
+    <div class="wire">
+<pre><span class="cmt"># VENDOR | WHAT IT DOES | WATCHABLE MOMENT | NEEDS | COST | VERDICT | VERIFIED</span>
+<span class="cmt">#</span>
+<span class="cmt"># The 30 Jul video-context-graph stack. None run yet — VERIFIED blank on purpose.</span>
+TwelveLabs | indexes video so it can be searched by what is seen, heard and said | the playhead jumps to the exact second the evidence appears | account and API key | free 600 min, then $0.042/min | use | —
+Neo4j | stores things and the relationships between them | one path lighting up hop by hop from a news event to a covenant ratio | an instance | free tier / self-hosted | conditional | —
+OpenAI | reasoning, and text to speech | a voice states the finding out loud over the footage | key | pay as you go | use | —
+Strands Agents | AWS agent SDK, model-agnostic, MCP native | nothing — a framework is invisible | none beyond a model key | free, open source | conditional | —
+AWS | host and venue | nothing to point at on screen | account | n/a | cut | —</pre>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">Tonight and tomorrow</p>
+    <h2>What settles all of this</h2>
+    <ol class="todo">
+      <li><span class="b">01</span><div><b>Index one Gatwick clip on TwelveLabs and time it.</b><span class="d">Pull the current model list first — Marengo 2.7 is gone. This single number decides whether the plan is four videos or one.</span></div></li>
+      <li><span class="b">02</span><div><b>One hour on Strands, hello-world with a tool.</b><span class="d">If it goes well it is the framework and it scores with the hosts. If it fights back, CrewAI and no time lost.</span></div></li>
+      <li><span class="b">03</span><div><b>Confirm the TTS voice by listening to the file.</b><span class="d">Not by checking the status code. The voice carries the whole moment and it is the component with a history of failing silently.</span></div></li>
+      <li><span class="b">04</span><div><b>Stand up Neo4j and load ten dummy nodes.</b><span class="d">Proves the connection and the driver before any real data exists. Cheapest possible de-risking.</span></div></li>
+    </ol>
+  </section>
+
+  <footer>
+    Campaign Desk · 28 July 2026 · sources: twelvelabs.io pricing and modality docs, strandsagents.com, AWS Strands documentation
+  </footer>
+
+</div>
+</div>

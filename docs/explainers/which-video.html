@@ -1,0 +1,296 @@
+<title>Which Video? — Enid and the Context Graph</title>
+
+<style>
+  :root {
+    --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA;
+    --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16;  --hot-bg:#F8E5DC;
+    --warn:#8A6512; --warn-bg:#F6EDD8;
+    --disp:"Futura","Avenir Next Condensed","Avenir Next",system-ui,sans-serif;
+    --body:"Avenir Next","Avenir",-apple-system,"Segoe UI",sans-serif;
+    --mono:"SF Mono","IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+      --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+      --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  }
+  :root[data-theme="dark"] { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+    --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+    --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  :root[data-theme="light"] { --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA; --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16; --hot-bg:#F8E5DC; --warn:#8A6512; --warn-bg:#F6EDD8; }
+
+  * { box-sizing:border-box; }
+  .sheet { background:var(--ground); color:var(--ink); font-family:var(--body);
+           font-size:16.5px; line-height:1.6; padding:0 20px 96px; }
+  .wrap { max-width:900px; margin:0 auto; }
+  .col { max-width:64ch; }
+
+  .mast { padding:52px 0 22px; border-bottom:3px solid var(--ink); margin-bottom:32px; }
+  .strip { font-family:var(--mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+           color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px 18px; margin-bottom:20px; }
+  .strip .urgent { color:var(--hot); font-weight:600; }
+  h1 { font-family:var(--disp); font-size:clamp(32px,5.6vw,54px); line-height:1.04; font-weight:500;
+       letter-spacing:.005em; margin:0 0 16px; text-transform:uppercase; text-wrap:balance; }
+  .standfirst { font-size:19px; line-height:1.5; color:var(--ink-soft); margin:0; max-width:56ch; }
+
+  section { margin-top:56px; }
+  h2 { font-family:var(--disp); font-size:26px; font-weight:500; letter-spacing:.02em;
+       text-transform:uppercase; margin:0 0 14px; }
+  h3 { font-family:var(--disp); font-size:19px; font-weight:500; letter-spacing:.02em;
+       text-transform:uppercase; margin:28px 0 8px; }
+  .kicker { font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+            color:var(--ink-soft); margin:0 0 9px; }
+  p { margin:0 0 15px; }
+  strong { font-weight:600; }
+  em.q { font-style:italic; }
+
+  .answer { border:3px solid var(--edge); background:var(--card); padding:26px 28px; margin-top:24px; }
+  .answer .big { font-family:var(--disp); font-size:clamp(24px,3.6vw,34px); line-height:1.15;
+                 font-weight:500; text-transform:uppercase; letter-spacing:.01em; margin:0 0 12px;
+                 color:var(--edge); text-wrap:balance; }
+  .answer p { margin:0; font-size:17px; }
+
+  .prem { border-left:4px solid var(--warn); background:var(--warn-bg); padding:16px 20px; margin-top:22px; }
+  .prem b { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+            color:var(--warn); display:block; margin-bottom:7px; font-weight:600; }
+  .prem p { margin:0; font-size:16px; }
+
+  /* three sources */
+  .recon { margin-top:24px; border:1px solid var(--rule); background:var(--card); overflow-x:auto; }
+  .recon table { width:100%; border-collapse:collapse; font-size:15.5px; min-width:520px; }
+  .recon th { font-family:var(--mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase;
+              text-align:left; color:var(--ink-soft); padding:12px 16px; border-bottom:2px solid var(--ink);
+              font-weight:600; }
+  .recon td { padding:14px 16px; border-bottom:1px solid var(--rule-soft); vertical-align:top; }
+  .recon tr:last-child td { border-bottom:none; }
+  .recon .mod { font-family:var(--mono); font-size:11.5px; color:var(--edge); font-weight:600;
+                text-transform:uppercase; letter-spacing:.08em; }
+  .recon .fig { font-family:var(--mono); font-size:19px; font-weight:600; font-variant-numeric:tabular-nums;
+                white-space:nowrap; }
+  .recon tr.truth td { background:var(--hot-bg); }
+  .recon tr.truth .fig, .recon tr.truth .mod { color:var(--hot); }
+  .recon .said { font-style:italic; }
+
+  .moment { border:1px solid var(--rule); background:var(--card); padding:22px 24px; margin-top:22px; }
+  .moment .lbl { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+                 color:var(--hot); display:block; margin-bottom:10px; font-weight:600; }
+  .moment .speak { font-family:var(--disp); font-size:clamp(19px,2.8vw,25px); line-height:1.3;
+                   margin:0 0 12px; font-weight:500; }
+  .moment p { margin:0; font-size:15.5px; color:var(--ink-soft); }
+
+  /* graph questions */
+  .qs { list-style:none; padding:0; margin:22px 0 0; display:grid; gap:12px; }
+  .qs li { border-left:3px solid var(--edge); background:var(--card); padding:14px 18px; }
+  .qs .ask { font-size:16.5px; font-style:italic; margin:0 0 6px; }
+  .qs .note { font-size:14.5px; color:var(--ink-soft); margin:0; line-height:1.45; }
+
+  .chain { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:18px;
+           border:1px solid var(--rule); background:var(--card); margin-top:22px;
+           font-family:var(--mono); font-size:12px; overflow-x:auto; }
+  .chain .n { border:1px solid var(--edge); color:var(--edge); background:var(--edge-bg);
+              padding:7px 10px; white-space:nowrap; font-weight:600; }
+  .chain .r { color:var(--ink-soft); font-size:11px; }
+
+  /* alternatives */
+  .alts { margin-top:22px; border-top:2px solid var(--ink); }
+  .alt { display:grid; grid-template-columns:1fr auto; gap:18px; padding:15px 0;
+         border-bottom:1px solid var(--rule-soft); align-items:baseline; }
+  .alt .nm { font-size:16.5px; }
+  .alt .nm small { display:block; color:var(--ink-soft); font-size:14.5px; margin-top:3px; line-height:1.45; }
+  .alt .v { font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
+            padding:4px 8px; font-weight:600; white-space:nowrap; }
+  .v.pick { background:var(--edge-bg); color:var(--edge); }
+  .v.maybe { background:var(--warn-bg); color:var(--warn); }
+  .v.no { background:var(--hot-bg); color:var(--hot); }
+
+  .trap { border:2px solid var(--hot); background:var(--card); padding:20px 22px; margin-top:24px; }
+  .trap b { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+            color:var(--hot); display:block; margin-bottom:8px; font-weight:600; }
+  .trap p { margin:0 0 12px; font-size:16px; }
+  .trap p:last-child { margin:0; }
+
+  .todo { list-style:none; padding:0; margin:22px 0 0; display:grid; gap:10px; }
+  .todo li { border:1px solid var(--rule); background:var(--card); padding:14px 16px;
+             display:grid; grid-template-columns:26px 1fr; gap:14px; align-items:start; }
+  .todo .b { font-family:var(--mono); font-size:12px; color:var(--ink-soft); padding-top:2px; }
+  .todo b { font-weight:600; }
+  .todo span.d { display:block; color:var(--ink-soft); font-size:14.5px; margin-top:3px; line-height:1.45; }
+
+  footer { margin-top:60px; padding-top:16px; border-top:1px solid var(--rule);
+           font-family:var(--mono); font-size:11px; letter-spacing:.05em; color:var(--ink-soft); }
+</style>
+
+<div class="sheet">
+<div class="wrap">
+
+  <header class="mast">
+    <div class="strip">
+      <span>Campaign Desk</span>
+      <span>Video selection</span>
+      <span class="urgent">Thu 30 July · two days out</span>
+    </div>
+    <h1>What video would Enid watch?</h1>
+    <p class="standfirst">No video is provided and the prizes are still to be announced, so the
+      choice is entirely ours — which makes it the highest-leverage decision on the table.</p>
+  </header>
+
+  <section>
+    <div class="prem">
+      <b>Checked first</b>
+      <p>The event page provides no video, no dataset and no sample corpus, and says
+        <em>“prize categories and judging details are still to come”</em>. Organisers are still
+        confirming final links and access. We bring our own material.</p>
+    </div>
+
+    <div class="answer">
+      <p class="big">Earnings calls. Because credit analysts already watch them — and nobody has
+        ever checked what was said against what was filed.</p>
+      <p>A lender’s job is partly listening. Management describes leverage, earnings and adjustments
+        out loud, on camera, weeks before any certificate is signed. That spoken record is a primary
+        source in credit, it is entirely unstructured, and it is audited by nobody.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">Why this is the answer</p>
+    <h2>Three sources, one number, and they disagree</h2>
+    <div class="col">
+      <p>TwelveLabs reads <strong>on-screen text through OCR</strong> as well as speech and audio.
+        That is the fact that makes this work, and I did not expect it. It means one video carries two
+        independent claims about the same figure — what the slide shows and what the person says — and
+        Enid already holds the third.</p>
+    </div>
+
+    <div class="recon">
+      <table>
+        <thead>
+          <tr><th>Source</th><th>How we read it</th><th>Claim</th><th>Figure</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>The slide behind them</td>
+            <td class="mod">Visual · OCR</td>
+            <td class="said">“Net leverage 4.2×”</td>
+            <td class="fig">4.20×</td>
+          </tr>
+          <tr>
+            <td>What the CFO says</td>
+            <td class="mod">Transcription</td>
+            <td class="said">“comfortably inside our covenant”</td>
+            <td class="fig">~4.2×</td>
+          </tr>
+          <tr class="truth">
+            <td>What the documents require</td>
+            <td class="mod">Enid</td>
+            <td class="said">Amendment No. 2 capped the add-back and stepped the limit to 4.00×</td>
+            <td class="fig">4.48×</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <p style="margin-top:18px">Nobody is lying. That is the point worth making to a judge — and
+        worth making honestly. Discrepancies like this are almost always innocent: rounding, a
+        different basis, a definition that changed after the deck was built. Which is exactly why an
+        agent that surfaces them for a human beats one that accuses anybody of anything.</p>
+    </div>
+
+    <div class="moment">
+      <span class="lbl">The watchable moment</span>
+      <p class="speak">The call is playing. A flat voice cuts across it: <em>“The slide says four
+        point two. He said comfortably inside. The agreement says four point four eight, against a
+        limit of four.”</em></p>
+      <p>Carried on sound, over the video the judge is already watching — which is the channel this
+        desk has actually won on, and one almost nobody at a video hackathon will use. It is not a
+        graph drawing itself, which the desk refuses as a chart redrawing.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">Why a set, not a single video</p>
+    <h2>The graph has to earn its keep</h2>
+    <div class="col">
+      <p>One video does not need a graph — it needs a transcript. The graph only justifies itself when
+        it answers something no single clip can. So we index <strong>four calls</strong>: the same
+        borrower across consecutive quarters, or two borrowers in the same portfolio.</p>
+    </div>
+
+    <ul class="qs">
+      <li>
+        <p class="ask">“Every time this company described adjusted earnings, what number did they give
+          and when did the definition quietly change?”</p>
+        <p class="note">Needs claims from four videos linked to one metric, ordered in time. Unanswerable from any one of them.</p>
+      </li>
+      <li>
+        <p class="ask">“Who was speaking when the leverage guidance moved, and what was on the slide
+          behind them?”</p>
+        <p class="note">Links a person, a scene, an OCR reading and a spoken claim — four entity types in one hop.</p>
+      </li>
+      <li>
+        <p class="ask">“Which of our borrowers used the phrase ‘run-rate synergies’ this quarter?”</p>
+        <p class="note">The portfolio-wide question a credit desk actually asks, across companies rather than within one.</p>
+      </li>
+    </ul>
+
+    <h3>The graph shape</h3>
+    <div class="chain">
+      <span class="n">Person</span><span class="r">— said →</span>
+      <span class="n">Claim</span><span class="r">— about →</span>
+      <span class="n">Metric</span><span class="r">— for →</span>
+      <span class="n">Period</span><span class="r">— governed by →</span>
+      <span class="n">Covenant</span>
+    </div>
+    <div class="col">
+      <p style="margin-top:14px">With <span style="font-family:var(--mono);font-size:.85em">Scene</span>
+        hanging off every claim — prepared remarks or Q&amp;A, and the timecode — so any assertion in
+        the graph can be played back at the second it was made. That playback is what makes it
+        demonstrable rather than merely asserted.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">What else was considered</p>
+    <h2>Alternatives, and why not</h2>
+    <div class="alts">
+      <div class="alt"><div class="nm">Earnings calls and investor days<small>Public, free, abundant, multi-speaker, slides on screen, hard numbers, and directly what credit analysts consume.</small></div><span class="v pick">Pick</span></div>
+      <div class="alt"><div class="nm">Collateral and site inspection video<small>The genuinely outside-the-box one — private credit lends against warehouses, fleets and equipment, and a walkthrough graphs into assets, condition and coverage. No public corpus exists, so it cannot be sourced in a day.</small></div><span class="v maybe">Later</span></div>
+      <div class="alt"><div class="nm">Private credit conference panels<small>GPs discussing portfolio performance, public on YouTube. Rich in entities and relationships, thin on the hard figures that make the reconciliation land.</small></div><span class="v maybe">Backup</span></div>
+      <div class="alt"><div class="nm">Bankruptcy and court hearings<small>Public and squarely on-domain, but rarely on video, visually inert, and painful to source at speed.</small></div><span class="v no">No</span></div>
+      <div class="alt"><div class="nm">Analyst segments on financial TV<small>Short and easy to find, but it is commentary about a borrower rather than the borrower speaking. No primary claim to reconcile.</small></div><span class="v no">No</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="trap">
+      <b>The catch that could cost the day</b>
+      <p><strong>Video has to be indexed before it can be queried, and indexing is not instant.</strong>
+        With a 3h30m build window, discovering that a sixty-minute call takes twenty minutes to index —
+        times four videos — is how the build ends with nothing on screen.</p>
+      <p>Index everything on Wednesday. If pre-built work is disallowed we throw the index away and
+        re-run it, having lost nothing but knowing exactly how long it takes. That number is worth more
+        than anything else we could learn before the doors open.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">To settle</p>
+    <h2>Before Thursday</h2>
+    <ol class="todo">
+      <li><span class="b">01</span><div><b>Pick the four videos and download them.</b><span class="d">A leveraged public company with a visible debt load, four consecutive quarterly calls with slides on screen. Real material beats synthetic, and it proves the thing works outside a sandbox.</span></div></li>
+      <li><span class="b">02</span><div><b>Get a TwelveLabs key and index one call end to end.</b><span class="d">Time it. That single number decides whether four videos is the plan or one is.</span></div></li>
+      <li><span class="b">03</span><div><b>Decide whether Enid’s covenant data is real or staged.</b><span class="d">The Meridian corpus from the DataHub work already exists with a known right answer, and reusing it means the third row of the reconciliation is ground truth we control.</span></div></li>
+      <li><span class="b">04</span><div><b>Ask the organisers what the 16:00 submission contains.</b><span class="d">Still unanswered, still shapes the last two hours, and still one message.</span></div></li>
+    </ol>
+  </section>
+
+  <footer>
+    Campaign Desk · 28 July 2026 · sources: luma.com event page and TwelveLabs modality documentation
+  </footer>
+
+</div>
+</div>

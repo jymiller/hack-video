@@ -1,0 +1,22 @@
+# Secrets — never committed
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# DataHub local runtime
+.datahub/
+docker-compose.override.yml
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

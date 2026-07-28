@@ -1,0 +1,348 @@
+<title>Gatwick — The Corpus That Is Actually Real</title>
+
+<style>
+  :root {
+    --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA;
+    --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16;  --hot-bg:#F8E5DC;
+    --warn:#8A6512; --warn-bg:#F6EDD8;
+    --disp:"Futura","Avenir Next Condensed","Avenir Next",system-ui,sans-serif;
+    --body:"Avenir Next","Avenir",-apple-system,"Segoe UI",sans-serif;
+    --mono:"SF Mono","IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+      --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+      --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  }
+  :root[data-theme="dark"] { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+    --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+    --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  :root[data-theme="light"] { --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA; --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16; --hot-bg:#F8E5DC; --warn:#8A6512; --warn-bg:#F6EDD8; }
+
+  * { box-sizing:border-box; }
+  .sheet { background:var(--ground); color:var(--ink); font-family:var(--body);
+           font-size:16.5px; line-height:1.6; padding:0 20px 96px; }
+  .wrap { max-width:920px; margin:0 auto; }
+  .col { max-width:64ch; }
+
+  .mast { padding:52px 0 22px; border-bottom:3px solid var(--ink); margin-bottom:32px; }
+  .strip { font-family:var(--mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+           color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px 18px; margin-bottom:20px; }
+  h1 { font-family:var(--disp); font-size:clamp(32px,5.6vw,54px); line-height:1.04; font-weight:500;
+       letter-spacing:.005em; margin:0 0 16px; text-transform:uppercase; text-wrap:balance; }
+  .standfirst { font-size:19px; line-height:1.5; color:var(--ink-soft); margin:0; max-width:57ch; }
+
+  section { margin-top:56px; }
+  h2 { font-family:var(--disp); font-size:26px; font-weight:500; letter-spacing:.02em;
+       text-transform:uppercase; margin:0 0 14px; }
+  h3 { font-family:var(--disp); font-size:19px; font-weight:500; letter-spacing:.02em;
+       text-transform:uppercase; margin:30px 0 8px; }
+  .kicker { font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+            color:var(--ink-soft); margin:0 0 9px; }
+  p { margin:0 0 15px; }
+  strong { font-weight:600; }
+  code { font-family:var(--mono); font-size:.86em; background:var(--rule-soft); padding:1px 5px; }
+
+  .admit { border-left:4px solid var(--warn); background:var(--warn-bg); padding:18px 20px; margin-top:22px; }
+  .admit b { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+             color:var(--warn); display:block; margin-bottom:8px; font-weight:600; }
+  .admit p { margin:0 0 12px; font-size:16px; }
+  .admit p:last-child { margin:0; }
+
+  .verdict { border:3px solid var(--edge); background:var(--card); padding:26px 28px; margin-top:24px; }
+  .verdict .big { font-family:var(--disp); font-size:clamp(23px,3.5vw,33px); line-height:1.16;
+                  font-weight:500; text-transform:uppercase; letter-spacing:.01em; margin:0 0 12px;
+                  color:var(--edge); text-wrap:balance; }
+  .verdict p { margin:0; font-size:17px; }
+
+  /* facts */
+  .facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1px;
+           background:var(--rule); border:1px solid var(--rule); margin-top:24px; }
+  .facts > div { background:var(--card); padding:18px 20px; }
+  .facts .n { font-family:var(--disp); font-size:31px; font-weight:500; display:block; line-height:1.05;
+              color:var(--edge); }
+  .facts .n.hot { color:var(--hot); }
+  .facts .k { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+              color:var(--ink-soft); display:block; margin-top:8px; line-height:1.45; }
+
+  /* the two events */
+  .events { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--rule);
+            border:1px solid var(--rule); margin-top:24px; }
+  @media (max-width:720px) { .events { grid-template-columns:1fr; } }
+  .events > div { background:var(--card); padding:22px 24px; }
+  .events h4 { font-family:var(--disp); font-size:21px; font-weight:500; text-transform:uppercase;
+               letter-spacing:.02em; margin:0 0 4px; }
+  .events .when { font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:var(--ink-soft);
+                  display:block; margin-bottom:14px; }
+  .events dl { margin:0; display:grid; gap:9px; }
+  .events dt { font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
+               color:var(--ink-soft); }
+  .events dd { margin:2px 0 0; font-size:15.5px; line-height:1.4; }
+  .events .tvpop { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+                   padding:3px 8px; display:inline-block; margin-top:14px; font-weight:600; }
+  .drone .tvpop { background:var(--hot-bg); color:var(--hot); }
+  .covid .tvpop { background:var(--edge-bg); color:var(--edge); }
+  .events .impact { font-family:var(--disp); font-size:26px; font-weight:500; margin-top:14px; display:block; }
+  .drone .impact { color:var(--ink-soft); }
+  .covid .impact { color:var(--hot); }
+
+  .trapbox { border:3px solid var(--hot); background:var(--card); padding:26px 28px; margin-top:26px; }
+  .trapbox b { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+               color:var(--hot); display:block; margin-bottom:10px; font-weight:600; }
+  .trapbox .ob { font-family:var(--disp); font-size:clamp(19px,2.7vw,24px); line-height:1.3;
+                 font-weight:500; margin:0 0 6px; }
+  .trapbox .ri { font-family:var(--disp); font-size:clamp(19px,2.7vw,24px); line-height:1.3;
+                 font-weight:500; margin:0 0 14px; color:var(--hot); }
+  .trapbox p.x { margin:0; font-size:16px; }
+
+  /* archive */
+  .arch { margin-top:22px; border:1px solid var(--rule); background:var(--card); }
+  .arch .row { display:grid; grid-template-columns:1fr auto; gap:16px; padding:13px 18px;
+               border-bottom:1px solid var(--rule-soft); align-items:baseline; }
+  .arch .row:last-child { border-bottom:none; }
+  .arch .id { font-family:var(--mono); font-size:12px; word-break:break-all; }
+  .arch .id small { display:block; font-family:var(--body); font-size:14px; color:var(--ink-soft);
+                    margin-top:3px; word-break:normal; }
+  .arch .yr { font-family:var(--mono); font-size:11px; color:var(--edge); font-weight:600; white-space:nowrap; }
+
+  .chain { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:18px;
+           border:1px solid var(--rule); background:var(--card); margin-top:22px;
+           font-family:var(--mono); font-size:12px; overflow-x:auto; }
+  .chain .n { border:1px solid var(--edge); color:var(--edge); background:var(--edge-bg);
+              padding:7px 10px; white-space:nowrap; font-weight:600; }
+  .chain .n.end { border-color:var(--hot); color:var(--hot); background:var(--hot-bg); }
+  .chain .r { color:var(--ink-soft); font-size:11px; }
+
+  .moment { border:1px solid var(--rule); background:var(--card); padding:22px 24px; margin-top:22px; }
+  .moment .lbl { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+                 color:var(--hot); display:block; margin-bottom:10px; font-weight:600; }
+  .moment .speak { font-family:var(--disp); font-size:clamp(18px,2.6vw,24px); line-height:1.3;
+                   margin:0 0 12px; font-weight:500; }
+  .moment p { margin:0; font-size:15.5px; color:var(--ink-soft); }
+
+  .bonus { border-left:4px solid var(--edge); background:var(--card); padding:18px 20px; margin-top:24px; }
+  .bonus b { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+             color:var(--edge); display:block; margin-bottom:8px; font-weight:600; }
+  .bonus p { margin:0 0 12px; font-size:16px; }
+  .bonus p:last-child { margin:0; }
+
+  .todo { list-style:none; padding:0; margin:22px 0 0; display:grid; gap:10px; }
+  .todo li { border:1px solid var(--rule); background:var(--card); padding:14px 16px;
+             display:grid; grid-template-columns:26px 1fr; gap:14px; align-items:start; }
+  .todo .b { font-family:var(--mono); font-size:12px; color:var(--ink-soft); padding-top:2px; }
+  .todo b { font-weight:600; }
+  .todo span.d { display:block; color:var(--ink-soft); font-size:14.5px; margin-top:3px; line-height:1.45; }
+
+  footer { margin-top:60px; padding-top:16px; border-top:1px solid var(--rule);
+           font-family:var(--mono); font-size:11px; letter-spacing:.05em; color:var(--ink-soft); }
+  footer a { color:var(--edge); }
+</style>
+
+<div class="sheet">
+<div class="wrap">
+
+  <header class="mast">
+    <div class="strip">
+      <span>Campaign Desk</span>
+      <span>Corpus decision</span>
+      <span>Thu 30 July · video context graph</span>
+    </div>
+    <h1>Gatwick beats the thing I made up</h1>
+    <p class="standfirst">You asked what the Meridian corpus is. It is invented — and your instinct is
+      right: Gatwick is real, it is on video, and its covenants genuinely broke.</p>
+  </header>
+
+  <section>
+    <p class="kicker">First, the honest answer</p>
+    <h2>What the Meridian corpus is</h2>
+
+    <div class="admit">
+      <b>I invented it. Yesterday.</b>
+      <p><strong>Meridian Cold Storage Holdings does not exist.</strong> It was generated by one of
+        Campaign Desk’s crews when I asked it to design a demonstration corpus for the DataHub entry —
+        a fictional borrower with a $250m term loan, two fictional amendments, and a fictional CFO
+        called Dana Whitfield signing a fictional compliance certificate.</p>
+      <p>The design is good: the certificate asserts compliance at 4.20× against a cited 4.50× limit,
+        and it is wrong twice over, because an amendment both lowered the limit to 4.00× and capped an
+        adjustment — making the true figure 4.48×. The obvious reading is confidently wrong, which is
+        what a demonstration corpus is for.</p>
+      <p>Its weakness is fatal for video: <strong>a judge cannot verify a word of it</strong>, there is
+        no footage of a company that does not exist, and it proves nothing about handling real-world
+        mess. It lives in <code>hack-datahub/docs/03-entry-design.md</code> and nothing has been built
+        from it.</p>
+    </div>
+
+    <div class="verdict">
+      <p class="big">Gatwick is the same story, except it actually happened — and the lenders actually
+        had to waive the covenants.</p>
+      <p>Real bonds, real covenants, a real breach, and thousands of hours of real news footage sitting
+        in the Internet Archive. Everything Meridian was pretending to be.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">The credit structure is real</p>
+    <h2>Gatwick is a leveraged borrower with public covenants</h2>
+    <div class="col">
+      <p>This is the part that makes it an Enid corpus rather than a general-interest one. Gatwick is
+        financed exactly the way infrastructure credit is financed, and its covenants are disclosed.</p>
+    </div>
+
+    <div class="facts">
+      <div><span class="n">£2.5bn</span><span class="k">Listed secured bonds via Gatwick Funding Ltd, maturities 2024–2050</span></div>
+      <div><span class="n">3.59×</span><span class="k">Senior interest cover ratio, year ended 31 Mar 2018 — down from 3.96×</span></div>
+      <div><span class="n">£2.8bn</span><span class="k">Reference net debt covered by the 2021 covenant waiver</span></div>
+      <div><span class="n hot">Waived</span><span class="k">Senior ICR and Senior RAR, not tested at Dec 2021 or Jun 2022</span></div>
+    </div>
+
+    <div class="col">
+      <p style="margin-top:20px">In August 2021 Gatwick went to its lenders and asked to be released
+        from testing its interest cover and debt ratios. A very large majority agreed. <strong>That is
+        a documented, public, real covenant event</strong> — the exact thing Enid exists to see coming,
+        and it is the ending our demo can point at.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">And here is the good part</p>
+    <h2>Two events, and only one of them mattered</h2>
+
+    <div class="events">
+      <div class="drone">
+        <h4>The drone</h4>
+        <span class="when">19–21 December 2018</span>
+        <dl>
+          <div><dt>Flights cancelled</dt><dd>~1,000</dd></div>
+          <div><dt>Passengers affected</dt><dd>~140,000</dd></div>
+          <div><dt>Airport closed</dt><dd>~33–36 hours</dd></div>
+          <div><dt>Cost to airlines</dt><dd>~£50m</dd></div>
+          <div><dt>Cost to Gatwick itself</dt><dd><strong>~£1.4m</strong></dd></div>
+        </dl>
+        <span class="impact">No covenant effect</span>
+        <span class="tvpop">Wall-to-wall coverage</span>
+      </div>
+      <div class="covid">
+        <h4>The pandemic</h4>
+        <span class="when">From March 2020</span>
+        <dl>
+          <div><dt>Traffic</dt><dd>Collapsed — the sharpest fall in the airport’s history</dd></div>
+          <div><dt>Pre-tax loss, 2020</dt><dd><strong>~£2bn</strong></dd></div>
+          <div><dt>Recovery guidance</dt><dd>Four to five years back to pre-Covid volumes</dd></div>
+          <div><dt>Outcome</dt><dd>Lenders waived Senior ICR and Senior RAR</dd></div>
+        </dl>
+        <span class="impact">The covenant event</span>
+        <span class="tvpop">Diffuse, months of it</span>
+      </div>
+    </div>
+
+    <div class="trapbox">
+      <b>The trap case — and this one is real</b>
+      <p class="ob">Obvious reading: the airport was shut down by drones and it was on every news
+        channel in the world, so that is the credit event.</p>
+      <p class="ri">Right reading: the drone cost Gatwick about £1.4m and moved nothing. The pandemic
+        cost about £2bn and its lenders had to waive the covenants.</p>
+      <p class="x">A system that reacts to the loudest footage gets this backwards. One that follows
+        the footage through to passenger volumes, then to earnings, then to the ratio the bonds are
+        tested on, gets it right. <strong>That is the whole argument for a context graph</strong> —
+        and unlike Meridian, every number in it can be checked by a judge on their phone.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">The archive</p>
+    <h2>What is actually sitting there</h2>
+    <div class="col">
+      <p>I searched it rather than assuming. <strong>894 items</strong> match Gatwick in the Internet
+        Archive’s film collections, and the television news archive carries the December 2018 shutdown
+        hour by hour as it happened.</p>
+    </div>
+
+    <div class="arch">
+      <div class="row"><span class="id">BBCNEWS_20190417_023000_The_Gatwick_Drone_Attack<small>A BBC documentary devoted to the incident — the retrospective, with analysis</small></span><span class="yr">Apr 2019</span></div>
+      <div class="row"><span class="id">ALJAZ_20181220_190000 → ALJAZ_20181222_100000<small>Al Jazeera’s rolling coverage across the three days of the shutdown, hour by hour</small></span><span class="yr">Dec 2018</span></div>
+      <div class="row"><span class="id">BBCNEWS_20190419_023000_The_Gatwick_Drone_Attack<small>Second broadcast of the documentary</small></span><span class="yr">Apr 2019</span></div>
+    </div>
+
+    <div class="col">
+      <p style="margin-top:20px"><strong>Two corrections to what you said, and both help.</strong>
+        Gatwick long predates 2000 — it has been a commercial airport since 1958, and an aerodrome
+        since the 1930s, so historical newsreel of it exists. But the Internet Archive’s
+        <em>television news</em> collection begins around 2009, which is the part that matters: it
+        comfortably covers both the 2018 drone and the 2020 pandemic, which are the only two events
+        that moved the credit.</p>
+      <p>So the long historical arc is available if we want it, but it is decoration. The credit story
+        lives entirely inside the archive’s strongest window.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">The demo</p>
+    <h2>News footage in, covenant risk out</h2>
+
+    <div class="chain">
+      <span class="n">news footage</span><span class="r">— TwelveLabs →</span>
+      <span class="n">event · place · date · figures</span><span class="r">— written to →</span>
+      <span class="n">Neo4j graph</span><span class="r">— linked to →</span>
+      <span class="n">passenger volumes</span><span class="r">→</span>
+      <span class="n">earnings</span><span class="r">→</span>
+      <span class="n end">Senior ICR</span>
+    </div>
+
+    <div class="col">
+      <p style="margin-top:20px">Speech gives us what the reporter says. OCR gives us the figures on
+        the lower third and the studio graphics. Vision gives us the scene — a terminal full of
+        stranded passengers reads differently from a press conference. All three write into one graph,
+        and the graph is what connects a Thursday night in December to a ratio in a bond covenant.</p>
+      <p>The question no single clip can answer, and the graph answers instantly:
+        <strong>“which of these events actually threatened the debt?”</strong></p>
+    </div>
+
+    <div class="moment">
+      <span class="lbl">The watchable moment</span>
+      <p class="speak">Drone footage playing, chaos in the terminal. A flat voice cuts in:
+        <em>“One thousand flights cancelled. One hundred and forty thousand passengers. Cost to the
+        airport: one point four million. Interest cover unaffected. This is not the one.”</em>
+        Then the graph jumps to March 2020.</p>
+      <p>Carried on sound over footage the judge is already watching, and it says something
+        counter-intuitive in the first fifteen seconds — which is what makes a stranger look up. It is
+        not a graph drawing itself, which the desk refuses.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="bonus">
+      <b>This fixes the DataHub entry too</b>
+      <p>If Gatwick works on Thursday, it should replace Meridian in the 10 August DataHub entry as
+        well. One corpus, two hackathons, and the weakest part of the DataHub plan — a fictional
+        borrower a judge cannot check — becomes its strongest.</p>
+      <p>The DataHub story survives the swap intact: an amendment or a waiver changes what a ratio
+        means, lineage says which covenant tests depend on it. Gatwick’s actual 2021 waiver is a
+        better instance of that than anything invented, because <strong>it really happened and the
+        documents are public</strong>.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">To settle</p>
+    <h2>Before Thursday</h2>
+    <ol class="todo">
+      <li><span class="b">01</span><div><b>Confirm what Enid already holds on Gatwick.</b><span class="d">You said there is sample data in there already. Whatever it is, it is the third source in the reconciliation and it decides how much we build versus reuse.</span></div></li>
+      <li><span class="b">02</span><div><b>Pull four clips and time an index.</b><span class="d">Two from the drone shutdown as it happened, one from the BBC documentary, one from the pandemic. Indexing time is still the number that decides whether four videos is the plan or one.</span></div></li>
+      <li><span class="b">03</span><div><b>Get the covenant figures from the published accounts.</b><span class="d">Senior ICR and Senior RAR by year, and the 2021 waiver. These are the ground truth the graph resolves to, and they are all in the public filings.</span></div></li>
+      <li><span class="b">04</span><div><b>Decide whether the drone or the pandemic opens the video.</b><span class="d">The drone is the better footage and the wrong answer. Opening on it and then overturning it is the strongest three minutes available — but it costs seconds we may not have.</span></div></li>
+    </ol>
+  </section>
+
+  <footer>
+    Campaign Desk · 28 July 2026 · figures from
+    <a href="https://www.vinci.com/en/newsroom/press-releases/london-gatwick-airport-waiver-agreement-financial-covenants">VINCI</a>,
+    <a href="https://en.wikipedia.org/wiki/Gatwick_Airport_drone_incident">the drone incident record</a>,
+    Gatwick’s published financial statements, and a live search of archive.org
+  </footer>
+
+</div>
+</div>
