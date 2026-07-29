@@ -1,0 +1,62 @@
+[
+ {
+  "event": "Northern Runway development consent granted",
+  "covenant": "senior_icr",
+  "evidence_sha256": "0f9ea67ea3da99b2e0d705262a2afc4f8a985e5f547d8bf6d9c1569c05ce0f84",
+  "status": "validated",
+  "validated_by": "john",
+  "validated_at": "2026-07-29T07:23:35.853Z",
+  "human_note": "signed before the rebuild test",
+  "previous_status": null,
+  "reopened": null,
+  "could_affect": false,
+  "direction": "none",
+  "rationale": "Regulatory approval of a runway development does not directly change interest coverage metrics in the near term.",
+  "model": "zai-org/glm-5.2"
+ },
+ {
+  "event": "Northern Runway development consent granted",
+  "covenant": "senior_icr",
+  "evidence_sha256": "f114c7b39e5dcb834a0cd2967b649d04e2515dff631a77eecce97003e7c01029",
+  "status": "validated",
+  "validated_by": "john",
+  "validated_at": "2026-07-29T07:23:35.853Z",
+  "human_note": "signed before the rebuild test",
+  "previous_status": null,
+  "reopened": null,
+  "could_affect": false,
+  "direction": "none",
+  "rationale": "Regulatory approval for runway development does not directly change interest coverage metrics in the near term.",
+  "model": "zai-org/glm-5.2"
+ },
+ {
+  "event": "Northern Runway development consent granted",
+  "covenant": "senior_rar",
+  "evidence_sha256": "0f9ea67ea3da99b2e0d705262a2afc4f8a985e5f547d8bf6d9c1569c05ce0f84",
+  "status": "validated",
+  "validated_by": "john",
+  "validated_at": "2026-07-29T07:23:35.853Z",
+  "human_note": "signed before the rebuild test",
+  "previous_status": null,
+  "reopened": null,
+  "could_affect": false,
+  "direction": "none",
+  "rationale": "Granting development consent does not by itself alter senior debt levels or asset ratios.",
+  "model": "zai-org/glm-5.2"
+ },
+ {
+  "event": "Northern Runway development consent granted",
+  "covenant": "senior_rar",
+  "evidence_sha256": "f114c7b39e5dcb834a0cd2967b649d04e2515dff631a77eecce97003e7c01029",
+  "status": "validated",
+  "validated_by": "john",
+  "validated_at": "2026-07-29T07:23:35.853Z",
+  "human_note": "signed before the rebuild test",
+  "previous_status": null,
+  "reopened": null,
+  "could_affect": false,
+  "direction": "none",
+  "rationale": "Granting of development consent does not by itself alter senior debt levels or asset ratios.",
+  "model": "zai-org/glm-5.2"
+ }
+]
