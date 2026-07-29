@@ -25,13 +25,13 @@ OUT = ROOT / "audio"
 # and a long sentence cannot be re-cued if the room laughs or a demo stalls.
 LINES = {
     "01-open": "Gatwick is building a second runway. Two point two billion pounds, "
-               "privately financed. Every broadcaster ran it.",
+               "privately financed. Five broadcasters ran it.",
     "02-corroborate": "Five broadcasters. Three of them, independently, say fourteen "
                       "thousand jobs.",
     "03-the-question": "The bonds are tested on two covenants. Senior interest cover, "
                        "and senior debt ratio. So: which of this reaches them?",
-    "04-the-zero": "Nothing. Ninety-six links between video and concept, across five "
-                   "broadcasters. Zero reach a covenant.",
+    "04-the-zero": "Nothing. One hundred and six links between video and concept, across "
+                   "six broadcasters. Zero reach a covenant.",
     "05-the-model": "The model was asked whether the water outage threatened interest "
                     "cover. It said yes. A human said no, and the no is what stands.",
     "06-close": "The useful answer was a column of zeros. That is what it looks like "

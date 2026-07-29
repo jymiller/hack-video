@@ -1497,6 +1497,166 @@
    }
   },
   {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "purpose": "concept-driven retrieval",
+    "started_at": "2026-07-29T08:29:17.242000000+00:00",
+    "model": "marengo3.0",
+    "id": "marengo3.0-1785313757"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "duration": 252.702766,
+    "provenance_class": "observed",
+    "filename": "dKEpA70WhXU__Firstpost__London's Gatwick Airport Water Outage Explained\uff1a How Power F.mp4",
+    "kind": "broadcast_news",
+    "publisher": "Firstpost",
+    "url_sha256": "78a3514f49df917d23c007a976b2afaca16ae59ad2d99000d0659d2f718f069f",
+    "id": "6a69b9a6bb33be5074e4c07b",
+    "url": "https://www.youtube.com/watch?v=dKEpA70WhXU"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:123",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "outage a failure at Bow Beach water treatment works in Southeast",
+    "start": 21.3,
+    "end": 25.5,
+    "video_id": "6a69b9a6bb33be5074e4c07b"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:124",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "taps either ran dry or had extremely low pressure for arriving and departing passengers, the impact spread across Gatwick's terminals.",
+    "start": 35.9,
+    "end": 43.3,
+    "video_id": "6a69b9a6bb33be5074e4c07b"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:125",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "of seating added to the frustration at least",
+    "start": 109.9,
+    "end": 113.9,
+    "video_id": "6a69b9a6bb33be5074e4c07b"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:126",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "Southeast England triggered a chain reaction that disrupted operations at Gatwick without water supply the",
+    "start": 25.5,
+    "end": 31.5,
+    "video_id": "6a69b9a6bb33be5074e4c07b"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:127",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "later confirmed that the water supply gradually returned to normal in the evening. The airport also apologised for the disruption",
+    "start": 149.6,
+    "end": 158,
+    "video_id": "6a69b9a6bb33be5074e4c07b"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:128",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "airport continued operating with arrivals and departures running as scheduled. The water crisis disrupted passenger services, but it did not bring air traffic to a halt. Hours after the youtage,",
+    "start": 131.3,
+    "end": 142,
+    "video_id": "6a69b9a6bb33be5074e4c07b"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:129",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "low pressure or a temporary loss of supply. The",
+    "start": 195,
+    "end": 198.7,
+    "video_id": "6a69b9a6bb33be5074e4c07b"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:130",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "airport's basic facilities began to fail. Toilets stopped working taps",
+    "start": 31.5,
+    "end": 35.9,
+    "video_id": "6a69b9a6bb33be5074e4c07b"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:131",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "well despite the chaos that the terminal's flights remained unaffected, the airport",
+    "start": 127.4,
+    "end": 131.3,
+    "video_id": "6a69b9a6bb33be5074e4c07b"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:132",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "purpose": "observation extraction",
+    "started_at": "2026-07-29T08:29:35.388000000+00:00",
+    "model": "zai-org/glm-5.2",
+    "id": "extract-zai-org/glm-5.2-1785313775"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:133",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "purpose": "covenant impact assertion",
+    "started_at": "2026-07-29T08:33:15.512000000+00:00",
+    "model": "zai-org/glm-5.2",
+    "id": "zai-org/glm-5.2-1785313995"
+   }
+  },
+  {
    "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:134",
    "labels": [
     "Vocabulary"
@@ -2118,7 +2278,7 @@
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
    "type": "CANDIDATE_FOR",
    "props": {
-    "rank": 6,
+    "rank": 8,
     "probe": "passengers travelling through the airport"
    }
   },
@@ -2160,8 +2320,8 @@
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
    "type": "CANDIDATE_FOR",
    "props": {
-    "rank": 8,
-    "probe": "passengers travelling through the airport"
+    "rank": 5,
+    "probe": "how many people used the airport"
    }
   },
   {
@@ -2181,8 +2341,8 @@
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
    "type": "CANDIDATE_FOR",
    "props": {
-    "rank": 9,
-    "probe": "passengers travelling through the airport"
+    "rank": 3,
+    "probe": "passenger numbers at the airport"
    }
   },
   {
@@ -2307,7 +2467,7 @@
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
    "type": "CANDIDATE_FOR",
    "props": {
-    "rank": 9,
+    "rank": 10,
     "probe": "passenger numbers at the airport"
    }
   },
@@ -3803,6 +3963,665 @@
    "type": "CORROBORATES",
    "props": {
     "basis": "independent sources, same figure"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:59",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:60",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:61",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:62",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:63",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:123",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:123",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:123",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:124",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:124",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:124",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:64",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:125",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:125",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 9,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:125",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:126",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:126",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:126",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:67",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:69",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:71",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:72",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:73",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:66",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:74",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:75",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:76",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:77",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:78",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:79",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:80",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:81",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:65",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:68",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:82",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:83",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:84",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:85",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:86",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:87",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:88",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:89",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:90",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:91",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:124",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 1,
+    "probe": "retail spend per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:127",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:127",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "retail spend per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:127",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:128",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:128",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 5,
+    "probe": "retail spend per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:128",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:129",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:129",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "retail spend per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:129",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:130",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:130",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "retail spend per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:130",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:131",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:131",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "retail spend per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:131",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:92",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:93",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:94",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:95",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:96",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:97",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:98",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:99",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:100",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:101",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:102",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:103",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:104",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:105",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:106",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:107",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:108",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:109",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:110",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:111",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:112",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:122",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:52",
+   "type": "REPORTS",
+   "props": {
+    "asserted_by": "human",
+    "basis": "manual \u2014 clip reviewed"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MAY_AFFECT",
+   "props": {
+    "asserted_by": "model",
+    "could_affect": true,
+    "evidence_sha256": "2526a9e52b61e61a01b298904dc711a569fe4153fbb3093fdb7e8895cfc2a223",
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=hXE6OY5ZLTU",
+    "asserted_at": "2026-07-29T08:33:19.987000000+00:00",
+    "rationale": "Granting development consent for the Northern Runway enables a major capital project to proceed, which over time could increase operating cash flows and thus improve interest cover, though near-term capex may temporarily pressure it.",
+    "status": "proposed",
+    "direction": "increases"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MAY_AFFECT",
+   "props": {
+    "asserted_by": "model",
+    "could_affect": true,
+    "evidence_sha256": "2526a9e52b61e61a01b298904dc711a569fe4153fbb3093fdb7e8895cfc2a223",
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=hXE6OY5ZLTU",
+    "asserted_at": "2026-07-29T08:33:20.008000000+00:00",
+    "rationale": "Regulatory approval to proceed with the Northern Runway is likely to trigger significant debt-funded capital expenditure, increasing senior debt relative to assets and pushing the senior debt ratio upward.",
+    "status": "proposed",
+    "direction": "increases"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MAY_AFFECT",
+   "props": {
+    "asserted_by": "model",
+    "could_affect": true,
+    "evidence_sha256": "2e5fb26665902bdcb8a474cb0ea6354e05fc44936d6b27756335ea7e0142bc5b",
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=vuM3pFQ4vZg",
+    "asserted_at": "2026-07-29T08:33:23.425000000+00:00",
+    "rationale": "Granting development consent for the Northern Runway enables future capacity expansion, which could improve revenue and EBITDA, thereby increasing interest cover.",
+    "status": "proposed",
+    "direction": "increases"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MAY_AFFECT",
+   "props": {
+    "asserted_by": "model",
+    "could_affect": true,
+    "evidence_sha256": "2e5fb26665902bdcb8a474cb0ea6354e05fc44936d6b27756335ea7e0142bc5b",
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=vuM3pFQ4vZg",
+    "asserted_at": "2026-07-29T08:33:23.443000000+00:00",
+    "rationale": "Regulatory approval reduces project execution risk and supports asset value and earnings, lowering the senior debt ratio over time.",
+    "status": "proposed",
+    "direction": "decreases"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MAY_AFFECT",
+   "props": {
+    "asserted_by": "model",
+    "could_affect": false,
+    "evidence_sha256": "9acf99df4abdd8e72b9f7936745141208284e885d17e6222ed54568c770bd689",
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=KLnxVX-m-Ng",
+    "asserted_at": "2026-07-29T08:33:26.449000000+00:00",
+    "rationale": "Regulatory approval for a runway development does not directly change interest coverage ratios in the near term.",
+    "status": "proposed",
+    "direction": "none"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MAY_AFFECT",
+   "props": {
+    "asserted_by": "model",
+    "could_affect": true,
+    "evidence_sha256": "9acf99df4abdd8e72b9f7936745141208284e885d17e6222ed54568c770bd689",
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=KLnxVX-m-Ng",
+    "asserted_at": "2026-07-29T08:33:26.465000000+00:00",
+    "rationale": "Granting development consent for the Northern Runway likely triggers capital expenditure, increasing senior debt and raising the senior debt ratio.",
+    "status": "proposed",
+    "direction": "increases"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:52",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MAY_AFFECT",
+   "props": {
+    "asserted_by": "model",
+    "could_affect": true,
+    "evidence_sha256": "78a3514f49df917d23c007a976b2afaca16ae59ad2d99000d0659d2f718f069f",
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=dKEpA70WhXU",
+    "asserted_at": "2026-07-29T08:33:32.682000000+00:00",
+    "rationale": "An airport water supply failure is an operational incident that could disrupt operations and reduce revenue, lowering the interest cover ratio.",
+    "status": "proposed",
+    "direction": "decreases"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:52",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MAY_AFFECT",
+   "props": {
+    "asserted_by": "model",
+    "could_affect": true,
+    "evidence_sha256": "78a3514f49df917d23c007a976b2afaca16ae59ad2d99000d0659d2f718f069f",
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=dKEpA70WhXU",
+    "asserted_at": "2026-07-29T08:33:32.781000000+00:00",
+    "rationale": "Operational disruption may reduce cash flow available for debt repayment, increasing the senior debt ratio.",
+    "status": "proposed",
+    "direction": "increases"
    }
   }
  ]

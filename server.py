@@ -471,9 +471,10 @@ async def graph_attestation():
              m.direction AS direction, m.rationale AS rationale,
              m.validated_by AS validated_by, toString(m.validated_at) AS validated_at,
              m.human_note AS human_note,
+             m.evidence_url AS evidence_url, m.could_affect AS could_affect,
              c.covenant_code AS covenant, c.direction AS covenant_direction,
              co.code AS concept, d.legal_name AS deal, fac.governing_doc AS governing_doc
-      ORDER BY e.date""")
+      ORDER BY e.date DESC""")
 
 
 @app.post("/api/graph/query")

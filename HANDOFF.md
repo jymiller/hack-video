@@ -42,8 +42,8 @@ A four-page local app against the hackathon's vendor stack, plus a Neo4j graph w
 Credit systems consume a **controlled document supply chain** — things a lender is sent by
 somebody accountable. News footage is none of that. So sources are either `controlled` or
 `observed`; observed sources produce `Observation`s and **may never produce a `Fact` or reach
-a covenant**. The payoff is measured, not asserted: 96 links between video and concept across
-five broadcasters, and **zero reach either covenant concept**. The graph declines to bridge a
+a covenant**. The payoff is measured, not asserted: 106 links between video and concept across
+six broadcasters, and **zero reach either covenant concept**. The graph declines to bridge a
 gap that does not exist, and saying so is the product.
 
 Full model: [`docs/05-the-data-model.md`](docs/05-the-data-model.md).
@@ -62,7 +62,7 @@ Full model: [`docs/05-the-data-model.md`](docs/05-the-data-model.md).
 | Model choice | `zai-org/glm-5.2` — chosen on schema support and latency (~17s), **not accuracy**: across five models, accuracy differences sat inside run-to-run noise (`graph/bakeoff.py`) |
 | Strands | Adoptable. 166s from nothing to a verified tool-calling agent, no AWS creds |
 | IA TV News archive | Metadata-searchable, **media blocked** (403 video, 401 captions). Full-text search works and is genuinely useful |
-| Voice | macOS `say`, Daniel (en_GB), 41.8s rendered, offline |
+| Voice | macOS `say`, Daniel (en_GB), 42.2s rendered, offline |
 
 ---
 
@@ -110,7 +110,7 @@ graph/voice.py         narration, offline      graph/bakeoff.py   the model comp
 graph/strands_hello.py verified Strands agent  graph/dump/        full graph export (JSON)
 docs/05-the-data-model.md   the model     docs/06-the-run-of-show.md   the three minutes
 docs/explainers/*.html      six explainers, house style
-video/                 5 clips, 140MB, gitignored
+video/                 6 clips, 171MB, gitignored
 audio/                 rendered narration, gitignored
 attestations.json      the human decisions — this file is not rebuildable
 ```
@@ -121,7 +121,7 @@ attestations.json      the human decisions — this file is not rebuildable
 
 **Running services.** Neo4j in docker container `hackgraph` (bolt 7687, browser 7474,
 neo4j/hackvideo2026). The app on `:8000`. Both are disposable —
-`graph/dump/graph-export.json` holds all 141 nodes and 284 relationships.
+`graph/dump/graph-export.json` holds all 154 nodes and 375 relationships.
 
 ---
 
@@ -151,10 +151,18 @@ reproduced; it has been corrected to say what is actually true.
 
 **Technical, decided but not done:**
 
-- **Beat 4 of the demo has no data.** The model falling for the water outage genuinely
-  happened on 28 July, but that event has **no source in the corpus**, so under the URL-hash
-  rule it is no longer assessed. Fix: add a water-outage clip (candidates found 28 July),
-  index, link, let the model assess it. ~15 min. This was the next task when the session ended.
+- **Beat 4 has data again — but the rejection is unsigned.** A Firstpost clip on the water
+  outage (`dKEpA70WhXU`, 4:13, hash `78a3514f49df`) is indexed, linked and assessed.
+  `glm-5.2` proposed **could_affect: true** on `senior_icr`. It is wrong — no flight was
+  cancelled, the airport never closed, water was back in ~11 hours — which is exactly the
+  beat. **Only John can sign the rejection**; until he does the edge sits at `proposed` and
+  beat 4 shows an overreach with no human answer next to it. Command in
+  [`docs/06`](docs/06-the-run-of-show.md).
+- **No UK broadcaster put the water outage on YouTube.** BBC, Sky, ITV, GB News, LBC,
+  Guardian, Telegraph, Independent, Reuters, AP all swept and all empty; ITV ran text only.
+  Do not spend time re-searching. Five other candidates exist and all are small channels —
+  `bLprsy_tLs0` (LONDONER) is the best second source if corroboration is wanted, but it is a
+  10-subscriber channel and that is a credibility trade John should make deliberately.
 - **Covenant thresholds are `not_sourced`** and deliberately null. A You.com search surfaced
   the actual Gatwick Funding prospectus PDF on gatwickairport.com — that is the lead.
 - **No controlled-lane source is loaded.** Both lanes exist in the schema; only `observed` has

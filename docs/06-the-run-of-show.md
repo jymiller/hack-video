@@ -27,17 +27,38 @@ The graph is on screen for eleven seconds total and never animates.
 
 | Time | On screen | Voice | Why it earns the seconds |
 |---|---|---|---|
-| **0:00–0:25** | Video page. Type *"jobs created by the expansion"*. Hits from five broadcasters. Click rank 1 — **playhead jumps, Reeves says the line** | `01-open` | The event. Buys the room's attention before any claim is made |
+| **0:00–0:25** | Video page. Type *"jobs created by the expansion"*. Counter reads **10 hits · 4 sources**. Click rank 1 — **playhead jumps to 14.4s, Channel 4 says "two point two billion pounds"** | `01-open` | The event. Buys the room's attention before any claim is made |
 | **0:25–1:00** | Graph page → corroboration. Three publishers, same figure, linked | `02-corroborate` | Establishes the machine is reading, not tagging |
-| **1:00–1:40** | Graph page → coverage table. Green counts, then **0 · 0 · 0** on the covenant rows | `03-the-question`, `04-the-zero` | **The finding.** The contrast is the whole demo |
+| **1:00–1:40** | Graph page → coverage table. Green counts, then **0 · 0** on the two covenant rows | `03-the-question`, `04-the-zero` | **The finding.** The contrast is the whole demo |
 | **1:40–2:20** | Attestation panel. Model proposed. Human rejected. Signed, timestamped, kept | `05-the-model` | The part a credit audience believes |
 | **2:20–2:45** | Explainer, attestation path — one still frame | `06-close` | Lands it |
 | **2:45–3:00** | — | — | Slack. Something will run long |
 
+### Two corrections to beat 1, measured 29 July — decide these in rehearsal
+
+This row said *"Hits from five broadcasters. Click rank 1 — Reeves says the line"* until it
+was checked against a live search. Neither half was true, and neither is a regression from
+the sixth clip: Firstpost scores nowhere near the top ten, so this has been wrong in every
+rehearsal so far.
+
+- **Rank 1 is Channel 4 News at 14.4s**, a reporter in voiceover: *"…runway would cost two
+  point two billion pounds…"*. Reeves speaks only in the London Standard clip, which does
+  **not appear in the default top ten at all** — audio-only search puts her at rank 9, 59.0s.
+  The Channel 4 line is arguably the better cue: it lands the exact figure `01-open` says out
+  loud. If Reeves is wanted, she has to be clicked by name, not by rank.
+- **The counter reads `10 hits · 4 sources`**, not five — Channel 4, Runway Radar, SussexWorld,
+  TalkTV. The graph genuinely holds five publishers on `jobs_claimed`; this one query surfaces
+  four of them. `01-open` says *"Five broadcasters ran it"*, which is true of the corpus and
+  does not match the number on screen. **Either change the line or do not draw the eye to the
+  counter.** Left as-is deliberately: it is a stage decision, not a fact to correct.
+
+Beat 3 likewise said **0 · 0 · 0**. The table has **two** covenant-labelled zero rows
+(`cta_senior_icr`, `cta_senior_rar`) and four zero rows in all. Point at two.
+
 ### The line that has to land
 
-> *"Ninety-six links between video and concept, across five broadcasters. **Zero** reach a
-> covenant."*
+> *"One hundred and six links between video and concept, across six broadcasters. **Zero**
+> reach a covenant."*
 
 Said at **1:20**, over the coverage table. If only one sentence survives, it is that one.
 
@@ -79,6 +100,10 @@ Then, and only then, open in this order and **leave all four tabs open**:
 - [ ] Wifi off for one rehearsal. The video, the audio and the graph are all local; only
       TwelveLabs search needs the network. **Know what the demo looks like without it.**
 - [ ] Audio out of the laptop tested in the actual room, at the actual volume
+- [ ] **Hard-reload every tab** (`Cmd+Shift+R`). The browser caches `chassis.css` hard, and a
+      stale stylesheet at 17:15 would be a stupid way to lose
+- [ ] **macOS Appearance set to Light.** The app is light; the six explainers follow the system
+      setting, so on a dark-mode laptop beat 6 jumps from a white page to a black one
 
 ---
 
@@ -97,7 +122,8 @@ Then, and only then, open in this order and **leave all four tabs open**:
 ## The three questions to expect
 
 **"Isn't the answer just that your corpus is bad?"**
-No — and that is the point. The corpus is five real broadcasters on the actual event. News
+No — and that is the point. Five real broadcasters on the runway approval, one on the water
+outage, all of them on the actual events. News
 does not carry covenant data, and a system that pretended otherwise would be lying. The graph
 declining to bridge that gap *is* the product.
 
@@ -123,20 +149,35 @@ After 14:30 only three moves are legal: **SUBTRACT, SUBMIT, REHEARSE.**
 
 ---
 
-## Known gap in this script
+## Beat 4 — closed 29 July, and what is still owed
 
-**Beat 4 currently has no data.** The narration line `05-the-model` describes the model
-falling for the water outage and a human overruling it — which genuinely happened, on
-28 July, with deepseek. But the assertion was rebuilt under the URL-hash rule, and the water
-outage **has no source in the corpus**, so it is no longer assessed and the edge no longer
-exists.
+The water-outage clip is in the corpus: **Firstpost, 4:13, 27 July 2026**,
+`https://www.youtube.com/watch?v=dKEpA70WhXU`, hash `78a3514f49df`. Indexed, linked to the
+`Airport water supply failure` event, and assessed. `zai-org/glm-5.2` proposed:
 
-Two honest options:
+> `senior_icr` · **could_affect: true** · decreases —
+> *"An airport water supply failure is an operational incident that could disrupt operations
+> and reduce revenue, lowering the interest cover ratio."*
 
-1. **Add a water-outage clip** to the corpus (candidates were found on 28 July), index it,
-   link it, let the model assess it. Restores the beat as a live artifact. ~15 minutes.
-2. **Re-point beat 4** at the Northern Runway assertions, which do exist and are signed. The
-   story becomes "the model proposed, a human validated" — true, but weaker, because
-   agreement is less interesting than correction.
+**That is wrong, and checkably so.** No flight was cancelled, the airport never closed, and
+water was back across the campus inside about eleven hours. The model reacted to the loudest
+reading of the footage. This is the beat.
 
-Option 1 is better and it is a corpus decision, not a code one.
+**What is still owed: the rejection is unsigned.** The edge sits at `proposed`. Only John can
+move it, and until he does, beat 4 shows a live model overreach with no human answer beside
+it. Reject it on the graph page, or:
+
+```bash
+ID=$(curl -s http://127.0.0.1:8000/api/graph/assertions | python3 -c "import json,sys; print(next(a['id'] for a in json.load(sys.stdin) if a['event']=='Airport water supply failure' and a['covenant']=='senior_icr'))") && curl -s -X POST http://127.0.0.1:8000/api/graph/validate -H 'Content-Type: application/json' -d "{\"id\":\"$ID\",\"status\":\"rejected\",\"who\":\"john\",\"note\":\"no flights cancelled, no closure, water restored in about eleven hours\"}"
+```
+
+The id is a Neo4j element id and changes on every rebuild, so it is resolved live rather
+than written down.
+
+`senior_rar` carries the same overreach and can be rejected the same way, or left proposed —
+one rejection is enough for the beat, and two is not twice as good.
+
+**No search for a UK broadcaster clip is worth repeating.** BBC, Sky, ITV, GB News, LBC,
+Guardian, Telegraph, Independent, Reuters and AP were all swept: none put this event on
+YouTube. ITV ran text only. Firstpost is the only outlet with real editorial standing that
+did. That is a finding about the coverage, not a gap in the search.

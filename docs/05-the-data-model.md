@@ -232,9 +232,14 @@ MATCH (f:Fact)-[:TESTS]->(c:Covenant), (f)-[:FROM]->(src:Source)
 RETURN c.name, f.value, src.publisher, src.provenance_class;
 ```
 
-Query 3 returns **no observed sources at all**, by construction. The water outage — the
-loudest, most recent, most watched event in the corpus — has no path to a `Covenant` and
-simply does not appear.
+Query 3 returns **no observed sources at all**, by construction — no `Fact` exists for a
+covenant to be tested on. The water outage — the loudest, most recent, most watched event in
+the corpus — does not appear in it.
+
+Since 29 July the outage does have exactly one path to a `Covenant`: a `MAY_AFFECT` edge the
+model proposed, claiming the outage could lower interest cover. That edge is inert. It is not
+a `Fact`, it carries `status='proposed'`, and no computation reads it. **A model may gesture
+at a covenant. It may not reach one.**
 
 **The graph excludes the loud event by structure rather than by opinion.** That is a stronger
 argument than any narration, and it is the moment worth demoing.
@@ -245,7 +250,7 @@ argument than any narration, and it is the moment worth demoing.
 
 | Node | Public source |
 |---|---|
-| `Observation` | The five broadcast clips in `video/`, via TwelveLabs |
+| `Observation` | The six broadcast clips in `video/`, via TwelveLabs |
 | `Source` (controlled) | Gatwick Funding Ltd prospectus and supplement (London Stock Exchange RNS) |
 | `Fact` | Published Gatwick accounts, filed and public |
 | `Covenant` | Disclosed covenant terms in the bond documentation |

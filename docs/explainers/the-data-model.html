@@ -344,8 +344,8 @@
         <div class="nm">event_kind</div>
         <div class="vals"><span>regulatory_approval</span><span>legal_challenge</span>
           <span>financing_event</span><span>operational_incident</span></div>
-        <div class="d">The water outage is an <code>operational_incident</code> — and it is
-          the one with no path to a Covenant.</div>
+        <div class="d">The water outage is an <code>operational_incident</code> — and its
+          only path to a Covenant is a proposed edge no computation reads.</div>
       </div>
       <div class="row">
         <div class="nm">contradiction_basis</div>
@@ -394,9 +394,11 @@ RETURN c.name, f.value, src.publisher, src.provenance_class;</pre>
       <div class="verdict">
         <p class="big">Query 3 returns no observed sources at all</p>
         <p>The water outage — the loudest, most recent, most watched event in the corpus, and
-          the one on every news channel two days before we demo — has no path to a Covenant
-          and simply does not appear. The graph excludes it <strong>by structure rather than
-          by opinion</strong>. That is a stronger argument than any narration.</p>
+          the one on every news channel days before we demo — does not appear in it. Its only
+          path to a Covenant is a <code>MAY_AFFECT</code> edge the model proposed: not a Fact,
+          never read by a computation, inert until a human signs it. The graph excludes the
+          loud event <strong>by structure rather than by opinion</strong>. That is a stronger
+          argument than any narration.</p>
       </div>
     </div>
   </section>

@@ -8,8 +8,8 @@ from neo4j import GraphDatabase
 
 drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
 
-# Determined by reading the clips: all five report the runway approval. None of
-# them covers the court ruling, the prospectus, or the water outage.
+# Determined by reading the clips: five report the runway approval, one the water
+# supply failure. None covers the court ruling or the prospectus.
 REPORTS = {
     "Northern Runway development consent granted": [
         "https://www.youtube.com/watch?v=0rV_N6ktnRA",
@@ -17,6 +17,9 @@ REPORTS = {
         "https://www.youtube.com/watch?v=hXE6OY5ZLTU",
         "https://www.youtube.com/watch?v=vuM3pFQ4vZg",
         "https://www.youtube.com/watch?v=KLnxVX-m-Ng",
+    ],
+    "Airport water supply failure": [
+        "https://www.youtube.com/watch?v=dKEpA70WhXU",
     ],
 }
 
