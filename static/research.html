@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Research — You.com</title>
+<link rel="stylesheet" href="/chassis.css">
+</head>
+<body>
+
+<header>
+  <span class="brand">RESEARCH</span>
+  <nav>
+    <a href="/">Video</a>
+    <a href="/archive.html">Archive</a>
+    <a href="/research.html" class="on">Research</a>
+    <a href="/graph.html">Graph</a>
+  </nav>
+  <span style="flex:1"></span>
+  <span id="bal" class="muted"></span>
+  <span id="stat" class="vfd">READY</span>
+</header>
+
+<main style="grid-template-columns:330px 1fr">
+  <div class="col">
+    <div class="sect">
+      <h2><span class="lbl">Ask</span> <span class="muted">you.com · deep research</span></h2>
+      <div class="body stack">
+        <textarea id="q" style="min-height:110px"></textarea>
+        <select id="preset" onchange="usePreset()">
+          <option value="">— saved lines of enquiry —</option>
+          <option>What are the strongest contrarian and skeptical arguments against the Gatwick second runway expansion, on financial, debt and economic grounds rather than environmental?</option>
+          <option>How is Gatwick's £2.2bn northern runway being financed, and what does it do to Gatwick Funding Ltd's leverage and covenant headroom?</option>
+          <option>What are Gatwick's Senior ICR and Senior RAR covenant levels by year, and what headroom exists against them?</option>
+          <option>What have Moody's, S&amp;P and Fitch said about Gatwick's credit since the runway approval?</option>
+          <option>Who opposed the Gatwick northern runway, on what grounds, and what happened to each challenge?</option>
+          <option>What did the June 2026 High Court ruling on the Gatwick northern runway actually decide?</option>
+        </select>
+        <div class="row">
+          <button class="p" onclick="run()" style="flex:1">DEEP RESEARCH</button>
+          <button onclick="quick()" style="flex:1">QUICK SEARCH</button>
+        </div>
+        <div class="muted">Quick search returns ranked links in ~2s. Deep research
+          synthesises with citations and takes 30–120s.</div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <h2><span class="lbl">Jobs</span> <span class="muted">server-side · survive navigation</span></h2>
+      <div class="body" id="jobs"></div>
+    </div>
+
+    <div class="sect grow collapsed" id="logSect">
+      <h2>
+        <span><span class="lbl">API log</span> <span id="logCount" class="muted"></span></span>
+        <button class="sm" onclick="toggleLog()" id="logBtn">show</button>
+      </h2>
+      <div class="body" id="log" style="padding:0"></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="sect grow">
+      <h2><span class="lbl">Findings</span> <span id="meta" class="muted"></span></h2>
+      <div class="body">
+        <div id="out" class="muted">pick a line of enquiry, or write your own</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="/common.js"></script>
+<script>
+function usePreset() {
+  const v = $('preset').value;
+  if (v) { $('q').value = v; $('preset').value = ''; }
+}
+
+// minimal markdown: headings, bold, bullets, [[n]] citations
+function md(s) {
+  return s
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/^### (.*)$/gm, '<div style="color:var(--teal);font-weight:700;margin:14px 0 5px">$1</div>')
+    .replace(/^## (.*)$/gm,  '<div style="color:var(--teal);font-weight:700;margin:16px 0 6px">$1</div>')
+    .replace(/\*\*(.+?)\*\*/g, '<b style="color:var(--fg)">$1</b>')
+    .replace(/\[\[(\d+)\]\]/g, '<span class="badge">$1</span>')
+    .replace(/^---$/gm, '<hr style="border:0;border-top:1px solid var(--line);margin:12px 0">')
+    .replace(/^[-*] (.*)$/gm, '<div style="margin:3px 0 3px 12px">• $1</div>')
+    .replace(/\n{2,}/g, '<br>');
+}
+
+function renderResult(res, secs) {
+  $('meta').textContent = secs != null ? `${secs}s` : '';
+  $('out').className = '';
+  $('out').innerHTML = md(res.content || '');
+  if (res.citations && res.citations.length) {
+    const c = document.createElement('div');
+    c.style.marginTop = '16px';
+    c.innerHTML = '<div style="color:var(--teal);font-weight:700;margin-bottom:6px">SOURCES</div>' +
+      res.citations.map((x, i) => {
+        const url = x.url || x;
+        return `<div class="muted" style="margin:3px 0"><span class="badge">${i+1}</span>
+                <a href="${url}" target="_blank" style="color:var(--dim)">${url}</a></div>`;
+      }).join('');
+    $('out').appendChild(c);
+  }
+}
+
+// The job runs on the server. Leaving this page, or closing the tab, no longer
+// kills it — we simply reattach to whatever is still running when we come back.
+async function watch(jobId) {
+  localStorage.setItem('activeJob', jobId);
+  while (true) {
+    const j = await fetch(`/api/jobs/${jobId}`).then(r => r.json()).catch(() => null);
+    if (!j || j.error) { stat('job lost', 'var(--err)'); break; }
+    const el = ((j.finished_at || Date.now()/1000) - j.started_at).toFixed(0);
+    if (j.status === 'running') {
+      stat(`researching ${el}s — safe to switch tabs`, 'var(--warn)');
+      $('out').innerHTML = `<div class="muted">researching ${el}s…<br>
+        This runs on the server. You can move between pages and come back.</div>`;
+      await new Promise(r => setTimeout(r, 2000));
+      continue;
+    }
+    localStorage.removeItem('activeJob');
+    if (j.status === 'failed') {
+      $('out').innerHTML = `<div class="muted">${j.error}</div>`;
+      stat('failed', 'var(--err)');
+    } else {
+      renderResult(j.result, el);
+      localStorage.setItem('lastResult', JSON.stringify({ res: j.result, secs: el, q: j.query }));
+      stat(`done in ${el}s`, 'var(--ok)');
+      loadBal();
+    }
+    loadJobs();
+    break;
+  }
+}
+
+async function run() {
+  const q = $('q').value.trim();
+  if (!q) return stat('write a question', 'var(--err)');
+  const j = await api('POST', '/api/you/research', { query: q });
+  if (!j.job_id) return stat('could not start', 'var(--err)');
+  loadJobs();
+  watch(j.job_id);
+}
+
+async function loadJobs() {
+  const jobs = await fetch('/api/jobs').then(r => r.json()).catch(() => []);
+  const box = $('jobs');
+  if (!jobs.length) { box.innerHTML = '<div class="muted">no jobs yet</div>'; return; }
+  box.innerHTML = jobs.map(j => {
+    const el = ((j.finished_at || Date.now()/1000) - j.started_at).toFixed(0);
+    const b = j.status === 'running' ? 'b-run' : (j.status === 'done' ? 'b-ok' : 'b-err');
+    return `<div class="item" onclick="reopen('${j.id}')" title="${j.query}">
+      <span class="n">${j.query.slice(0, 44)}</span>
+      <span class="m"><span class="badge ${b}">${j.status} ${el}s</span></span></div>`;
+  }).join('');
+}
+
+async function reopen(id) {
+  const j = await fetch(`/api/jobs/${id}`).then(r => r.json());
+  $('q').value = j.query;
+  if (j.status === 'running') return watch(id);
+  if (j.result) renderResult(j.result, ((j.finished_at - j.started_at)).toFixed(0));
+  stat('reopened', 'var(--ok)');
+}
+
+async function quick() {
+  const q = $('q').value.trim();
+  if (!q) return stat('write a query', 'var(--err)');
+  stat('searching', 'var(--warn)');
+  const t0 = Date.now();
+  const j = await api('GET', `/api/you/search?q=${encodeURIComponent(q)}`);
+  const rows = j.results || [];
+  const secs = ((Date.now() - t0) / 1000).toFixed(1);
+  $('meta').textContent = `${rows.length} results · ${secs}s`;
+  $('out').className = '';
+  $('out').innerHTML = rows.length ? '' : '<div class="muted">no results</div>';
+  rows.forEach(r => {
+    const d = document.createElement('div');
+    d.className = 'hit';
+    d.innerHTML = `<div class="t">${(r.age || '').slice(0,10) || '—'}
+        <span class="src">${r.kind}</span></div>
+      <div style="margin:2px 0"><a href="${r.url}" target="_blank"
+        style="color:var(--fg);text-decoration:none">${r.title || r.url}</a></div>
+      <div class="x">${r.description || ''}</div>
+      <div class="muted" style="font-size:10px">${(r.url||'').slice(0,90)}</div>`;
+    $('out').appendChild(d);
+  });
+  stat(`${rows.length} results`, 'var(--ok)');
+}
+
+async function loadBal() {
+  const j = await api('GET', '/api/you/status');
+  $('bal').textContent = j.ok ? `balance ${j.balance}` : (j.error || 'key missing');
+  $('bal').style.color = j.ok ? 'var(--dim)' : 'var(--err)';
+}
+loadBal();
+loadJobs();
+
+// reattach on load: a running job resumes, otherwise restore the last result
+(function restore() {
+  const active = localStorage.getItem('activeJob');
+  if (active) { watch(active); return; }
+  const last = localStorage.getItem('lastResult');
+  if (last) {
+    try {
+      const { res, secs, q } = JSON.parse(last);
+      $('q').value = q || '';
+      renderResult(res, secs);
+      stat('restored last result', 'var(--dim)');
+    } catch {}
+  }
+})();
+</script>
+<script src="/credits.js"></script>
+<script>renderCredits(['you'], ['fastapi']);</script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Graph — Neo4j</title>
+<link rel="stylesheet" href="/chassis.css">
+<style>
+  .cov { width:100%; border-collapse:collapse; font-size:12px; }
+  .cov th { font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);
+            text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); font-weight:600; }
+  .cov td { padding:6px 8px; border-bottom:1px solid #23262c; }
+  .cov tr:hover td { background:var(--glass-2); }
+  .cov .n { text-align:right; font-weight:700; }
+  .zero { color:var(--err); }
+  .some { color:var(--ok); }
+  .lane { font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); }
+  .asrt { border:1px solid var(--line); border-left:3px solid var(--vfd); border-radius:0 4px 4px 0;
+          background:var(--glass-2); padding:9px 11px; margin-bottom:7px; }
+  .asrt.validated { border-left-color:var(--ok); }
+  .asrt.rejected  { border-left-color:var(--err); opacity:.72; }
+  .asrt .top { display:flex; gap:8px; align-items:center; margin-bottom:4px; }
+  .asrt .ev { font-weight:700; font-size:11.5px; flex:1; }
+  .asrt .why { color:#9aa1ab; font-size:11px; margin:4px 0 7px; line-height:1.45; }
+  .asrt .acts { display:flex; gap:6px; }
+  .who { font-size:10px; color:var(--dim); margin-top:5px; }
+
+  /* attestation path */
+  .att { border:1px solid var(--line); background:var(--glass-2); border-radius:4px;
+         padding:10px 12px; margin-bottom:8px; }
+  .att .flow { display:flex; align-items:stretch; gap:0; flex-wrap:wrap; }
+  .att .step { flex:1; min-width:96px; padding:7px 9px; border:1px solid var(--line);
+               background:var(--glass); position:relative; }
+  .att .step + .step { border-left:none; }
+  .att .step .k { font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); }
+  .att .step .v { font-size:11px; font-weight:700; margin-top:3px; word-break:break-word; }
+  .att .step.on   { border-color:var(--teal); background:#13302d; }
+  .att .step.on .v{ color:var(--teal); }
+  .att .step.no   { border-color:var(--err); background:#2a1214; }
+  .att .step.no .v{ color:var(--err); }
+  .att .step.wait { border-color:var(--vfd); background:#2a2006; }
+  .att .step.wait .v { color:var(--vfd); }
+  .att .arw { align-self:center; color:var(--dim); padding:0 5px; font-size:12px; }
+  .att .why { color:#9aa1ab; font-size:11px; margin-top:7px; line-height:1.45; }
+  .att .gate { font-size:10px; margin-top:7px; padding:5px 8px; border-radius:3px; }
+  .att .gate.blocked { background:#2a1214; color:var(--err); }
+  .att .gate.open    { background:#10321a; color:var(--ok); }
+
+  /* query results */
+  .qt { width:100%; border-collapse:collapse; font-size:11.5px; }
+  .qt th { position:sticky; top:0; background:#23262c; font-size:9px; letter-spacing:.1em;
+           text-transform:uppercase; color:var(--teal); text-align:left; padding:6px 9px;
+           border-bottom:1px solid var(--line); }
+  .qt td { padding:5px 9px; border-bottom:1px solid #23262c; vertical-align:top; }
+  .qt tr:hover td { background:var(--glass-2); }
+  .qt td.num { text-align:right; font-weight:700; }
+  .qt td.num.z { color:var(--err); }
+  .qt td.num.p { color:var(--ok); }
+  .qt .bar { display:inline-block; height:8px; background:var(--teal); vertical-align:middle;
+             margin-left:6px; border-radius:1px; min-width:1px; }
+  .qt td.nul { color:var(--dim); font-style:italic; }
+  .qwrap { max-height:340px; overflow:auto; border:1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand">GRAPH</span>
+  <nav>
+    <a href="/">Video</a><a href="/archive.html">Archive</a>
+    <a href="/research.html">Research</a><a href="/graph.html" class="on">Graph</a>
+  </nav>
+  <span style="flex:1"></span>
+  <span id="size" class="muted"></span>
+  <span id="stat" class="vfd">READY</span>
+</header>
+
+<main style="grid-template-columns:minmax(0,1fr) minmax(430px,0.95fr)">
+  <div class="col">
+    <div class="sect">
+      <h2><span class="lbl">Concept coverage</span>
+        <span class="muted">what video can and cannot reach</span></h2>
+      <div class="body"><table class="cov" id="cov"></table></div>
+    </div>
+
+    <div class="sect grow">
+      <h2><span class="lbl">Query</span> <span class="muted">read-only</span></h2>
+      <div class="body stack">
+        <select id="preset" onchange="usePreset()">
+          <option value="">— queries in the vocabulary —</option>
+        </select>
+        <textarea id="cy" style="min-height:74px"></textarea>
+        <button class="p" onclick="runQ()" style="width:100%">RUN</button>
+        <div id="qout" class="muted">pick a query</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="sect grow">
+      <h2><span class="lbl">Attestation path</span> <span class="muted">model proposes · human decides</span></h2>
+      <div class="body">
+        <div class="muted" style="margin-bottom:9px">
+          Proposed edges are inert — no computation reads them. Rejected edges are kept, never deleted.
+        </div>
+        <div id="asserts"></div>
+      </div>
+    </div>
+    <div class="sect collapsed" id="logSect">
+      <h2><span><span class="lbl">API log</span> <span id="logCount" class="muted"></span></span>
+        <button class="sm" onclick="toggleLog()" id="logBtn">show</button></h2>
+      <div class="body" id="log" style="padding:0"></div>
+    </div>
+  </div>
+</main>
+
+<script src="/common.js"></script>
+<script>
+const QUERIES = [
+  ['Can any video evidence reach a covenant?',
+   `MATCH (c:Covenant)-[:MEASURED_BY]->(co:Concept)
+OPTIONAL MATCH (seg:Segment)-[:CANDIDATE_FOR]->(co)
+RETURN c.covenant_code AS covenant, co.code AS concept,
+       count(seg) AS video_segments`],
+  ['Which publisher reaches which concept',
+   `MATCH (src:Source)<-[:PART_OF]-(:Segment)-[:CANDIDATE_FOR]->(co:Concept)
+RETURN src.publisher AS publisher, co.code AS concept, count(*) AS segments
+ORDER BY publisher, segments DESC`],
+  ['Where did a claim come from — with timecode',
+   `MATCH (seg:Segment)-[e:CANDIDATE_FOR]->(co:Concept {code:'scheme_cost'})
+MATCH (seg)-[:PART_OF]->(src:Source)
+RETURN src.publisher AS publisher, seg.start AS start, seg.end AS end,
+       e.probe AS found_by, left(seg.transcript,80) AS transcript
+ORDER BY e.rank LIMIT 8`],
+  ['The deal lane — who wrote the covenants',
+   `MATCH (d:Deal)-[:HAS_FACILITY]->(f:Facility)-[:GOVERNED_BY]->(c:Covenant)
+RETURN d.legal_name AS deal, f.governing_doc AS governing_doc,
+       c.covenant_code AS covenant, c.direction AS direction,
+       c.threshold_status AS threshold`],
+  ['What the model proposed vs what a human decided',
+   `MATCH (e:Event)-[m:MAY_AFFECT]->(c:Covenant)
+RETURN e.name AS event, c.covenant_code AS covenant, m.asserted_by AS by,
+       m.status AS status, m.validated_by AS signed_off_by`],
+  ['The vocabulary, from the graph itself',
+   `MATCH (v:Vocabulary)-[:HAS_TERM]->(t:Term)
+RETURN v.name AS vocabulary, collect(t.value) AS terms`],
+];
+
+function usePreset() {
+  const i = $('preset').value;
+  if (i !== '') { $('cy').value = QUERIES[i][1]; $('preset').value = ''; }
+}
+QUERIES.forEach((q,i) => {
+  const o = document.createElement('option'); o.value = i; o.textContent = q[0];
+  $('preset').appendChild(o);
+});
+
+async function loadStats() {
+  const j = await api('GET', '/api/graph/stats');
+  if (j.error) { stat('neo4j down', 'var(--err)'); $('size').textContent = j.error; return; }
+  const n = j.nodes.reduce((a,x)=>a+x.n,0), e = j.edges.reduce((a,x)=>a+x.n,0);
+  $('size').textContent = `${n} nodes · ${e} edges`;
+  stat('connected', 'var(--ok)');
+}
+
+async function loadCoverage() {
+  const rows = await api('GET', '/api/graph/coverage');
+  $('cov').innerHTML = `<tr><th>Concept</th><th>Unit</th><th>Reachable by</th>
+    <th class="n">Segments</th><th class="n">Sources</th><th>Covenant</th></tr>` +
+    rows.map(r => `<tr>
+      <td><b>${r.concept}</b></td>
+      <td class="lane">${r.unit}</td>
+      <td class="lane">${r.lane}</td>
+      <td class="n ${r.segments ? 'some' : 'zero'}">${r.segments}</td>
+      <td class="n ${r.sources ? 'some' : 'zero'}">${r.sources}</td>
+      <td class="lane">${r.covenant || ''}</td></tr>`).join('');
+}
+
+async function loadAsserts() {
+  const rows = await api('GET', '/api/graph/attestation');
+  $('asserts').innerHTML = rows.length ? '' : '<div class="muted">no assertions yet</div>';
+  rows.forEach(r => {
+    // the five stations of the attestation path
+    const decided = r.status !== 'proposed';
+    const ok = r.status === 'validated';
+    const humanCls = !decided ? 'wait' : (ok ? 'on' : 'no');
+    const humanVal = !decided ? 'awaiting' : `${r.status}<br><span style="font-weight:400;font-size:9.5px">${r.validated_by || ''}</span>`;
+
+    const d = document.createElement('div');
+    d.className = 'att';
+    d.innerHTML = `
+      <div class="flow">
+        <div class="step">
+          <div class="k">Event</div><div class="v">${r.event}</div>
+          <div class="k" style="margin-top:4px">${r.date} · ${r.event_kind}</div>
+        </div>
+        <span class="arw">▸</span>
+        <div class="step">
+          <div class="k">Asserted by</div><div class="v">${r.asserted_by}</div>
+          <div class="k" style="margin-top:4px">${(r.model || '').split('/').pop() || ''}</div>
+        </div>
+        <span class="arw">▸</span>
+        <div class="step ${humanCls}">
+          <div class="k">Human decision</div><div class="v">${humanVal}</div>
+          ${r.validated_at ? `<div class="k" style="margin-top:4px">${r.validated_at.slice(0,16).replace('T',' ')}</div>` : ''}
+        </div>
+        <span class="arw">▸</span>
+        <div class="step ${ok ? 'on' : ''}">
+          <div class="k">Covenant</div><div class="v">${r.covenant}</div>
+          <div class="k" style="margin-top:4px">must stay ${r.covenant_direction}</div>
+        </div>
+      </div>
+      <div class="why">${r.rationale || ''}</div>
+      ${r.human_note ? `<div class="why" style="color:var(--err)">Human: ${r.human_note}</div>` : ''}
+      <div class="gate ${ok ? 'open' : 'blocked'}">
+        ${ok ? '✓ readable by a computation — a human signed it'
+             : (decided ? '✕ rejected — kept for the record, read by nothing'
+                        : '⊘ proposed — inert until a human decides')}
+      </div>
+      ${!decided ? `<div class="acts" style="margin-top:8px">
+           <button class="p sm" onclick="decide('${r.id}','validated')">✓ validate</button>
+           <button class="sm" onclick="decide('${r.id}','rejected')">✕ reject</button>
+         </div>` : ''}`;
+    $('asserts').appendChild(d);
+  });
+}
+
+async function decide(id, status) {
+  stat(status === 'validated' ? 'validating' : 'rejecting', 'var(--warn)');
+  await api('POST', '/api/graph/validate', { id, status, who: 'john' });
+  stat(status, status === 'validated' ? 'var(--ok)' : 'var(--err)');
+  loadAsserts();
+}
+
+function cell(v, col, max) {
+  if (v === null || v === undefined) return `<td class="nul">null</td>`;
+  if (Array.isArray(v))
+    return `<td>${v.map(x=>`<span class="badge">${x}</span>`).join(' ')}</td>`;
+  if (typeof v === 'number') {
+    const w = max > 0 ? Math.round((v / max) * 46) : 0;
+    const cls = v === 0 ? 'z' : 'p';
+    return `<td class="num ${cls}">${v}${v > 0 ? `<span class="bar" style="width:${w}px"></span>` : ''}</td>`;
+  }
+  const s = String(v);
+  if (/^(validated|proposed|rejected|observed|controlled)$/.test(s)) {
+    const b = s === 'validated' ? 'b-ok' : (s === 'rejected' ? 'b-err' :
+              (s === 'proposed' ? 'b-run' : ''));
+    return `<td><span class="badge ${b}">${s}</span></td>`;
+  }
+  return `<td>${s.length > 90 ? s.slice(0,90) + '…' : s}</td>`;
+}
+
+async function runQ() {
+  const j = await api('POST', '/api/graph/query', { cypher: $('cy').value });
+  const out = $('qout');
+  out.className = '';
+  if (j.error) { out.innerHTML = `<span style="color:var(--err)">${j.error}</span>`; return; }
+  const rows = j.rows || [];
+  if (!rows.length) { out.textContent = '(no rows)'; stat('0 rows', 'var(--dim)'); return; }
+  const cols = Object.keys(rows[0]);
+  // per-column max, so bars are scaled within their own column
+  const maxes = {};
+  cols.forEach(c => {
+    const nums = rows.map(r => r[c]).filter(v => typeof v === 'number');
+    maxes[c] = nums.length ? Math.max(...nums) : 0;
+  });
+  out.innerHTML = `<div class="qwrap"><table class="qt">
+    <thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(r=>`<tr>${cols.map(c=>cell(r[c], c, maxes[c])).join('')}</tr>`).join('')}</tbody>
+    </table></div>`;
+  stat(`${rows.length} rows`, 'var(--ok)');
+}
+
+loadStats(); loadCoverage(); loadAsserts();
+</script>
+<script src="/credits.js"></script>
+<script>renderCredits(['neo4j'], ['fastapi']);</script>
+</body>
+</html>

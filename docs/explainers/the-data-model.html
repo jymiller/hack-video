@@ -1,0 +1,444 @@
+<title>The Data Model — Admitting Observed Evidence</title>
+
+<style>
+  :root {
+    --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA;
+    --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16;  --hot-bg:#F8E5DC;
+    --warn:#8A6512; --warn-bg:#F6EDD8;
+    --disp:"Futura","Avenir Next Condensed","Avenir Next",system-ui,sans-serif;
+    --body:"Avenir Next","Avenir",-apple-system,"Segoe UI",sans-serif;
+    --mono:"SF Mono","IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+      --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+      --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  }
+  :root[data-theme="dark"] { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+    --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+    --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  :root[data-theme="light"] { --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA; --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16; --hot-bg:#F8E5DC; --warn:#8A6512; --warn-bg:#F6EDD8; }
+
+  * { box-sizing:border-box; }
+  .sheet { background:var(--ground); color:var(--ink); font-family:var(--body);
+           font-size:16.5px; line-height:1.6; padding:0 20px 96px; }
+  .wrap { max-width:920px; margin:0 auto; }
+  .col { max-width:64ch; }
+
+  .mast { padding:52px 0 22px; border-bottom:3px solid var(--ink); margin-bottom:32px; }
+  .strip { font-family:var(--mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+           color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px 18px; margin-bottom:20px; }
+  h1 { font-family:var(--disp); font-size:clamp(32px,5.6vw,54px); line-height:1.04; font-weight:500;
+       letter-spacing:.005em; margin:0 0 16px; text-transform:uppercase; text-wrap:balance; }
+  .standfirst { font-size:19px; line-height:1.5; color:var(--ink-soft); margin:0; max-width:57ch; }
+
+  section { margin-top:56px; }
+  h2 { font-family:var(--disp); font-size:26px; font-weight:500; letter-spacing:.02em;
+       text-transform:uppercase; margin:0 0 14px; }
+  h3 { font-family:var(--disp); font-size:19px; font-weight:500; letter-spacing:.02em;
+       text-transform:uppercase; margin:30px 0 8px; }
+  .kicker { font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+            color:var(--ink-soft); margin:0 0 9px; }
+  p { margin:0 0 15px; }
+  strong { font-weight:600; }
+  code { font-family:var(--mono); font-size:.86em; background:var(--rule-soft); padding:1px 5px; }
+
+  .admit { border-left:4px solid var(--warn); background:var(--warn-bg); padding:18px 20px; margin-top:22px; }
+  .admit b { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+             color:var(--warn); display:block; margin-bottom:8px; font-weight:600; }
+  .admit p { margin:0 0 12px; font-size:16px; }
+  .admit p:last-child { margin:0; }
+
+  .verdict { border:3px solid var(--edge); background:var(--card); padding:26px 28px; margin-top:24px; }
+  .verdict .big { font-family:var(--disp); font-size:clamp(23px,3.5vw,33px); line-height:1.16;
+                  font-weight:500; text-transform:uppercase; letter-spacing:.01em; margin:0 0 12px;
+                  color:var(--edge); text-wrap:balance; }
+  .verdict p { margin:0; font-size:17px; }
+
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--rule);
+         border:1px solid var(--rule); margin-top:24px; }
+  @media (max-width:720px) { .two { grid-template-columns:1fr; } }
+  .two > div { background:var(--card); padding:22px 24px; }
+  .two h4 { font-family:var(--disp); font-size:21px; font-weight:500; text-transform:uppercase;
+            letter-spacing:.02em; margin:0 0 4px; }
+  .two .when { font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:var(--ink-soft);
+               display:block; margin-bottom:14px; }
+  .two dl { margin:0; display:grid; gap:9px; }
+  .two dt { font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
+            color:var(--ink-soft); }
+  .two dd { margin:2px 0 0; font-size:15.5px; line-height:1.4; }
+  .two .tag { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+              padding:3px 8px; display:inline-block; margin-top:14px; font-weight:600; }
+  .ctrl .tag { background:var(--edge-bg); color:var(--edge); }
+  .obs .tag  { background:var(--hot-bg);  color:var(--hot); }
+
+  .trapbox { border:3px solid var(--hot); background:var(--card); padding:26px 28px; margin-top:26px; }
+  .trapbox b { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+               color:var(--hot); display:block; margin-bottom:10px; font-weight:600; }
+  .trapbox .ob { font-family:var(--disp); font-size:clamp(19px,2.7vw,24px); line-height:1.3;
+                 font-weight:500; margin:0 0 6px; }
+  .trapbox .ri { font-family:var(--disp); font-size:clamp(19px,2.7vw,24px); line-height:1.3;
+                 font-weight:500; margin:0 0 14px; color:var(--hot); }
+  .trapbox p.x { margin:0; font-size:16px; }
+
+  .chain { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:18px;
+           border:1px solid var(--rule); background:var(--card); margin-top:22px;
+           font-family:var(--mono); font-size:12px; overflow-x:auto; }
+  .chain .n { border:1px solid var(--edge); color:var(--edge); background:var(--edge-bg);
+              padding:7px 10px; white-space:nowrap; font-weight:600; }
+  .chain .n.end { border-color:var(--hot); color:var(--hot); background:var(--hot-bg); }
+  .chain .n.soft { border-color:var(--rule); color:var(--ink-soft); background:var(--rule-soft); }
+  .chain .r { color:var(--ink-soft); font-size:11px; }
+
+  .tbl { width:100%; border-collapse:collapse; margin-top:22px; background:var(--card);
+         border:1px solid var(--rule); font-size:15px; }
+  .tbl th { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+            text-align:left; color:var(--ink-soft); padding:11px 14px; border-bottom:2px solid var(--rule);
+            font-weight:600; }
+  .tbl td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:top; }
+  .tbl tr:last-child td { border-bottom:none; }
+  .tbl td.m { font-family:var(--mono); font-size:12.5px; white-space:nowrap; }
+  .scroll { overflow-x:auto; }
+
+  pre { font-family:var(--mono); font-size:12.5px; line-height:1.55; background:var(--card);
+        border:1px solid var(--rule); padding:18px; overflow-x:auto; margin-top:22px; }
+  pre .c { color:var(--ink-soft); }
+  pre .k { color:var(--edge); font-weight:600; }
+  pre .h { color:var(--hot); font-weight:600; }
+
+  .vocab { margin-top:22px; border:1px solid var(--rule); background:var(--card); }
+  .vocab .row { padding:14px 18px; border-bottom:1px solid var(--rule-soft); }
+  .vocab .row:last-child { border-bottom:none; }
+  .vocab .nm { font-family:var(--mono); font-size:12px; font-weight:600; color:var(--edge); }
+  .vocab .vals { font-family:var(--mono); font-size:11.5px; color:var(--ink); margin-top:6px;
+                 display:flex; flex-wrap:wrap; gap:6px; }
+  .vocab .vals span { border:1px solid var(--rule); padding:2px 7px; background:var(--rule-soft); }
+  .vocab .d { font-size:14.5px; color:var(--ink-soft); margin-top:7px; line-height:1.45; }
+
+  .ask { border:1px solid var(--rule); background:var(--card); padding:20px 24px; margin-top:20px; }
+  .ask h4 { font-family:var(--disp); font-size:18px; font-weight:500; text-transform:uppercase;
+            letter-spacing:.02em; margin:0 0 8px; }
+  .ask p { margin:0; font-size:15.5px; color:var(--ink-soft); }
+  .ask .q { color:var(--hot); font-weight:600; }
+
+  .foot { margin-top:64px; padding-top:20px; border-top:1px solid var(--rule);
+          font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+          color:var(--ink-soft); }
+</style>
+
+<div class="sheet">
+<div class="wrap">
+
+  <header class="mast">
+    <div class="strip">
+      <span>Data model</span>
+      <span>30 July 2026</span>
+      <span>Public sources only</span>
+      <span>Proposal — not built</span>
+    </div>
+    <h1>Admitting evidence nobody vouched for</h1>
+    <p class="standfirst">A credit graph is built for documents somebody is accountable for.
+      News footage is not one of those. This is how the hackathon graph lets it in without
+      letting it lie.</p>
+  </header>
+
+  <section class="col">
+    <p class="kicker">Scope</p>
+    <h2>What this is, and is not</h2>
+    <p>Built entirely from <strong>public sources</strong> — broadcast clips, the bond
+      prospectus, filed accounts, and matters of court record. Everything on this page can be
+      checked by a stranger.</p>
+    <div class="admit">
+      <b>Deliberately excluded</b>
+      <p>Nothing here reproduces Enid's internal schema, its vocabularies, or its
+        trust-grading scheme. The use case and the business thinking are shared by
+        agreement; the mechanisms are not, and are not on this page.</p>
+      <p>An earlier draft did contain internal material and was removed before any commit.</p>
+    </div>
+  </section>
+
+  <section class="col">
+    <p class="kicker">The question</p>
+    <h2>Not "video in a graph"</h2>
+    <p>Credit systems are built around a <strong>controlled document supply chain</strong> —
+      things the lender is sent. A signed agreement. Audited accounts. A compliance
+      certificate. Every one arrives from a known party who is accountable if it is wrong.</p>
+    <p><strong>News footage is none of those things.</strong> Nobody sent it. Nobody is on the
+      hook for it. It was not produced for the lender and carries no obligation to be right.</p>
+    <div class="verdict">
+      <p class="big">How does a credit graph admit external, uncontrolled observation without
+        letting it contaminate the record?</p>
+      <p>That is the contribution. It is worth building because the answer is not obvious, and
+        because a system that has only ever consumed controlled documents has never had to
+        answer it.</p>
+    </div>
+  </section>
+
+  <section class="col">
+    <p class="kicker">Why bother</p>
+    <h2>Observed evidence is early</h2>
+    <p>The controlled document is authoritative and <strong>late</strong>. Accounts reflecting
+      the runway decision arrive many months after the decision. The broadcast is
+      unauthoritative and <strong>immediate</strong> — it exists the same afternoon.</p>
+    <div class="chain">
+      <span class="n soft">Sep 2025 · approval on the news</span>
+      <span class="r">→</span>
+      <span class="n soft">Jun 2026 · court ruling on the news</span>
+      <span class="r">→ … months …  →</span>
+      <span class="n end">accounts reflecting the capex</span>
+    </div>
+    <p style="margin-top:22px"><strong>The lead time is the product.</strong> An observed
+      signal cannot change a covenant test. It can tell you <em>which covenant test to go and
+      look at</em>, months before the document that settles it exists.</p>
+  </section>
+
+  <section>
+    <div class="col">
+      <p class="kicker">The one axis</p>
+      <h2>Controlled and observed</h2>
+      <p>Two values, not a ladder. A finer ranking is a different conversation and is not
+        needed to make Thursday's point.</p>
+    </div>
+    <div class="two">
+      <div class="ctrl">
+        <h4>Controlled</h4>
+        <span class="when">Accountable · authoritative · late</span>
+        <dl>
+          <dt>Who made it</dt>
+          <dd>A party in the deal's document chain</dd>
+          <dt>Examples</dt>
+          <dd>Filed accounts, bond prospectus, RNS announcement, court judgment</dd>
+          <dt>Produces</dt>
+          <dd>A <code>Fact</code></dd>
+          <dt>May test a covenant</dt>
+          <dd>Yes</dd>
+        </dl>
+        <span class="tag">may become fact</span>
+      </div>
+      <div class="obs">
+        <h4>Observed</h4>
+        <span class="when">Unwarranted · weak · immediate</span>
+        <dl>
+          <dt>Who made it</dt>
+          <dd>A third party with no duty to the lender</dd>
+          <dt>Examples</dt>
+          <dd>Broadcast news, rally footage, commentary, web article</dd>
+          <dt>Produces</dt>
+          <dd>An <code>Observation</code></dd>
+          <dt>May test a covenant</dt>
+          <dd>Never</dd>
+        </dl>
+        <span class="tag">never becomes fact</span>
+      </div>
+    </div>
+    <div class="col">
+      <div class="trapbox">
+        <b>The rule, and it is enforceable</b>
+        <p class="ob">An observed source can never produce a Fact.</p>
+        <p class="ri">It produces only an Observation.</p>
+        <p class="x">An Observation may corroborate, contradict, or flag a Fact. It may never
+          become one, and it may never be what a covenant test reads. The integrity check
+          returns zero rows or the graph is wrong.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <p class="kicker">Structure</p>
+      <h2>Nodes</h2>
+      <p><code>Segment</code> is separate from <code>Source</code> on purpose. An Observation
+        evidenced by "Channel 4 News, somewhere" is worthless. One evidenced by "Channel 4
+        News at 4:31–4:38" seeks the playhead to the proof. <strong>The timecode is the
+        product.</strong></p>
+    </div>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Node</th><th>What it is</th><th>Key properties</th></tr>
+      <tr><td class="m">Source</td><td>One retrievable thing</td>
+          <td class="m">provenance_class, kind, url, publisher, published_at, sha256</td></tr>
+      <tr><td class="m">Segment</td><td>A timecoded span of video</td>
+          <td class="m">video_id, start, end, transcript</td></tr>
+      <tr><td class="m">Observation</td><td>An assertion from an observed source</td>
+          <td class="m">text, value, unit, currency, confidence, modality</td></tr>
+      <tr><td class="m">Fact</td><td>An assertion from a controlled source</td>
+          <td class="m">value, unit, currency, as_of, effective_date</td></tr>
+      <tr><td class="m">Concept</td><td>What is measured or named</td>
+          <td class="m">name, aliases[], kind</td></tr>
+      <tr><td class="m">Event</td><td>Something that happened on a date</td>
+          <td class="m">name, date, kind</td></tr>
+      <tr><td class="m">Covenant</td><td>A tested financial condition</td>
+          <td class="m">name, threshold, direction, test_dates[]</td></tr>
+      <tr><td class="m">ExtractionRun</td><td>One model pass that produced nodes</td>
+          <td class="m">model, version, prompt_hash, tokens, cost_usd</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <h2>Edges</h2>
+      <p>Note the asymmetry at the bottom. An Event <strong>may affect</strong> a Covenant — a
+        judgement, hedged, reversible. A Fact <strong>tests</strong> it — a computation.
+        Different verbs because they carry different weight, and blurring them is how a demo
+        starts lying.</p>
+    </div>
+<pre><span class="c">// evidence</span>
+(:Segment)-[:<span class="k">PART_OF</span>]->(:Source)
+(:Observation)-[:<span class="k">CITES</span> {start, end, bbox, modality}]->(:Segment)
+(:Observation)-[:<span class="k">FROM</span>]->(:Source)
+(:Fact)-[:<span class="k">FROM</span>]->(:Source)            <span class="c">// controlled only — enforced</span>
+
+<span class="c">// meaning</span>
+(:Observation|:Fact)-[:<span class="k">OF_CONCEPT</span>]->(:Concept)
+(:Observation)-[:<span class="h">CORROBORATES</span>|<span class="h">CONTRADICTS</span> {basis}]->(:Observation|:Fact)
+(:Observation|:Fact)-[:<span class="k">ABOUT</span>]->(:Event)
+
+<span class="c">// consequence — note the two different verbs</span>
+(:Event)-[:<span class="h">MAY_AFFECT</span> {direction, rationale}]->(:Covenant)   <span class="c">// judgement</span>
+(:Fact)-[:<span class="k">TESTS</span>]->(:Covenant)                          <span class="c">// computation</span>
+
+<span class="c">// audit</span>
+(:Observation|:Fact)-[:<span class="k">PRODUCED_BY</span>]->(:ExtractionRun)</pre>
+  </section>
+
+  <section>
+    <div class="col">
+      <p class="kicker">Reference data</p>
+      <h2>The vocabularies to agree</h2>
+      <p>Small, closed, and the part worth arguing about before anything is built. These are
+        proposals — every one is John's call.</p>
+    </div>
+    <div class="vocab">
+      <div class="row">
+        <div class="nm">provenance_class</div>
+        <div class="vals"><span>controlled</span><span>observed</span></div>
+        <div class="d">The load-bearing one. Everything else follows from it.</div>
+      </div>
+      <div class="row">
+        <div class="nm">source_kind</div>
+        <div class="vals"><span>broadcast_news</span><span>rally_footage</span><span>commentary</span>
+          <span>web_article</span><span>prospectus</span><span>accounts</span><span>rns_announcement</span>
+          <span>court_judgment</span></div>
+        <div class="d">First four are always observed; last four always controlled. The demo
+          needs no more than these eight.</div>
+      </div>
+      <div class="row">
+        <div class="nm">modality</div>
+        <div class="vals"><span>spoken</span><span>on_screen_text</span><span>visual</span></div>
+        <div class="d">How the evidence appeared in the video. See the warning below — this
+          is the field the model gets wrong.</div>
+      </div>
+      <div class="row">
+        <div class="nm">concept</div>
+        <div class="vals"><span>scheme_cost</span><span>jobs_claimed</span><span>passenger_volume</span>
+          <span>senior_debt_ratio</span><span>senior_icr</span><span>capex</span></div>
+        <div class="d">Six is enough for Thursday. Each carries an alias list — "London
+          Gatwick", "Gatwick Airport Ltd", "LGW" resolve to one Concept.</div>
+      </div>
+      <div class="row">
+        <div class="nm">event_kind</div>
+        <div class="vals"><span>regulatory_approval</span><span>legal_challenge</span>
+          <span>financing_event</span><span>operational_incident</span></div>
+        <div class="d">The water outage is an <code>operational_incident</code> — and it is
+          the one with no path to a Covenant.</div>
+      </div>
+      <div class="row">
+        <div class="nm">contradiction_basis</div>
+        <div class="vals"><span>methodology</span><span>timing</span><span>scope</span><span>arithmetic</span></div>
+        <div class="d">Why two sources disagree. Without this, a contradiction edge is just a
+          shrug.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col">
+    <p class="kicker">Measured, not assumed</p>
+    <h2>The model lies about modality</h2>
+    <p><code>modality</code> is the field the whole demo turns on, and it is the one the video
+      model cannot be trusted to fill.</p>
+    <div class="admit">
+      <b>Observed on 28 July, on our own corpus</b>
+      <p>Asked to attribute each figure to speech or on-screen text, Pegasus labelled
+        demonstrably <em>spoken</em> content as on-screen text — then asserted that
+        <em>nothing at all</em> was spoken aloud in the clip. The search transcript proves
+        otherwise.</p>
+      <p>Derive <code>modality</code> by cross-checking the search transcript against a
+        separate OCR-focused prompt. Record <code>confidence</code> honestly. Never take one
+        prompt's word for it.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <p class="kicker">The payoff</p>
+      <h2>The query that makes the case</h2>
+      <p>Three queries earn their place. The third is the demo.</p>
+    </div>
+<pre><span class="c">// 1 · Where did this number come from, and may we believe it?</span>
+MATCH (o:Observation)-[c:CITES]->(s:Segment)-[:PART_OF]->(src:Source)
+WHERE o.value = 14000
+RETURN src.publisher, src.provenance_class, s.start, s.end, c.modality;
+
+<span class="c">// 2 · What do our sources disagree about?</span>
+MATCH (a)-[x:CONTRADICTS]-(b) RETURN a.text, x.basis, b.text;
+
+<span class="c">// 3 · What is the covenant actually tested on?</span>
+MATCH (f:Fact)-[:TESTS]->(c:Covenant), (f)-[:FROM]->(src:Source)
+RETURN c.name, f.value, src.publisher, src.provenance_class;</pre>
+    <div class="col">
+      <div class="verdict">
+        <p class="big">Query 3 returns no observed sources at all</p>
+        <p>The water outage — the loudest, most recent, most watched event in the corpus, and
+          the one on every news channel two days before we demo — has no path to a Covenant
+          and simply does not appear. The graph excludes it <strong>by structure rather than
+          by opinion</strong>. That is a stronger argument than any narration.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <p class="kicker">Decisions</p>
+      <h2>What I need from you</h2>
+      <p>None of this gets built until these are settled.</p>
+    </div>
+    <div class="ask">
+      <h4>1 · Are two provenance classes enough?</h4>
+      <p><span class="q">controlled / observed</span> is deliberately coarse so that nothing
+        finer-grained is implied or exposed. If it is too coarse to be interesting, say so and
+        we find a public-domain way to add resolution.</p>
+    </div>
+    <div class="ask">
+      <h4>2 · Which concepts, and do any come across?</h4>
+      <p>Six proposed above, invented for this corpus. <span class="q">You flagged concepts as
+        possibly reusable</span> — that is a decision to take on its own, and I have not acted
+        on it.</p>
+    </div>
+    <div class="ask">
+      <h4>3 · Which public filing supplies the covenant figures?</h4>
+      <p>The prospectus, the supplement, or the filed accounts. <span class="q">All public,
+        none gathered yet.</span> This is the last real dependency before the graph can hold
+        anything true.</p>
+    </div>
+    <div class="ask">
+      <h4>4 · Who asserts MAY_AFFECT?</h4>
+      <p>A human or a model. <span class="q">Leaning human</span> — a model guessing at
+        covenant impact in front of a judge is exactly the thing that should not be
+        automated.</p>
+    </div>
+    <div class="ask">
+      <h4>5 · Does Thursday's graph stand alone?</h4>
+      <p>Standalone Neo4j, nothing written back anywhere. <span class="q">Recommended</span>,
+        and it keeps the whole question of what transfers for a calmer day than this one.</p>
+    </div>
+  </section>
+
+  <p class="foot">Proposal · 28 July 2026 · nothing built · public sources only</p>
+
+</div>
+</div>

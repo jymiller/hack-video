@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Internet Archive Playground</title>
+<link rel="stylesheet" href="/chassis.css">
+</head>
+<body>
+
+<header>
+  <span class="brand">ARCHIVE</span>
+  <nav>
+    <a href="/">Video</a>
+    <a href="/archive.html" class="on">Archive</a>
+    <a href="/research.html">Research</a>
+    <a href="/graph.html">Graph</a>
+  </nav>
+  <span style="flex:1"></span>
+  <span id="stat" class="vfd">READY</span>
+</header>
+
+<main style="grid-template-columns:340px 1fr">
+  <div class="col">
+    <div class="sect">
+      <h2><span class="lbl">Query</span></h2>
+      <div class="body stack">
+        <input id="q" placeholder="gatwick runway" onkeydown="if(event.key==='Enter')go()">
+        <div class="row">
+          <select id="mode" style="flex:1">
+            <option value="meta">metadata search — titles, dates, collections</option>
+            <option value="fts">full text — inside OCR'd docs &amp; transcripts</option>
+          </select>
+        </div>
+        <div id="metaOpts" class="stack">
+          <select id="coll">
+            <option value="">any collection</option>
+            <option value="tvarchive">tvarchive — TV news (restricted)</option>
+            <option value="newsandpublicaffairs">newsandpublicaffairs</option>
+            <option value="opensource_movies">opensource_movies</option>
+          </select>
+          <select id="mt">
+            <option value="">any mediatype</option>
+            <option value="movies">movies</option>
+            <option value="audio">audio</option>
+            <option value="texts">texts</option>
+          </select>
+        </div>
+        <button class="p" onclick="go()" style="width:100%">SEARCH</button>
+      </div>
+    </div>
+
+    <div class="sect grow">
+      <h2><span class="lbl">Selected item</span></h2>
+      <div class="body" id="detail">
+        <div class="muted">pick a result to inspect its files</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="sect grow">
+      <h2><span class="lbl">Results</span> <span id="count" class="muted"></span></h2>
+      <div class="body" id="results">
+        <div class="muted">
+          The TV News Archive (<code>tvarchive</code>) is metadata-searchable but its media is
+          access-restricted — downloads return 403, captions 401. Everything else here is fetchable.
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="/common.js"></script>
+<script>
+$('mode').onchange = () => {
+  $('metaOpts').style.display = $('mode').value === 'fts' ? 'none' : '';
+};
+
+async function go() {
+  const q = $('q').value.trim();
+  if (!q) return stat('enter a query', 'var(--err)');
+  stat('searching');
+  $('results').innerHTML = '<div class="muted">searching…</div>';
+
+  if ($('mode').value === 'fts') {
+    const j = await api('GET', `/api/ia/fulltext?q=${encodeURIComponent(q)}&rows=15`);
+    const hits = j.hits || [];
+    $('count').textContent = `${hits.length} full-text hits`;
+    stat(`${hits.length} hits`, hits.length ? 'var(--ok)' : 'var(--dim)');
+    $('results').innerHTML = hits.length ? '' : '<div class="muted">no hits</div>';
+    hits.forEach(h => {
+      const d = document.createElement('div');
+      d.className = 'hit';
+      d.innerHTML = `<div class="t">${h.title || h.identifier}
+          <span class="src">${h.mediatype}${h.year ? ' · ' + h.year : ''}</span></div>
+        ${h.snippets.map(s => `<div class="x">…${s.replace(/\{\{\{/g,'<mark>').replace(/\}\}\}/g,'</mark>')}…</div>`).join('')}`;
+      d.onclick = () => inspect(h.identifier);
+      $('results').appendChild(d);
+    });
+    return;
+  }
+
+  const p = new URLSearchParams({ q, rows: 30 });
+  if ($('coll').value) p.set('collection', $('coll').value);
+  if ($('mt').value) p.set('mediatype', $('mt').value);
+  const j = await api('GET', '/api/ia/search?' + p);
+  const docs = j.docs || [];
+  $('count').textContent = `${docs.length} shown of ${j.numFound ?? '?'}`;
+  stat(`${j.numFound ?? 0} found`, docs.length ? 'var(--ok)' : 'var(--dim)');
+  $('results').innerHTML = docs.length ? '' : '<div class="muted">no results</div>';
+  docs.forEach(x => {
+    const colls = [].concat(x.collection || []);
+    const tv = colls.includes('tvarchive');
+    const d = document.createElement('div');
+    d.className = 'hit';
+    d.innerHTML = `<div class="t">${(x.date || '').slice(0,10) || '—'}
+        <span class="src">${x.mediatype || ''}</span>
+        ${tv ? '<span class="badge b-err">restricted</span>' : '<span class="badge b-ok">open</span>'}</div>
+      <div class="x">${x.title || x.identifier}</div>
+      <div class="muted" style="font-size:10px">${x.identifier}</div>`;
+    d.onclick = () => inspect(x.identifier);
+    $('results').appendChild(d);
+  });
+}
+
+async function inspect(id) {
+  $('detail').innerHTML = '<div class="muted">loading…</div>';
+  const j = await api('GET', `/api/ia/item/${encodeURIComponent(id)}`);
+  if (j.error) { $('detail').innerHTML = `<div class="muted">${j.error}</div>`; return; }
+  const vids = j.videos || [];
+  $('detail').innerHTML = `
+    <div style="margin-bottom:8px"><b>${j.title || id}</b></div>
+    <div class="muted" style="margin-bottom:4px">${j.date || ''} · ${j.n_files} files</div>
+    <div style="margin-bottom:8px">${j.restricted
+      ? '<span class="badge b-err">access-restricted — media downloads blocked</span>'
+      : '<span class="badge b-ok">open — downloadable</span>'}</div>
+    <div class="muted" style="margin-bottom:6px">${vids.length} video file(s)</div>
+    <div id="files"></div>`;
+  vids.forEach(v => {
+    const d = document.createElement('div');
+    d.className = 'item';
+    d.innerHTML = `<span class="n">${v.format || v.name.split('.').pop()}</span>
+                   <span class="m">${v.size_mb != null ? v.size_mb + 'MB' : ''}
+                   <span class="badge">↓ fetch</span></span>`;
+    d.title = v.name;
+    d.onclick = () => fetchFile(id, v.name, d);
+    $('files').appendChild(d);
+  });
+}
+
+async function fetchFile(id, name, el) {
+  el.querySelector('.badge').textContent = 'fetching…';
+  stat('downloading', 'var(--warn)');
+  const j = await api('POST', '/api/ia/fetch', { identifier: id, name });
+  if (j.error) {
+    el.querySelector('.badge').textContent = 'blocked';
+    el.querySelector('.badge').className = 'badge b-err';
+    return stat(j.error, 'var(--err)');
+  }
+  el.querySelector('.badge').textContent = '✓ in library';
+  el.querySelector('.badge').className = 'badge b-ok';
+  stat(`saved ${j.size_mb}MB — now on the Video page`, 'var(--ok)');
+}
+
+$('q').value = 'gatwick runway';
+</script>
+<script src="/credits.js"></script>
+<script>renderCredits(['archive'], ['ytdlp','fastapi']);</script>
+</body>
+</html>

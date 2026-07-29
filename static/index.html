@@ -1,0 +1,380 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>TwelveLabs Playground</title>
+<link rel="stylesheet" href="/chassis.css">
+</head>
+<body>
+
+<header>
+  <span class="brand">TWELVELABS</span>
+  <nav>
+    <a href="/" class="on">Video</a>
+    <a href="/archive.html">Archive</a>
+    <a href="/research.html">Research</a>
+    <a href="/graph.html">Graph</a>
+  </nav>
+  <select id="idxSel" style="max-width:300px"></select>
+  <button onclick="loadIndexes()" title="refresh">↻</button>
+  <button onclick="renameIndex()" title="rename selected index">✎ rename</button>
+  <input id="newIdx" placeholder="new index name" style="max-width:150px">
+  <button onclick="createIndex()">＋ create</button>
+  <span style="flex:1"></span>
+  <span id="stat" class="vfd">READY</span>
+</header>
+
+<main>
+  <!-- LEFT: source browser -->
+  <div class="col">
+    <div class="sect grow">
+      <h2><span class="lbl">Library</span> <span id="libCount" class="muted"></span></h2>
+      <div class="body">
+        <div id="drop">drop a video file here</div>
+        <button id="allBtn" onclick="indexAll()" style="width:100%; margin-bottom:8px"></button>
+        <div id="localList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTRE: viewer, with search results directly beneath it -->
+  <div class="col">
+    <div class="sect">
+      <h2><span class="lbl">Viewer</span> <span id="playerName" class="muted"></span></h2>
+      <div class="body">
+        <video id="player" controls></video>
+        <div class="row" style="margin-top:7px">
+          <span class="vfd" style="min-width:90px" id="tcode">0.0s</span>
+          <span style="flex:1"></span>
+          <button onclick="player.currentTime=Math.max(0,player.currentTime-5)">◀◀ 5s</button>
+          <button onclick="player.currentTime+=5">5s ▶▶</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sect grow">
+      <h2><span class="lbl">Search</span> <span class="muted">marengo · across every video in the index</span></h2>
+      <div class="body stack">
+        <div class="row">
+          <input id="q" placeholder="what are you looking for?"
+                 onkeydown="if(event.key==='Enter')search()">
+          <button class="p" onclick="search()">GO</button>
+        </div>
+        <div class="row muted" style="gap:14px">
+          <label><input type="checkbox" id="oVis" checked style="width:auto"> visual</label>
+          <label><input type="checkbox" id="oAud" checked style="width:auto"> audio</label>
+          <span style="flex:1"></span>
+          <span id="hitCount"></span>
+        </div>
+        <div id="hits"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: slow work -->
+  <div class="col">
+    <div class="sect grow">
+      <h2><span class="lbl">Analyze</span> <span class="muted">pegasus · one video at a time</span></h2>
+      <div class="body stack">
+        <textarea id="prompt">List every monetary figure, number, place name and organisation in this video. For each, give the timecode and say whether it was spoken aloud or shown as on-screen text.</textarea>
+        <div class="row">
+          <select id="preset" onchange="usePreset()" style="flex:1">
+            <option value="">— prompt presets —</option>
+            <option>Summarise this clip in three sentences.</option>
+            <option>List every number and figure shown as on-screen text, with timecodes.</option>
+            <option>List every organisation, person and place named, with timecodes.</option>
+            <option>Describe the visual scene at each major change, with timecodes.</option>
+            <option>What claim does this clip make about jobs or economic impact?</option>
+            <option>Return JSON: {entities:[{name,type,timecode,source}]}</option>
+          </select>
+          <button class="p" onclick="analyze()">RUN</button>
+        </div>
+        <pre id="out" class="muted">select a video, then run a prompt</pre>
+      </div>
+    </div>
+
+    <div class="sect collapsed" id="logSect">
+      <h2>
+        <span><span class="lbl">API log</span> <span id="logCount" class="muted"></span></span>
+        <span>
+          <button class="sm" onclick="event.stopPropagation();document.getElementById('log').innerHTML='';logN=0;updLogCount()">clear</button>
+          <button class="sm" onclick="toggleLog()" id="logBtn">show</button>
+        </span>
+      </h2>
+      <div class="body" id="log" style="padding:0"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const player = $('player');
+let curIndex = null, curVideo = null, vidMap = {};
+let localFiles = [], indexedByName = {}, busy = {}, vidDur = {}, logN = 0;
+
+const short = n => n.split('__').slice(1).join(' · ').replace('.mp4', '') || n;
+const chan  = n => n.split('__')[1] || n;
+const mmss  = s => s == null ? '' : `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
+
+player.addEventListener('timeupdate', () => $('tcode').textContent = player.currentTime.toFixed(1) + 's');
+
+function stat(m, c) { $('stat').textContent = m.toUpperCase(); $('stat').style.color = c || 'var(--vfd)'; }
+
+function toggleLog() {
+  const s = $('logSect'), open = s.classList.toggle('collapsed');
+  s.classList.toggle('grow', !open);
+  $('logBtn').textContent = open ? 'show' : 'hide';
+}
+function updLogCount() { $('logCount').textContent = logN ? `(${logN})` : ''; }
+
+function logCall(meth, path, status, data) {
+  const d = document.createElement('div');
+  d.className = 'log';
+  const cls = status >= 200 && status < 300 ? 'b-ok' : 'b-err';
+  d.innerHTML = `<div class="h"><span class="meth">${meth}</span>
+    <span class="path">${path}</span><span class="badge ${cls}">${status}</span></div>
+    <pre>${JSON.stringify(data, null, 2).slice(0, 20000)}</pre>`;
+  d.querySelector('.h').onclick = () => d.classList.toggle('open');
+  $('log').prepend(d);
+  logN++; updLogCount();
+}
+
+async function api(meth, path, body, isForm) {
+  const opt = { method: meth };
+  if (body && !isForm) { opt.headers = {'Content-Type':'application/json'}; opt.body = JSON.stringify(body); }
+  if (isForm) opt.body = body;
+  const r = await fetch(path, opt);
+  const j = await r.json().catch(() => ({}));
+  logCall(meth, path, r.status, j);
+  return j;
+}
+
+async function loadIndexes() {
+  const j = await api('GET', '/api/indexes');
+  const sel = $('idxSel');
+  const prev = curIndex;
+  sel.innerHTML = '';
+  (j.data || []).forEach(i => {
+    const models = (i.models || []).map(m => m.model_name).join('+');
+    const o = document.createElement('option');
+    o.value = i._id;
+    o.textContent = `${i.index_name} — ${models} — ${i.video_count} vids`;
+    sel.appendChild(o);
+  });
+  sel.onchange = () => { curIndex = sel.value; loadVideos(); };
+  if (!sel.options.length) return;
+  const stillThere = prev && [...sel.options].some(o => o.value === prev);
+  sel.value = stillThere ? prev : sel.options[0].value;
+  curIndex = sel.value;
+  if (!stillThere) loadVideos();
+}
+
+async function renameIndex() {
+  if (!curIndex) return stat('select an index', 'var(--err)');
+  const cur = $('idxSel').selectedOptions[0].textContent.split(' — ')[0];
+  const name = prompt('Rename index (videos and ids are unaffected):', cur);
+  if (!name || name === cur) return;
+  await api('PUT', `/api/indexes/${curIndex}`, { index_name: name });
+  const keep = curIndex;
+  await loadIndexes();
+  $('idxSel').value = keep; curIndex = keep;
+  stat('renamed', 'var(--ok)');
+}
+
+async function createIndex() {
+  const name = $('newIdx').value.trim();
+  if (!name) return stat('name required', 'var(--err)');
+  await api('POST', '/api/indexes', { index_name: name });
+  $('newIdx').value = '';
+  loadIndexes();
+}
+
+async function loadLocal() {
+  localFiles = await api('GET', '/api/local-videos');
+  renderLocal();
+}
+
+function durOf(videoId) { return (vidDur || {})[videoId]; }
+
+function renderLocal() {
+  const names = new Set(localFiles.map(v => v.name));
+  const extra = Object.entries(indexedByName)
+    .filter(([n]) => !names.has(n))
+    .map(([n, id]) => ({ name: n, remote: true, duration: durOf(id) }));
+  const rows = [...localFiles, ...extra];
+
+  const missing = rows.filter(v => !indexedByName[v.name] && !busy[v.name]).length;
+  $('libCount').textContent = `${rows.length - missing}/${rows.length} indexed`;
+  $('allBtn').disabled = missing === 0;
+  $('allBtn').textContent = missing ? `＋ index the ${missing} not yet indexed` : '✓ all indexed';
+
+  $('localList').innerHTML = '';
+  rows.forEach(v => {
+    const vid = indexedByName[v.name];
+    const d = document.createElement('div');
+    d.className = 'item' + (vid && vid === curVideo ? ' sel' : '');
+    let right;
+    if (busy[v.name])   right = `<span class="badge b-run">${busy[v.name]}</span>`;
+    else if (vid)       right = `<span class="m">${mmss(v.duration)}</span>`;
+    else                right = `<span class="badge">＋ index</span>`;
+    d.innerHTML = `<span class="n">${vid ? '' : '<span class="dot"></span>'}${short(v.name)}</span>
+                   <span class="m">${right}</span>`;
+    d.title = vid ? 'indexed — click to open in viewer'
+                  : `not indexed — click to index (${mmss(v.duration)}, ${v.size_mb}MB)`;
+    d.onclick = () => {
+      if (busy[v.name]) return;
+      if (vid) selectVideo(vid, v.name);
+      else indexLocal(v.name);
+    };
+    $('localList').appendChild(d);
+  });
+}
+
+async function indexAll() {
+  const todo = localFiles.filter(v => !indexedByName[v.name] && !busy[v.name]);
+  for (const v of todo) await indexLocal(v.name);
+}
+
+async function loadVideos() {
+  if (!curIndex) return;
+  const j = await api('GET', `/api/indexes/${curIndex}/videos`);
+  const list = j.data || [];
+  vidMap = {}; indexedByName = {}; vidDur = {};
+  list.forEach(v => {
+    const fn = (v.user_metadata && v.user_metadata.filename)
+            || (v.system_metadata && v.system_metadata.filename) || v._id;
+    vidMap[v._id] = fn;
+    indexedByName[fn] = v._id;
+    vidDur[v._id] = v.system_metadata && v.system_metadata.duration;
+  });
+  renderLocal();
+}
+
+function selectVideo(id, fn, el) {
+  curVideo = id;
+  $('playerName').textContent = fn ? short(fn) : id;
+  if (fn) player.src = '/media/' + encodeURIComponent(fn);
+  renderLocal();
+}
+
+async function pollTask(taskId, name) {
+  let last = '';
+  const t0 = Date.now();
+  while (true) {
+    const j = await api('GET', `/api/tasks/${taskId}`);
+    const el = ((Date.now() - t0) / 1000).toFixed(0);
+    if (j.status !== last) {
+      last = j.status;
+      if (name) { busy[name] = `${j.status} ${el}s`; renderLocal(); }
+      stat(`${chan(name || '')} ${j.status} ${el}s`, 'var(--warn)');
+    }
+    if (j.status === 'ready' || j.status === 'failed') {
+      if (name) delete busy[name];
+      stat(`${chan(name || '')} ${j.status} ${el}s`,
+           j.status === 'ready' ? 'var(--ok)' : 'var(--err)');
+      await loadVideos(); loadIndexes();
+      return;
+    }
+    await new Promise(r => setTimeout(r, 3000));
+  }
+}
+
+async function indexLocal(name) {
+  if (!curIndex) return stat('select an index', 'var(--err)');
+  busy[name] = 'uploading'; renderLocal();
+  const j = await api('POST', '/api/index-local', { index_id: curIndex, name });
+  if (j._id) return pollTask(j._id, name);
+  delete busy[name]; renderLocal();
+  stat('upload failed', 'var(--err)');
+}
+
+const drop = $('drop');
+['dragenter','dragover'].forEach(e => drop.addEventListener(e, ev => {
+  ev.preventDefault(); drop.classList.add('over');
+}));
+['dragleave','drop'].forEach(e => drop.addEventListener(e, ev => {
+  ev.preventDefault(); drop.classList.remove('over');
+}));
+drop.addEventListener('drop', async ev => {
+  const f = ev.dataTransfer.files[0];
+  if (!f || !curIndex) return stat('need a file and an index', 'var(--err)');
+  stat(`uploading ${f.name.slice(0,18)}`, 'var(--warn)');
+  const fd = new FormData();
+  fd.append('index_id', curIndex);
+  fd.append('file', f);
+  const j = await api('POST', '/api/upload', fd, true);
+  await loadLocal();
+  if (j._id) pollTask(j._id, f.name);
+});
+
+async function search() {
+  if (!curIndex) return stat('select an index', 'var(--err)');
+  const opts = [];
+  if ($('oVis').checked) opts.push('visual');
+  if ($('oAud').checked) opts.push('audio');
+  stat('searching', 'var(--warn)');
+  const j = await api('POST', '/api/search', { index_id: curIndex, query: $('q').value, options: opts });
+  const hits = j.data || [];
+  const srcs = new Set(hits.map(h => chan(vidMap[h.video_id] || '')));
+  $('hitCount').textContent = hits.length ? `${hits.length} hits · ${srcs.size} sources` : '';
+  stat(hits.length ? `${hits.length} hits` : 'no hits', hits.length ? 'var(--ok)' : 'var(--dim)');
+  $('hits').innerHTML = hits.length ? '' : '<div class="muted">no hits</div>';
+  hits.forEach(h => {
+    const fn = vidMap[h.video_id] || '';
+    const d = document.createElement('div');
+    d.className = 'hit';
+    d.innerHTML = `<div class="t">${mmss(h.start)}–${mmss(h.end)}
+        <span class="src">${chan(fn)}</span>
+        <span class="muted">· #${h.rank}</span></div>
+      <div class="x">${h.transcription || '<em>visual match — nothing spoken</em>'}</div>`;
+    d.onclick = () => {
+      if (h.video_id !== curVideo) selectVideo(h.video_id, fn);
+      const seek = () => { player.currentTime = h.start; player.play(); };
+      if (player.readyState >= 1) seek();
+      else player.addEventListener('loadedmetadata', seek, { once: true });
+    };
+    $('hits').appendChild(d);
+  });
+}
+
+function usePreset() {
+  const v = $('preset').value;
+  if (v) { $('prompt').value = v; $('preset').value = ''; }
+}
+
+async function analyze() {
+  if (!curVideo) return stat('select a video first', 'var(--err)');
+  $('out').textContent = ''; $('out').className = '';
+  stat('analyzing', 'var(--warn)');
+  const t0 = Date.now();
+  const r = await fetch('/api/analyze', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ video_id: curVideo, prompt: $('prompt').value }),
+  });
+  const rd = r.body.getReader(), dec = new TextDecoder();
+  let buf = '', text = '';
+  while (true) {
+    const { done, value } = await rd.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    for (const ln of lines) {
+      if (!ln.trim()) continue;
+      try {
+        const e = JSON.parse(ln);
+        if (e.event_type === 'text_generation') { text += e.text; $('out').textContent = text; }
+      } catch { text += ln; $('out').textContent = text; }
+    }
+  }
+  logCall('POST', '/api/analyze', 200, { prompt: $('prompt').value, result: text });
+  stat(`analyzed ${((Date.now()-t0)/1000).toFixed(1)}s`, 'var(--ok)');
+}
+
+loadIndexes();
+loadLocal();
+</script>
+<script src="/credits.js"></script>
+<script>renderCredits(['twelvelabs'], ['ffmpeg','ytdlp','fastapi']);</script>
+</body>
+</html>

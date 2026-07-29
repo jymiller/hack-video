@@ -1,0 +1,505 @@
+<title>The Graph — Nodes, Edges, Vocabularies</title>
+
+<style>
+  :root {
+    --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA;
+    --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16;  --hot-bg:#F8E5DC;
+    --warn:#8A6512; --warn-bg:#F6EDD8;
+    --deal:#4B3A8F; --deal-bg:#E4E0F4;
+    --disp:"Futura","Avenir Next Condensed","Avenir Next",system-ui,sans-serif;
+    --body:"Avenir Next","Avenir",-apple-system,"Segoe UI",sans-serif;
+    --mono:"SF Mono","IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+      --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+      --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616;
+      --deal:#A99BE8; --deal-bg:#1E1A35; }
+  }
+  :root[data-theme="dark"] { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+    --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+    --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616;
+    --deal:#A99BE8; --deal-bg:#1E1A35; }
+  :root[data-theme="light"] { --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA; --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16; --hot-bg:#F8E5DC; --warn:#8A6512; --warn-bg:#F6EDD8;
+    --deal:#4B3A8F; --deal-bg:#E4E0F4; }
+
+  * { box-sizing:border-box; }
+  .sheet { background:var(--ground); color:var(--ink); font-family:var(--body);
+           font-size:16.5px; line-height:1.6; padding:0 20px 96px; }
+  .wrap { max-width:1180px; margin:0 auto; }
+  .col { max-width:64ch; }
+
+  .mast { padding:52px 0 22px; border-bottom:3px solid var(--ink); margin-bottom:28px; }
+  .strip { font-family:var(--mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+           color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px 18px; margin-bottom:20px; }
+  h1 { font-family:var(--disp); font-size:clamp(32px,5.6vw,54px); line-height:1.04; font-weight:500;
+       margin:0 0 16px; text-transform:uppercase; text-wrap:balance; }
+  .standfirst { font-size:19px; line-height:1.5; color:var(--ink-soft); margin:0; max-width:57ch; }
+
+  section { margin-top:48px; }
+  h2 { font-family:var(--disp); font-size:26px; font-weight:500; letter-spacing:.02em;
+       text-transform:uppercase; margin:0 0 14px; }
+  .kicker { font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+            color:var(--ink-soft); margin:0 0 9px; }
+  p { margin:0 0 15px; }
+  code { font-family:var(--mono); font-size:.86em; background:var(--rule-soft); padding:1px 5px; }
+
+  /* ---- controls ---- */
+  .bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:22px 0 14px; }
+  .bar button {
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    padding:8px 14px; border:1px solid var(--rule); background:var(--card); color:var(--ink-soft);
+    cursor:pointer; font-weight:600;
+  }
+  .bar button:hover { border-color:var(--edge); color:var(--edge); }
+  .bar button.on { background:var(--ink); color:var(--ground); border-color:var(--ink); }
+  .bar .sp { flex:1; }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; font-family:var(--mono); font-size:10.5px;
+            letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); align-items:center; }
+  .legend i { width:11px; height:11px; display:inline-block; margin-right:5px; vertical-align:-1px; }
+
+  /* ---- canvas ---- */
+  .stage { display:grid; grid-template-columns:1fr 320px; gap:14px; align-items:start; }
+  @media (max-width:900px) { .stage { grid-template-columns:1fr; } }
+  .canvas { border:1px solid var(--rule); background:var(--card); overflow:auto; }
+  svg { display:block; width:100%; height:auto; min-width:720px; }
+
+  .nd rect { stroke-width:2; cursor:pointer; }
+  .nd text { font-family:var(--mono); pointer-events:none; }
+  .nd .t  { font-size:12px; font-weight:700; }
+  .nd .s  { font-size:9.5px; letter-spacing:.08em; }
+  .nd.dim { opacity:.2; }
+  .ed { pointer-events:none; }
+  .ed path { fill:none; stroke-width:1.6; }
+  .ed text { font-family:var(--mono); font-size:9px; letter-spacing:.06em; }
+  .ed.dim { opacity:.1; }
+  .ed.hi path { stroke-width:3; }
+
+  /* ---- inspector ---- */
+  .insp { border:1px solid var(--rule); background:var(--card); padding:18px 20px; position:sticky; top:14px; }
+  .insp h3 { font-family:var(--disp); font-size:20px; font-weight:500; text-transform:uppercase;
+             letter-spacing:.02em; margin:0 0 4px; }
+  .insp .sub { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+               color:var(--ink-soft); margin-bottom:14px; }
+  .insp .lbl { font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
+               color:var(--ink-soft); margin:16px 0 6px; }
+  .insp .props { font-family:var(--mono); font-size:11.5px; line-height:1.75; }
+  .insp .props b { color:var(--edge); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:5px; }
+  .chips span { font-family:var(--mono); font-size:10.5px; border:1px solid var(--rule);
+                background:var(--rule-soft); padding:2px 7px; }
+  .chips span.v { border-color:var(--edge); color:var(--edge); }
+  .insp .note { font-size:14px; color:var(--ink-soft); line-height:1.5; margin-top:14px; }
+  .insp .inst { font-family:var(--mono); font-size:11px; background:var(--ground);
+                border:1px solid var(--rule); padding:10px; margin-top:8px; line-height:1.6;
+                word-break:break-word; }
+
+  /* ---- vocab table ---- */
+  .vocab { margin-top:22px; border:1px solid var(--rule); background:var(--card); }
+  .vocab .row { padding:13px 18px; border-bottom:1px solid var(--rule-soft); cursor:pointer; }
+  .vocab .row:last-child { border-bottom:none; }
+  .vocab .row:hover { background:var(--rule-soft); }
+  .vocab .row.on { background:var(--edge-bg); }
+  .vocab .nm { font-family:var(--mono); font-size:12px; font-weight:600; color:var(--edge); }
+  .vocab .on-node { font-family:var(--mono); font-size:10px; color:var(--ink-soft); float:right; }
+  .vocab .vals { font-family:var(--mono); font-size:11px; margin-top:6px;
+                 display:flex; flex-wrap:wrap; gap:5px; }
+  .vocab .vals span { border:1px solid var(--rule); padding:2px 7px; background:var(--rule-soft); }
+
+  .admit { border-left:4px solid var(--warn); background:var(--warn-bg); padding:18px 20px; margin-top:22px; }
+  .admit b { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+             color:var(--warn); display:block; margin-bottom:8px; font-weight:600; }
+  .admit p { margin:0; font-size:16px; }
+  .verdict { border:3px solid var(--edge); background:var(--card); padding:24px 26px; margin-top:22px; }
+  .verdict .big { font-family:var(--disp); font-size:clamp(21px,3.2vw,30px); line-height:1.16;
+                  font-weight:500; text-transform:uppercase; margin:0 0 10px; color:var(--edge); }
+  .verdict p { margin:0; font-size:16.5px; }
+  .foot { margin-top:56px; padding-top:20px; border-top:1px solid var(--rule);
+          font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+          color:var(--ink-soft); }
+</style>
+
+<div class="sheet">
+<div class="wrap">
+
+  <header class="mast">
+    <div class="strip">
+      <span>Schema map</span><span>30 July 2026</span>
+      <span>Click any node</span><span>Proposal — not built</span>
+    </div>
+    <h1>The graph, all of it, on one page</h1>
+    <p class="standfirst">Nodes, edges and controlled vocabularies together — with a toggle to
+      swap the schema for the actual Gatwick instances, so you can watch it populate.</p>
+  </header>
+
+  <section>
+    <div class="bar">
+      <button id="bSchema" class="on" onclick="setMode('schema')">Schema</button>
+      <button id="bInst" onclick="setMode('instance')">Instances</button>
+      <button onclick="focusNode(null)">Clear focus</button>
+      <span id="live" style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+            text-transform:uppercase;padding:5px 10px;border:1px solid var(--rule)">checking graph…</span>
+      <span class="sp"></span>
+      <span class="legend">
+        <span><i style="background:var(--hot-bg);border:2px solid var(--hot)"></i>observed</span>
+        <span><i style="background:var(--edge-bg);border:2px solid var(--edge)"></i>controlled</span>
+        <span><i style="background:var(--deal-bg);border:2px solid var(--deal)"></i>deal</span>
+        <span><i style="background:var(--rule-soft);border:2px solid var(--ink-soft)"></i>shared</span>
+      </span>
+    </div>
+
+    <div class="stage">
+      <div class="canvas">
+        <svg id="g" viewBox="0 0 980 640" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <g id="edges"></g>
+          <g id="nodes"></g>
+        </svg>
+      </div>
+
+      <aside class="insp" id="insp">
+        <h3>The whole model</h3>
+        <div class="sub">click a node to inspect</div>
+        <p class="note">Two lanes. The <b>observed</b> lane — video, broadcast, commentary —
+          can never reach a covenant. The <b>controlled</b> lane — filings and judgments —
+          is the only path to a test. The <b>deal</b> lane is who lent the money and wrote
+          the covenants in the first place.</p>
+        <div class="lbl">Reading the edges</div>
+        <p class="note" style="margin-top:0">Solid teal edges carry evidence. The dashed red
+          edge is the model's guess. The purple lane is contractual.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <p class="kicker">Reference data</p>
+      <h2>The vocabularies</h2>
+      <p>Click one to highlight the nodes that use it. Closed sets, small on purpose.</p>
+    </div>
+    <div class="vocab" id="vocab"></div>
+  </section>
+
+  <section class="col">
+    <p class="kicker">The new bit</p>
+    <h2>The model guesses; a human decides</h2>
+    <p>Asking a model "which covenant could this news event threaten?" is the interesting
+      question and the dangerous one. So the graph separates the two acts rather than blending
+      them.</p>
+    <div class="verdict">
+      <p class="big">MAY_AFFECT is a proposal until a human signs it</p>
+      <p>The model writes the edge with <code>asserted_by:'model'</code> and
+        <code>status:'proposed'</code>. It stays dashed, and no query that computes anything
+        will read it. A human moves it to <code>validated</code> or <code>rejected</code>, and
+        their name and timestamp go on the edge. Both states are visible — <strong>a rejected
+        guess is kept, not deleted</strong>, because the record of what the model got wrong is
+        the most honest thing on screen.</p>
+    </div>
+    <div class="admit">
+      <b>Why this is worth demoing</b>
+      <p>Every other team will show a model asserting something. Showing the model assert,
+        then showing a human overrule it — with both preserved and distinguishable — is the
+        part a credit audience will actually believe.</p>
+    </div>
+  </section>
+
+  <p class="foot">Proposal · 28 July 2026 · nothing built · public sources only</p>
+
+</div>
+</div>
+
+<script>
+const NODES = {
+  DealSource:  {x:40,  y:40,  w:150,h:52, lane:'deal', t:'Source', s:'kind: cta / prospectus',
+    props:['id','kind','url','publisher','published_at','sha256'], vocabs:['source_kind'],
+    note:'The lending documents themselves. Public for a listed bond.',
+    inst:'Gatwick Funding Ltd\n£5bn programme prospectus\nRNS · 10 Feb 2026'},
+  Deal:        {x:240, y:40,  w:150,h:52, lane:'deal', t:'Deal', s:'who lent the money',
+    props:['legal_name','borrower','issuer','deal_type','currency','inception_date','final_maturity'],
+    vocabs:['deal_type'],
+    note:'The lending relationship. Somebody had to lend Gatwick the money — they are who wrote the covenants and agreed them.',
+    inst:'Gatwick Funding Ltd\nsecured bond programme\nGBP · maturities to 2050'},
+  Facility:    {x:440, y:40,  w:150,h:52, lane:'deal', t:'Facility', s:'a tranche',
+    props:['facility_code','label','facility_type','governing_doc','citation'], vocabs:['facility_type'],
+    note:'A tranche within the deal, pointing at the document that governs it.',
+    inst:'Senior secured notes\ngoverning doc: Common Terms Agreement'},
+  Covenant:    {x:640, y:40,  w:150,h:52, lane:'deal', t:'Covenant', s:'the tested condition',
+    props:['name','covenant_code','threshold_value','direction','test_frequency','test_dates[]'],
+    vocabs:['covenant_code','direction'],
+    note:'The condition the deal is tested on. Threshold and direction come from the filed documents.',
+    inst:'Senior ICR · Senior RAR\nboth disclosed in the bond documentation'},
+
+  ObsSource:   {x:40,  y:400, w:150,h:52, lane:'obs', t:'Source', s:'provenance: observed',
+    props:['id','provenance_class','kind','url','publisher','published_at','sha256'],
+    vocabs:['provenance_class','source_kind'],
+    note:'Nobody sent this. Nobody is accountable for it. It was not made for the lender.',
+    inst:'Channel 4 News · TalkTV\nSussexWorld rally · Runway Radar\nLondon Standard'},
+  Segment:     {x:240, y:400, w:150,h:52, lane:'obs', t:'Segment', s:'a timecoded span',
+    props:['video_id','start','end','transcript'], vocabs:[],
+    note:'The timecode is the product. "Channel 4 News, somewhere" is worthless; 4:31–4:38 seeks the playhead to the proof.',
+    inst:'KLnxVX-m-Ng · 26.5s → 35.9s\n"Today this government are backing\na second runway here at Gatwick"'},
+  Observation: {x:440, y:400, w:150,h:52, lane:'obs', t:'Observation', s:'never becomes a fact',
+    props:['text','value','unit','currency','confidence','modality'],
+    vocabs:['modality','unit_kind','scale'],
+    note:'An assertion from a source nobody vouched for. May corroborate, contradict or flag — never test.',
+    inst:'£2.2bn scheme cost · on_screen_text\n14,000 jobs · on_screen_text\nconfidence 0.9'},
+
+  Fact:        {x:440, y:230, w:150,h:52, lane:'ctrl', t:'Fact', s:'controlled only',
+    props:['value','unit','currency','as_of','effective_date'], vocabs:['unit_kind','scale'],
+    note:'From an accountable source. The only thing permitted to test a covenant.',
+    inst:'Senior net debt · £m · as_of 2026-02-10\nsource: prospectus supplement'},
+  Concept:     {x:640, y:315, w:150,h:52, lane:'shared', t:'Concept', s:'what is measured',
+    props:['code','name','unit_kind','canonical_scale','aliases[]'], vocabs:['unit_kind','scale'],
+    note:'Both lanes resolve to the same Concept — that is what lets an Observation be compared to a Fact at all.',
+    inst:'passenger_traffic · count\ncta_senior_icr · ratio_x\ncta_senior_rar · percent'},
+  Event:       {x:640, y:490, w:150,h:52, lane:'shared', t:'Event', s:'a dated happening',
+    props:['name','date','kind'], vocabs:['event_kind'],
+    note:'The thing that happened. Observations are about it; it may or may not reach a covenant.',
+    inst:'DCO granted · 2025-09-21\nHigh Court ruling · 2026-06-23\nwater outage · 2026-07-26'},
+  Run:         {x:240, y:530, w:150,h:52, lane:'shared', t:'ExtractionRun', s:'the audit trail',
+    props:['model','version','prompt_hash','tokens_in','tokens_out','cost_usd','started_at'], vocabs:[],
+    note:'Every generated node traces to the model and prompt that made it, and what it cost. The honest answer to "did a human write this?"',
+    inst:'pegasus1.2 · marengo3.0\ndeepseek-v4-flash (extraction)'},
+};
+
+const EDGES = [
+  ['DealSource','Deal','EVIDENCES','deal'],
+  ['Deal','Facility','HAS_FACILITY','deal'],
+  ['Facility','Covenant','GOVERNED_BY','deal'],
+  ['Segment','ObsSource','PART_OF','obs',  'back'],
+  ['Observation','Segment','CITES','obs',  'back'],
+  ['Observation','Concept','OF_CONCEPT','shared'],
+  ['Fact','Concept','OF_CONCEPT','shared'],
+  ['Observation','Fact','CORROBORATES / CONTRADICTS','cross'],
+  ['Observation','Event','ABOUT','shared'],
+  ['Fact','Covenant','TESTS','ctrl'],
+  ['Event','Covenant','MAY_AFFECT (proposed)','guess'],
+  ['Observation','Run','PRODUCED_BY','shared','back'],
+];
+
+const VOCABS = {
+  provenance_class: {v:['controlled','observed'], on:['ObsSource','DealSource'],
+    d:'The load-bearing one. Everything follows from it.'},
+  source_kind: {v:['broadcast_news','rally_footage','commentary','web_article','prospectus','accounts','rns_announcement','court_judgment','common_terms_agreement'],
+    on:['ObsSource','DealSource'], d:'First four always observed; the rest always controlled.'},
+  modality: {v:['spoken','on_screen_text','visual'], on:['Observation'],
+    d:'How the evidence appeared. The field the video model demonstrably gets wrong — cross-check it.'},
+  unit_kind: {v:['count','currency','percent','ratio_x','date','text'], on:['Observation','Fact','Concept'],
+    d:'What kind of quantity. A ratio and a percent are not interchangeable and conflating them breaks a covenant test.'},
+  scale: {v:['units','thousands','millions','none'], on:['Observation','Fact','Concept'],
+    d:'Canonical scale. "2.2" means nothing without it.'},
+  covenant_code: {v:['senior_icr','senior_rar'], on:['Covenant'],
+    d:'Just the two Gatwick discloses. Both appear in the bond documentation.'},
+  direction: {v:['min','max'], on:['Covenant'],
+    d:'ICR must stay above a floor; RAR must stay below a ceiling. Getting this backwards inverts the whole answer.'},
+  deal_type: {v:['secured_bond_programme','term_loan','rcf'], on:['Deal'],
+    d:'Enough to place Gatwick. Not a taxonomy.'},
+  facility_type: {v:['senior_secured_notes','revolving_credit'], on:['Facility'],
+    d:'Tranches within the deal.'},
+  event_kind: {v:['regulatory_approval','legal_challenge','financing_event','operational_incident'],
+    on:['Event'], d:'The water outage is operational_incident — and it is the one with no path to a Covenant.'},
+  contradiction_basis: {v:['methodology','timing','scope','arithmetic'], on:['Observation'],
+    d:'Why two sources disagree. Without it a contradiction edge is just a shrug.'},
+  assertion_status: {v:['proposed','validated','rejected'], on:['Event','Covenant'],
+    d:'On MAY_AFFECT only. The model may write proposed; only a human may write the other two.'},
+};
+
+const LANE = { deal:['--deal','--deal-bg'], obs:['--hot','--hot-bg'],
+               ctrl:['--edge','--edge-bg'], shared:['--ink-soft','--rule-soft'],
+               cross:['--warn','--warn-bg'], guess:['--hot','--hot-bg'] };
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+let mode = 'schema', focused = null, vocabFocus = null;
+
+function anchor(a, b) {
+  const A = NODES[a], B = NODES[b];
+  const ax = A.x + A.w/2, ay = A.y + A.h/2, bx = B.x + B.w/2, by = B.y + B.h/2;
+  let p1, p2;
+  if (Math.abs(bx-ax) > Math.abs(by-ay)) {
+    p1 = [ax + (bx>ax? A.w/2 : -A.w/2), ay];
+    p2 = [bx + (bx>ax? -B.w/2 : B.w/2), by];
+  } else {
+    p1 = [ax, ay + (by>ay? A.h/2 : -A.h/2)];
+    p2 = [bx, by + (by>ay? -B.h/2 : B.h/2)];
+  }
+  return [p1, p2];
+}
+
+function draw() {
+  const eg = document.getElementById('edges'), ng = document.getElementById('nodes');
+  eg.innerHTML = ''; ng.innerHTML = '';
+
+  EDGES.forEach(([a,b,label,lane]) => {
+    const [p1,p2] = anchor(a,b);
+    const mx = (p1[0]+p2[0])/2, my = (p1[1]+p2[1])/2;
+    const col = cssv(LANE[lane][0]);
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','ed');
+    g.dataset.a = a; g.dataset.b = b;
+    g.setAttribute('color', col);
+    const dash = lane === 'guess' ? '6 4' : (lane === 'cross' ? '3 3' : '0');
+    g.innerHTML =
+      `<path d="M${p1[0]},${p1[1]} L${p2[0]},${p2[1]}" stroke="${col}"
+             stroke-dasharray="${dash}" marker-end="url(#ar)"/>
+       <text x="${mx}" y="${my-6}" fill="${col}" text-anchor="middle">${label}</text>`;
+    eg.appendChild(g);
+  });
+
+  Object.entries(NODES).forEach(([id,n]) => {
+    const col = cssv(LANE[n.lane][0]), bg = cssv(LANE[n.lane][1]);
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','nd'); g.dataset.id = id;
+    const body = mode === 'instance'
+      ? (n.inst || '').split('\n').slice(0,3)
+          .map((l,i)=>`<text class="s" x="${n.x+10}" y="${n.y+30+i*12}" fill="${cssv('--ink')}">${l.slice(0,26)}</text>`).join('')
+      : `<text class="s" x="${n.x+10}" y="${n.y+36}" fill="${cssv('--ink-soft')}">${n.s}</text>`;
+    const h = mode === 'instance' ? Math.max(n.h, 58) : n.h;
+    const badge = (n.count !== undefined)
+      ? `<text class="s" x="${n.x + n.w - 8}" y="${n.y+18}" text-anchor="end"
+              fill="${n.count ? col : cssv('--hot')}" style="font-weight:700">${n.count}</text>`
+      : '';
+    g.innerHTML =
+      `<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${h}" fill="${bg}" stroke="${col}"/>
+       <text class="t" x="${n.x+10}" y="${n.y+18}" fill="${col}">${n.t}</text>${badge}${body}`;
+    g.onclick = () => focusNode(id);
+    ng.appendChild(g);
+  });
+  applyFocus();
+}
+
+function applyFocus() {
+  const nds = [...document.querySelectorAll('.nd')], eds = [...document.querySelectorAll('.ed')];
+  const vocabNodes = vocabFocus ? VOCABS[vocabFocus].on : null;
+  nds.forEach(n => {
+    const id = n.dataset.id;
+    let dim = false;
+    if (focused) dim = !(id === focused || EDGES.some(([a,b]) => (a===focused&&b===id)||(b===focused&&a===id)));
+    if (vocabNodes) dim = !vocabNodes.includes(id);
+    n.classList.toggle('dim', dim);
+  });
+  eds.forEach(e => {
+    const touch = focused && (e.dataset.a === focused || e.dataset.b === focused);
+    e.classList.toggle('dim', !!(focused && !touch) || !!vocabFocus);
+    e.classList.toggle('hi', !!touch);
+  });
+}
+
+function focusNode(id) {
+  focused = (id === focused) ? null : id;
+  vocabFocus = null;
+  renderVocab();
+  applyFocus();
+  const el = document.getElementById('insp');
+  if (!focused) {
+    el.innerHTML = `<h3>The whole model</h3><div class="sub">click a node to inspect</div>
+      <p class="note">Two lanes. The <b>observed</b> lane can never reach a covenant. The
+      <b>controlled</b> lane is the only path to a test. The <b>deal</b> lane is who lent the
+      money and wrote the covenants.</p>`;
+    return;
+  }
+  const n = NODES[focused];
+  const rel = EDGES.filter(([a,b]) => a===focused || b===focused)
+    .map(([a,b,l]) => `${a===focused?'→':'←'} <b>${l}</b> ${a===focused?b:a}`).join('<br>');
+  el.innerHTML = `
+    <h3>${n.t}</h3>
+    <div class="sub">${n.lane} lane · ${n.s}</div>
+    <p class="note" style="margin-top:0">${n.note}</p>
+    <div class="lbl">Properties</div>
+    <div class="props">${n.props.map(p=>`<b>${p}</b>`).join('<br>')}</div>
+    ${n.vocabs.length ? `<div class="lbl">Vocabularies</div>
+      <div class="chips">${n.vocabs.map(v=>`<span class="v">${v}</span>`).join('')}</div>` : ''}
+    <div class="lbl">Edges</div>
+    <div class="props">${rel}</div>
+    ${n.inst ? `<div class="lbl">In our corpus</div><div class="inst">${n.inst.replace(/\n/g,'<br>')}</div>` : ''}`;
+}
+
+function renderVocab() {
+  document.getElementById('vocab').innerHTML = Object.entries(VOCABS).map(([k,v]) =>
+    `<div class="row ${vocabFocus===k?'on':''}" onclick="focusVocab('${k}')">
+       <span class="nm">${k}</span>
+       <span class="on-node">${v.on.join(' · ')}</span>
+       <div class="vals">${v.v.map(x=>`<span>${x}</span>`).join('')}</div>
+       <div class="note" style="font-size:14px;color:var(--ink-soft);margin-top:7px">${v.d}</div>
+     </div>`).join('');
+}
+
+function focusVocab(k) {
+  vocabFocus = (vocabFocus === k) ? null : k;
+  focused = null;
+  renderVocab(); applyFocus();
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('bSchema').classList.toggle('on', m==='schema');
+  document.getElementById('bInst').classList.toggle('on', m==='instance');
+  draw();
+}
+
+// ---- live data ------------------------------------------------------------
+// Served from the app (/docs/explainers/…) this is same-origin and reads the
+// real graph. Opened as a bare file it falls back to the written-in samples
+// and says so, rather than pretending.
+const NODE_FOR_LABEL = {
+  Source:'ObsSource', Segment:'Segment', Concept:'Concept', Deal:'Deal',
+  Facility:'Facility', Covenant:'Covenant', Event:'Event', ExtractionRun:'Run',
+  Observation:'Observation', Fact:'Fact',
+};
+
+function setLive(state, text) {
+  const el = document.getElementById('live');
+  el.textContent = text;
+  el.style.color  = state === 'live' ? 'var(--edge)' : 'var(--ink-soft)';
+  el.style.borderColor = state === 'live' ? 'var(--edge)' : 'var(--rule)';
+  el.style.background  = state === 'live' ? 'var(--edge-bg)' : 'transparent';
+}
+
+async function hydrate() {
+  try {
+    const r = await fetch('/api/graph/model');
+    if (!r.ok) throw new Error('no graph');
+    const m = await r.json();
+
+    const counts = Object.fromEntries(m.labels.map(l => [l.label, l.n]));
+    const total = m.labels.reduce((a, l) => a + l.n, 0);
+
+    // node instance text, straight from the database
+    for (const [label, node] of Object.entries(NODE_FOR_LABEL)) {
+      const n = NODES[node];
+      if (!n) continue;
+      n.count = counts[label] || 0;
+      const rows = (m.samples[label] || []).slice(0, 3);
+      if (rows.length) {
+        n.inst = rows.map(x => Object.values(x).filter(v => v != null)
+                   .join(' · ').slice(0, 34)).join('\n');
+      } else if (n.count === 0) {
+        n.inst = '(none in graph)';
+      }
+    }
+    // observed Source count sits on ObsSource; controlled sources aren't loaded yet
+    NODES.DealSource.inst = '(no controlled source loaded)';
+
+    // vocabularies, live
+    m.vocabularies.forEach(v => {
+      if (VOCABS[v.name]) VOCABS[v.name].v = v.terms;
+      else VOCABS[v.name] = { v: v.terms, on: [], d: v.description || '' };
+    });
+
+    setLive('live', `live · ${total} nodes`);
+    draw(); renderVocab();
+  } catch (e) {
+    setLive('static', 'written-in samples — graph not reachable');
+  }
+}
+
+draw(); renderVocab(); hydrate();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
+</script>
