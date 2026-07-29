@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "twelvelabs-playground",
-      "runtimeExecutable": ".venv/bin/uvicorn",
-      "runtimeArgs": ["server:app", "--reload", "--port", "8000"],
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["-m", "uvicorn", "server:app", "--port", "8000", "--host", "127.0.0.1"],
       "port": 8000
     }
   ]

@@ -2,11 +2,23 @@
 
 *Proposed, for the 30 July hackathon. Built from public sources only.*
 
-> **Scope note.** An earlier draft of this file was written against internal Enid schema and
-> has been removed. Nothing here reproduces Enid table names, column names, constraints, or
-> its trust-grading scheme. What carries over is **business context and use case** — which is
-> John's to share — and nothing else. Anything that turns out to need internal material gets
-> raised before it is written down.
+> **Scope note — corrected 29 July.** An earlier version of this note claimed that nothing
+> here reproduced Enid table names, column names or vocabularies. **That claim was false**,
+> and an audit found it contradicted by this file's own concept section. The accurate
+> position:
+>
+> - **Clean:** Enid's trust-grading ladder appears nowhere, in any form. Neither do its
+>   table names, its provenance constraints, or its medallion pipeline.
+> - **Present, and pending John's decision:** the column names `covenant_code`,
+>   `unit_kind` and `canonical_scale`; the `unit_kind` and `scale` term sets, which are
+>   subsets of Enid's SQL CHECK lists; and the concept codes `cta_senior_icr`,
+>   `cta_senior_rar`, `cta_senior_net_debt`.
+> - **Mitigating:** Senior ICR, Senior RAR and Common Terms Agreement are publicly
+>   disclosed Gatwick covenant terminology. Only the `cta_` prefix convention is Enid's.
+>
+> The repository is private. Nothing above is exposed, and none of it is settled — the line
+> between "public financial term" and "Enid identifier" is John's to draw, not this file's
+> to assume.
 
 ---
 

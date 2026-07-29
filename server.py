@@ -279,12 +279,19 @@ async def _run_research(job_id: str, query: str):
         r = await client.post("https://api.you.com/v1/research",
                               headers={"X-API-Key": YOU_KEY, "Content-Type": "application/json"},
                               json={"input": query}, timeout=600.0)
+        if r.status_code != 200:
+            # an upstream failure was being filed as a successful job with no content
+            j["status"], j["error"] = "failed", f"upstream HTTP {r.status_code}: {r.text[:200]}"
+            j["finished_at"] = time.time()
+            return
         d = r.json()
         out = d.get("output") or {}
+        # the key is `sources`, not `citations` — reading the wrong one meant the
+        # SOURCES list was always empty and silently so
+        srcs = (out.get("sources") if isinstance(out, dict) else None) or d.get("sources") or []
         j["result"] = {
             "content": out.get("content") if isinstance(out, dict) else out,
-            "citations": (out.get("citations") if isinstance(out, dict) else None)
-                         or d.get("citations"),
+            "citations": srcs,
         }
         j["status"] = "done"
     except Exception as e:
@@ -384,14 +391,41 @@ async def graph_assertions():
 @app.post("/api/graph/validate")
 async def graph_validate(req: Request):
     b = await req.json()
-    if b["status"] not in ("validated", "rejected"):
+    if b.get("status") not in ("validated", "rejected"):
         return JSONResponse({"error": "humans may only validate or reject"}, status_code=400)
+
+    # Never invent an attester. An unsigned decision is not a decision, and
+    # defaulting the name meant an anonymous caller could sign as someone else.
+    who = (b.get("who") or "").strip()
+    if not who:
+        return JSONResponse({"error": "who is required — a decision must be signed"},
+                            status_code=400)
+
+    cur = cy("MATCH ()-[m:MAY_AFFECT]->() WHERE elementId(m) = $id "
+             "RETURN m.status AS status, m.validated_by AS by, "
+             "toString(m.validated_at) AS at", id=b["id"])
+    if not cur:
+        return JSONResponse({"error": "not found"}, status_code=404)
+
+    # A settled pair is closed — to the model AND to a second HTTP caller.
+    # Reopening is possible but must be deliberate and is recorded as such.
+    if cur[0]["status"] != "proposed" and not b.get("reopen"):
+        return JSONResponse({
+            "error": "already decided",
+            "status": cur[0]["status"], "by": cur[0]["by"], "at": cur[0]["at"],
+            "hint": "pass reopen:true to overturn — it is recorded, not silent",
+        }, status_code=409)
+
     rows = cy("""MATCH (e:Event)-[m:MAY_AFFECT]->(c:Covenant) WHERE elementId(m) = $id
                  SET m.status = $status, m.validated_by = $who, m.validated_at = datetime(),
-                     m.human_note = $note
-                 RETURN m.status AS status, m.validated_by AS by""",
-              id=b["id"], status=b["status"], who=b.get("who", "john"), note=b.get("note"))
-    return rows[0] if rows else JSONResponse({"error": "not found"}, status_code=404)
+                     m.human_note = $note,
+                     m.reopened = CASE WHEN $reopen THEN coalesce(m.reopened,0)+1 ELSE m.reopened END,
+                     m.previous_status = CASE WHEN $reopen THEN $prev ELSE m.previous_status END
+                 RETURN m.status AS status, m.validated_by AS by,
+                        coalesce(m.reopened,0) AS reopened""",
+              id=b["id"], status=b["status"], who=who, note=b.get("note"),
+              reopen=bool(b.get("reopen")), prev=cur[0]["status"])
+    return rows[0]
 
 
 @app.get("/api/graph/model")

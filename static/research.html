@@ -97,9 +97,11 @@ function renderResult(res, secs) {
     c.style.marginTop = '16px';
     c.innerHTML = '<div style="color:var(--teal);font-weight:700;margin-bottom:6px">SOURCES</div>' +
       res.citations.map((x, i) => {
-        const url = x.url || x;
-        return `<div class="muted" style="margin:3px 0"><span class="badge">${i+1}</span>
-                <a href="${url}" target="_blank" style="color:var(--dim)">${url}</a></div>`;
+        const url = x.url || x, title = x.title || '';
+        return `<div class="muted" style="margin:5px 0"><span class="badge">${i+1}</span>
+                <a href="${url}" target="_blank" style="color:var(--fg)">${title || url}</a>
+                ${title ? `<div style="font-size:10px;margin-left:26px">${url.slice(0,88)}</div>` : ''}
+                </div>`;
       }).join('');
     $('out').appendChild(c);
   }
