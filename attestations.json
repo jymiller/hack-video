@@ -1,5 +1,21 @@
 [
  {
+  "event": "Airport water supply failure",
+  "covenant": "senior_icr",
+  "evidence_sha256": "78a3514f49df917d23c007a976b2afaca16ae59ad2d99000d0659d2f718f069f",
+  "status": "rejected",
+  "validated_by": "john",
+  "validated_at": "2026-07-29T16:59:26.84Z",
+  "evidence_url": "https://www.youtube.com/watch?v=dKEpA70WhXU",
+  "human_note": "No flights cancelled, the airport never closed, water restored across the campus in about eleven hours. A terminal-services failure, not an air-operations one.",
+  "previous_status": null,
+  "reopened": null,
+  "could_affect": true,
+  "direction": "decreases",
+  "rationale": "An airport water supply failure is an operational incident that could disrupt operations and reduce revenue, lowering the interest cover ratio.",
+  "model": "zai-org/glm-5.2"
+ },
+ {
   "event": "Northern Runway development consent granted",
   "covenant": "senior_icr",
   "evidence_sha256": "f114c7b39e5dcb834a0cd2967b649d04e2515dff631a77eecce97003e7c01029",

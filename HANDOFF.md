@@ -121,7 +121,9 @@ attestations.json      the human decisions — this file is not rebuildable
 
 **Running services.** Neo4j in docker container `hackgraph` (bolt 7687, browser 7474,
 neo4j/hackvideo2026). The app on `:8000`. Both are disposable —
-`graph/dump/graph-export.json` holds all 154 nodes and 375 relationships.
+`graph/dump/graph-export.json` holds all 155 nodes and 375 relationships. The node count
+drifts upward by one every time `make assert` runs — it writes an `ExtractionRun` audit node
+even when the worklist is empty and no model call is made.
 
 ---
 
@@ -151,13 +153,12 @@ reproduced; it has been corrected to say what is actually true.
 
 **Technical, decided but not done:**
 
-- **Beat 4 has data again — but the rejection is unsigned.** A Firstpost clip on the water
-  outage (`dKEpA70WhXU`, 4:13, hash `78a3514f49df`) is indexed, linked and assessed.
-  `glm-5.2` proposed **could_affect: true** on `senior_icr`. It is wrong — no flight was
-  cancelled, the airport never closed, water was back in ~11 hours — which is exactly the
-  beat. **Only John can sign the rejection**; until he does the edge sits at `proposed` and
-  beat 4 shows an overreach with no human answer next to it. Command in
-  [`docs/06`](docs/06-the-run-of-show.md).
+- ~~Beat 4 has no data.~~ **Closed 29 July.** A Firstpost clip on the water outage
+  (`dKEpA70WhXU`, 4:13, hash `78a3514f49df`) is indexed, linked and assessed. `glm-5.2`
+  proposed **could_affect: true** on `senior_icr`; John **rejected** it at 16:59, signed and
+  timestamped, and the rejection is kept rather than deleted. `senior_rar` is deliberately
+  left `proposed` — the queue is not meant to look finished. The pair is now closed to the
+  model: `make assert` makes zero API calls and returns in 0.2s.
 - **No UK broadcaster put the water outage on YouTube.** BBC, Sky, ITV, GB News, LBC,
   Guardian, Telegraph, Independent, Reuters, AP all swept and all empty; ITV ran text only.
   Do not spend time re-searching. Five other candidates exist and all are small channels —

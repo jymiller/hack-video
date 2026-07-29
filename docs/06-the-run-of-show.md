@@ -149,7 +149,7 @@ After 14:30 only three moves are legal: **SUBTRACT, SUBMIT, REHEARSE.**
 
 ---
 
-## Beat 4 — closed 29 July, and what is still owed
+## Beat 4 — closed 29 July
 
 The water-outage clip is in the corpus: **Firstpost, 4:13, 27 July 2026**,
 `https://www.youtube.com/watch?v=dKEpA70WhXU`, hash `78a3514f49df`. Indexed, linked to the
@@ -163,19 +163,23 @@ The water-outage clip is in the corpus: **Firstpost, 4:13, 27 July 2026**,
 water was back across the campus inside about eleven hours. The model reacted to the loudest
 reading of the footage. This is the beat.
 
-**What is still owed: the rejection is unsigned.** The edge sits at `proposed`. Only John can
-move it, and until he does, beat 4 shows a live model overreach with no human answer beside
-it. Reject it on the graph page, or:
+**John rejected it at 16:59 on 29 July**, signed and timestamped, with the note *"No flights
+cancelled, the airport never closed, water restored across the campus in about eleven hours.
+A terminal-services failure, not an air-operations one."* The card reads **rejected — kept
+for the record, read by nothing**, which is the sentence the beat exists to earn.
 
-```bash
-ID=$(curl -s http://127.0.0.1:8000/api/graph/assertions | python3 -c "import json,sys; print(next(a['id'] for a in json.load(sys.stdin) if a['event']=='Airport water supply failure' and a['covenant']=='senior_icr'))") && curl -s -X POST http://127.0.0.1:8000/api/graph/validate -H 'Content-Type: application/json' -d "{\"id\":\"$ID\",\"status\":\"rejected\",\"who\":\"john\",\"note\":\"no flights cancelled, no closure, water restored in about eleven hours\"}"
-```
+`senior_rar` is deliberately **left proposed**. The same overreach, unanswered — because a
+queue that is entirely worked looks staged, and one rejection is enough for the beat. It also
+gives an easy answer if a judge asks what happens next.
 
-The id is a Neo4j element id and changes on every rebuild, so it is resolved live rather
-than written down.
+The pair is now closed to the model. `make assert` sends nothing, spends nothing and returns
+in 0.2 seconds — the attestation rule, demonstrable live if anyone doubts it. The decision
+survives `make rebuild`: `graph/attestations.py` restores it with a `MERGE`, so it reattaches
+even though the rebuild does not re-run the assertion pass.
 
-`senior_rar` carries the same overreach and can be rejected the same way, or left proposed —
-one rejection is enough for the beat, and two is not twice as good.
+**Do not re-run `make assert` between rehearsals unless something is wrong.** It is safe —
+it makes no model calls — but it writes an `ExtractionRun` audit node each time, so the node
+count in the header creeps upward and stops matching the documented figure.
 
 **No search for a UK broadcaster clip is worth repeating.** BBC, Sky, ITV, GB News, LBC,
 Guardian, Telegraph, Independent, Reuters and AP were all swept: none put this event on

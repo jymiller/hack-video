@@ -1871,6 +1871,18 @@
     "description": "A monetary amount",
     "value": "currency"
    }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:154",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "purpose": "covenant impact assertion",
+    "started_at": "2026-07-29T16:59:41.506000000+00:00",
+    "model": "zai-org/glm-5.2",
+    "id": "zai-org/glm-5.2-1785344381"
+   }
   }
  ],
  "relationships": [
@@ -4597,14 +4609,17 @@
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
    "type": "MAY_AFFECT",
    "props": {
+    "validated_by": "john",
     "asserted_by": "model",
     "could_affect": true,
     "evidence_sha256": "78a3514f49df917d23c007a976b2afaca16ae59ad2d99000d0659d2f718f069f",
+    "human_note": "No flights cancelled, the airport never closed, water restored across the campus in about eleven hours. A terminal-services failure, not an air-operations one.",
     "model": "zai-org/glm-5.2",
     "evidence_url": "https://www.youtube.com/watch?v=dKEpA70WhXU",
+    "validated_at": "2026-07-29T16:59:26.840000000+00:00",
     "asserted_at": "2026-07-29T08:33:32.682000000+00:00",
     "rationale": "An airport water supply failure is an operational incident that could disrupt operations and reduce revenue, lowering the interest cover ratio.",
-    "status": "proposed",
+    "status": "rejected",
     "direction": "decreases"
    }
   },
