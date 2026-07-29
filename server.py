@@ -445,6 +445,10 @@ async def graph_model():
                           "c.reachable_by AS lane ORDER BY c.code"),
             "Segment": cy("MATCH (s:Segment) RETURN s.video_id AS video_id, s.start AS start, "
                           "left(s.transcript, 70) AS transcript ORDER BY s.start LIMIT 4"),
+            "Observation": cy("MATCH (o:Observation) RETURN o.concept_code AS concept, "
+                              "o.value AS value, o.unit_kind AS unit, o.modality AS modality "
+                              "ORDER BY o.concept_code LIMIT 4"),
+            "Fact": cy("MATCH (f:Fact) RETURN f.value AS value, f.unit_kind AS unit LIMIT 4"),
             "Deal": cy("MATCH (d:Deal) RETURN d.legal_name AS legal_name, d.deal_type AS deal_type"),
             "Covenant": cy("MATCH (c:Covenant) RETURN c.covenant_code AS code, "
                            "c.direction AS direction, c.threshold_status AS threshold"),
@@ -494,4 +498,7 @@ async def media(name: str):
 
 # mounted before "/" — order matters, Starlette takes the first match
 app.mount("/docs", StaticFiles(directory="docs", html=True), name="docs")
+# Served from the app, not opened as file://, so the explainers can read live
+# graph data same-origin instead of shipping hardcoded samples.
+app.mount("/explainers", StaticFiles(directory="docs/explainers", html=True), name="explainers")
 app.mount("/", StaticFiles(directory="static", html=True), name="static")

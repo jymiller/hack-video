@@ -21,6 +21,7 @@ WHERE m.status <> 'proposed'
 RETURN e.name AS event, c.covenant_code AS covenant,
        m.evidence_sha256 AS evidence_sha256, m.status AS status,
        m.validated_by AS validated_by, toString(m.validated_at) AS validated_at,
+       m.evidence_url AS evidence_url,
        m.human_note AS human_note, m.previous_status AS previous_status,
        m.reopened AS reopened, m.could_affect AS could_affect,
        m.direction AS direction, m.rationale AS rationale, m.model AS model
@@ -33,6 +34,7 @@ MERGE (e)-[m:MAY_AFFECT {evidence_sha256:$evidence_sha256}]->(c)
 SET m.status=$status, m.validated_by=$validated_by,
     m.validated_at=datetime($validated_at), m.human_note=$human_note,
     m.previous_status=$previous_status, m.reopened=$reopened,
+    m.evidence_url=$evidence_url,
     m.could_affect=$could_affect, m.direction=$direction,
     m.rationale=$rationale, m.model=$model, m.asserted_by='model',
     m.restored=true

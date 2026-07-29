@@ -118,6 +118,27 @@
   .verdict .big { font-family:var(--disp); font-size:clamp(21px,3.2vw,30px); line-height:1.16;
                   font-weight:500; text-transform:uppercase; margin:0 0 10px; color:var(--edge); }
   .verdict p { margin:0; font-size:16.5px; }
+  /* ---- attestation path ---- */
+  .att { border:1px solid var(--rule); background:var(--card); padding:16px 18px; margin-top:14px; }
+  .att .flow { display:flex; flex-wrap:wrap; gap:0; }
+  .att .step { flex:1; min-width:112px; padding:9px 11px; border:1px solid var(--rule);
+               background:var(--ground); }
+  .att .step + .step { border-left:none; }
+  .att .step .k { font-family:var(--mono); font-size:9px; letter-spacing:.12em;
+                  text-transform:uppercase; color:var(--ink-soft); }
+  .att .step .v { font-family:var(--mono); font-size:12px; font-weight:700; margin-top:4px;
+                  word-break:break-word; }
+  .att .step.on   { border-color:var(--edge); background:var(--edge-bg); }
+  .att .step.on .v { color:var(--edge); }
+  .att .step.no   { border-color:var(--hot); background:var(--hot-bg); }
+  .att .step.no .v { color:var(--hot); }
+  .att .step.wait { border-color:var(--warn); background:var(--warn-bg); }
+  .att .step.wait .v { color:var(--warn); }
+  .att .why { font-size:14.5px; color:var(--ink-soft); margin-top:11px; line-height:1.45; }
+  .att .gate { font-family:var(--mono); font-size:11px; margin-top:11px; padding:8px 11px; }
+  .att .gate.blocked { background:var(--hot-bg); color:var(--hot); }
+  .att .gate.open    { background:var(--edge-bg); color:var(--edge); }
+
   .foot { margin-top:56px; padding-top:20px; border-top:1px solid var(--rule);
           font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
           color:var(--ink-soft); }
@@ -139,7 +160,7 @@
   <section>
     <div class="bar">
       <button id="bSchema" class="on" onclick="setMode('schema')">Schema</button>
-      <button id="bInst" onclick="setMode('instance')">Instances</button>
+      <button id="bInst" onclick="loadLive()">Live from Neo4j</button>
       <button onclick="focusNode(null)">Clear focus</button>
       <span id="live" style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;
             text-transform:uppercase;padding:5px 10px;border:1px solid var(--rule)">checking graph…</span>
@@ -211,7 +232,20 @@
     </div>
   </section>
 
-  <p class="foot">Proposal · 28 July 2026 · nothing built · public sources only</p>
+  <section>
+    <div class="col">
+      <p class="kicker">Live</p>
+      <h2>The attestation path</h2>
+      <p>Every assertion in the graph right now, and where it stopped. Read left to right:
+        a source, a model, a proposal, a human, an outcome. The gate at the bottom of each
+        says plainly whether anything is allowed to compute off it.</p>
+    </div>
+    <div id="attest"><p class="note">Serve this page from the app
+      (<code>make serve</code>, then <code>/explainers/the-graph.html</code>) to see live
+      assertions.</p></div>
+  </section>
+
+  <p class="foot">Live from Neo4j when served from the app · public sources only</p>
 
 </div>
 </div>
@@ -220,54 +254,43 @@
 const NODES = {
   DealSource:  {x:40,  y:40,  w:150,h:52, lane:'deal', t:'Source', s:'kind: cta / prospectus',
     props:['id','kind','url','publisher','published_at','sha256'], vocabs:['source_kind'],
-    note:'The lending documents themselves. Public for a listed bond.',
-    inst:'Gatwick Funding Ltd\n£5bn programme prospectus\nRNS · 10 Feb 2026'},
+    note:'The lending documents themselves. Public for a listed bond.'},
   Deal:        {x:240, y:40,  w:150,h:52, lane:'deal', t:'Deal', s:'who lent the money',
     props:['legal_name','borrower','issuer','deal_type','currency','inception_date','final_maturity'],
     vocabs:['deal_type'],
-    note:'The lending relationship. Somebody had to lend Gatwick the money — they are who wrote the covenants and agreed them.',
-    inst:'Gatwick Funding Ltd\nsecured bond programme\nGBP · maturities to 2050'},
+    note:'The lending relationship. Somebody had to lend Gatwick the money — they are who wrote the covenants and agreed them.'},
   Facility:    {x:440, y:40,  w:150,h:52, lane:'deal', t:'Facility', s:'a tranche',
     props:['facility_code','label','facility_type','governing_doc','citation'], vocabs:['facility_type'],
-    note:'A tranche within the deal, pointing at the document that governs it.',
-    inst:'Senior secured notes\ngoverning doc: Common Terms Agreement'},
+    note:'A tranche within the deal, pointing at the document that governs it.'},
   Covenant:    {x:640, y:40,  w:150,h:52, lane:'deal', t:'Covenant', s:'the tested condition',
     props:['name','covenant_code','threshold_value','direction','test_frequency','test_dates[]'],
     vocabs:['covenant_code','direction'],
-    note:'The condition the deal is tested on. Threshold and direction come from the filed documents.',
-    inst:'Senior ICR · Senior RAR\nboth disclosed in the bond documentation'},
+    note:'The condition the deal is tested on. Threshold and direction come from the filed documents.'},
 
   ObsSource:   {x:40,  y:400, w:150,h:52, lane:'obs', t:'Source', s:'provenance: observed',
     props:['id','provenance_class','kind','url','publisher','published_at','sha256'],
     vocabs:['provenance_class','source_kind'],
-    note:'Nobody sent this. Nobody is accountable for it. It was not made for the lender.',
-    inst:'Channel 4 News · TalkTV\nSussexWorld rally · Runway Radar\nLondon Standard'},
+    note:'Nobody sent this. Nobody is accountable for it. It was not made for the lender.'},
   Segment:     {x:240, y:400, w:150,h:52, lane:'obs', t:'Segment', s:'a timecoded span',
     props:['video_id','start','end','transcript'], vocabs:[],
-    note:'The timecode is the product. "Channel 4 News, somewhere" is worthless; 4:31–4:38 seeks the playhead to the proof.',
-    inst:'KLnxVX-m-Ng · 26.5s → 35.9s\n"Today this government are backing\na second runway here at Gatwick"'},
+    note:'The timecode is the product. "Channel 4 News, somewhere" is worthless; 4:31–4:38 seeks the playhead to the proof.'},
   Observation: {x:440, y:400, w:150,h:52, lane:'obs', t:'Observation', s:'never becomes a fact',
     props:['text','value','unit','currency','confidence','modality'],
     vocabs:['modality','unit_kind','scale'],
-    note:'An assertion from a source nobody vouched for. May corroborate, contradict or flag — never test.',
-    inst:'£2.2bn scheme cost · on_screen_text\n14,000 jobs · on_screen_text\nconfidence 0.9'},
+    note:'An assertion from a source nobody vouched for. May corroborate, contradict or flag — never test.'},
 
   Fact:        {x:440, y:230, w:150,h:52, lane:'ctrl', t:'Fact', s:'controlled only',
     props:['value','unit','currency','as_of','effective_date'], vocabs:['unit_kind','scale'],
-    note:'From an accountable source. The only thing permitted to test a covenant.',
-    inst:'Senior net debt · £m · as_of 2026-02-10\nsource: prospectus supplement'},
+    note:'From an accountable source. The only thing permitted to test a covenant.'},
   Concept:     {x:640, y:315, w:150,h:52, lane:'shared', t:'Concept', s:'what is measured',
     props:['code','name','unit_kind','canonical_scale','aliases[]'], vocabs:['unit_kind','scale'],
-    note:'Both lanes resolve to the same Concept — that is what lets an Observation be compared to a Fact at all.',
-    inst:'passenger_traffic · count\ncta_senior_icr · ratio_x\ncta_senior_rar · percent'},
+    note:'Both lanes resolve to the same Concept — that is what lets an Observation be compared to a Fact at all.'},
   Event:       {x:640, y:490, w:150,h:52, lane:'shared', t:'Event', s:'a dated happening',
     props:['name','date','kind'], vocabs:['event_kind'],
-    note:'The thing that happened. Observations are about it; it may or may not reach a covenant.',
-    inst:'DCO granted · 2025-09-21\nHigh Court ruling · 2026-06-23\nwater outage · 2026-07-26'},
+    note:'The thing that happened. Observations are about it; it may or may not reach a covenant.'},
   Run:         {x:240, y:530, w:150,h:52, lane:'shared', t:'ExtractionRun', s:'the audit trail',
     props:['model','version','prompt_hash','tokens_in','tokens_out','cost_usd','started_at'], vocabs:[],
-    note:'Every generated node traces to the model and prompt that made it, and what it cost. The honest answer to "did a human write this?"',
-    inst:'pegasus1.2 · marengo3.0\ndeepseek-v4-flash (extraction)'},
+    note:'Every generated node traces to the model and prompt that made it, and what it cost. The honest answer to "did a human write this?"'},
 };
 
 const EDGES = [
@@ -500,6 +523,47 @@ async function hydrate() {
   }
 }
 
-draw(); renderVocab(); hydrate();
+// The attestation path, live. Each row is one MAY_AFFECT edge walked end to end:
+// which source, which model, what it proposed, who decided, and — the point —
+// whether anything is permitted to compute off it.
+async function loadAttestation() {
+  const box = document.getElementById('attest');
+  if (!box) return;
+  let rows = [];
+  try {
+    const r = await fetch('/api/graph/attestation');
+    if (!r.ok) throw new Error('no server');
+    rows = await r.json();
+  } catch { return; }
+  if (!rows.length) {
+    box.innerHTML = '<p class="note">No assertions in the graph yet — run <code>make assert</code>.</p>';
+    return;
+  }
+  box.innerHTML = rows.map(r => {
+    const decided = r.status !== 'proposed';
+    const steps = [
+      ['Source',   (r.evidence_url || '').includes('youtube') ? 'broadcast clip'
+                     : (r.deal ? 'deal document' : 'no source'), decided || r.evidence_url ? 'on' : 'no'],
+      ['Model',    r.model || r.asserted_by || 'model', 'on'],
+      ['Proposed', r.could_affect === false ? 'no effect' : (r.direction || 'may affect'),
+                   decided ? 'on' : 'wait'],
+      ['Human',    r.validated_by || 'awaiting', decided ? 'on' : 'wait'],
+      ['Outcome',  r.status, r.status === 'validated' ? 'on'
+                     : (r.status === 'rejected' ? 'no' : 'wait')],
+    ];
+    const gate = r.status === 'validated'
+      ? `<div class="gate open">counts toward ${r.covenant} — a computation may read this</div>`
+      : `<div class="gate blocked">does not reach ${r.covenant} — nothing computes off a
+           ${r.status} edge</div>`;
+    return `<div class="att">
+      <div style="font-size:12px;color:var(--ink-soft);margin-bottom:7px">
+        ${r.date || ''} · <b style="color:var(--ink)">${r.event || ''}</b> → ${r.covenant}</div>
+      <div class="flow">${steps.map(([k, v, cls]) =>
+        `<div class="step ${cls}"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')}</div>
+      <div class="why">${r.rationale || ''}</div>${gate}</div>`;
+  }).join('');
+}
+
+draw(); renderVocab(); hydrate(); loadAttestation();
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
 </script>
