@@ -1,0 +1,3809 @@
+{
+ "nodes": [
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:0",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "unit_kind",
+    "description": "A percentage \u2014 has a ceiling",
+    "value": "percent"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:1",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "unit_kind",
+    "description": "A multiple \u2014 has a floor",
+    "value": "ratio_x"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:2",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "unit_kind",
+    "description": "A date",
+    "value": "date"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:3",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "scale",
+    "description": "Canonical scale of the stored number"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:4",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "unit_kind",
+    "description": "Free text",
+    "value": "text"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:5",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "scale",
+    "description": "As stated",
+    "value": "units"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:6",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "scale",
+    "description": "Thousands",
+    "value": "thousands"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:7",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "scale",
+    "description": "Millions",
+    "value": "millions"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:8",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "covenant_code",
+    "description": "The covenants this deal discloses"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:9",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "scale",
+    "description": "Not applicable",
+    "value": "none"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:10",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "covenant_code",
+    "description": "Senior interest cover ratio",
+    "value": "senior_icr"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:11",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "direction",
+    "description": "Which way a threshold binds"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:12",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "covenant_code",
+    "description": "Senior debt ratio",
+    "value": "senior_rar"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:13",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "direction",
+    "description": "Must stay above",
+    "value": "min"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:14",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "deal_type",
+    "description": "Shape of the lending"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:15",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "direction",
+    "description": "Must stay below",
+    "value": "max"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:16",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "deal_type",
+    "description": "Listed secured bond programme",
+    "value": "secured_bond_programme"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:17",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "deal_type",
+    "description": "Term loan",
+    "value": "term_loan"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:18",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "facility_type",
+    "description": "Tranche type"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:19",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "deal_type",
+    "description": "Revolving credit facility",
+    "value": "rcf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:20",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "facility_type",
+    "description": "Senior secured notes",
+    "value": "senior_secured_notes"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:21",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "event_kind",
+    "description": "What sort of thing happened"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:22",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "facility_type",
+    "description": "Revolving credit",
+    "value": "revolving_credit"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:23",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "event_kind",
+    "description": "A consent or approval granted",
+    "value": "regulatory_approval"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:24",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "event_kind",
+    "description": "A challenge and its outcome",
+    "value": "legal_challenge"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:25",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "event_kind",
+    "description": "An issuance, redemption or amendment",
+    "value": "financing_event"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:26",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "contradiction_basis",
+    "description": "Why two sources disagree"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:27",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "event_kind",
+    "description": "A disruption to operations",
+    "value": "operational_incident"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:28",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "contradiction_basis",
+    "description": "They counted differently",
+    "value": "methodology"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:29",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "contradiction_basis",
+    "description": "They refer to different periods",
+    "value": "timing"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:30",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "contradiction_basis",
+    "description": "They cover different things",
+    "value": "scope"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:31",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "assertion_status",
+    "description": "Lifecycle of a MAY_AFFECT edge"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:32",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "contradiction_basis",
+    "description": "One of them is simply wrong",
+    "value": "arithmetic"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:33",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "assertion_status",
+    "description": "Asserted by a model \u2014 inert, read by no computation",
+    "value": "proposed"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:34",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "assertion_status",
+    "description": "Signed off by a human",
+    "value": "validated"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:35",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "assertion_status",
+    "description": "Overruled by a human \u2014 kept, never deleted",
+    "value": "rejected"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "labels": [
+    "Concept"
+   ],
+   "props": {
+    "code": "passenger_traffic",
+    "name": "Passenger traffic",
+    "probes": [
+     "passengers travelling through the airport",
+     "passenger numbers at the airport",
+     "how many people used the airport"
+    ],
+    "reachable_by": "both",
+    "unit_kind": "count",
+    "canonical_scale": "millions"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "labels": [
+    "Concept"
+   ],
+   "props": {
+    "code": "air_traffic_movements",
+    "name": "Air traffic movements",
+    "probes": [
+     "number of flights per year",
+     "aircraft movements",
+     "flight capacity at the airport"
+    ],
+    "reachable_by": "both",
+    "unit_kind": "count",
+    "canonical_scale": "thousands"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "labels": [
+    "Concept"
+   ],
+   "props": {
+    "code": "revenue_per_passenger",
+    "name": "Revenue per passenger",
+    "reachable_by": "controlled",
+    "unit_kind": "currency",
+    "probes": [
+     "income earned per passenger",
+     "retail spend per passenger"
+    ],
+    "canonical_scale": "units"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "labels": [
+    "Concept"
+   ],
+   "props": {
+    "code": "scheme_cost",
+    "name": "Scheme cost",
+    "reachable_by": "observed",
+    "probes": [
+     "the cost of the runway scheme in billions",
+     "how much the expansion will cost",
+     "privately financed cost"
+    ],
+    "unit_kind": "currency",
+    "canonical_scale": "millions"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "labels": [
+    "Concept"
+   ],
+   "props": {
+    "code": "jobs_claimed",
+    "name": "Jobs claimed",
+    "probes": [
+     "jobs created by the expansion",
+     "employment benefits of the runway",
+     "how many jobs it will create"
+    ],
+    "reachable_by": "observed",
+    "unit_kind": "count",
+    "canonical_scale": "units"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:41",
+   "labels": [
+    "Concept"
+   ],
+   "props": {
+    "code": "cta_senior_net_debt",
+    "name": "Senior net debt",
+    "reachable_by": "controlled",
+    "unit_kind": "currency",
+    "probes": [],
+    "canonical_scale": "millions"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:42",
+   "labels": [
+    "Concept"
+   ],
+   "props": {
+    "code": "cta_senior_icr",
+    "name": "Senior interest cover ratio",
+    "reachable_by": "controlled",
+    "unit_kind": "ratio_x",
+    "probes": [],
+    "canonical_scale": "none"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:43",
+   "labels": [
+    "Concept"
+   ],
+   "props": {
+    "code": "cta_senior_rar",
+    "name": "Senior debt ratio",
+    "reachable_by": "controlled",
+    "unit_kind": "percent",
+    "probes": [],
+    "canonical_scale": "none"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:44",
+   "labels": [
+    "Concept"
+   ],
+   "props": {
+    "code": "two_pct_rab_deduction",
+    "name": "Two per cent of RAB deduction",
+    "probes": [],
+    "reachable_by": "controlled",
+    "unit_kind": "currency",
+    "canonical_scale": "millions"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:45",
+   "labels": [
+    "Deal"
+   ],
+   "props": {
+    "note": "Listed secured bond programme. Public for a listed issuer.",
+    "deal_type": "secured_bond_programme",
+    "borrower": "Gatwick Airport Limited",
+    "currency": "GBP",
+    "legal_name": "Gatwick Funding Limited",
+    "issuer": "Gatwick Funding Limited"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:46",
+   "labels": [
+    "Facility"
+   ],
+   "props": {
+    "governing_doc": "Common Terms Agreement",
+    "label": "Senior secured notes",
+    "facility_type": "senior_secured_notes",
+    "facility_code": "GFL-SSN"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "labels": [
+    "Covenant"
+   ],
+   "props": {
+    "covenant_code": "senior_icr",
+    "threshold_status": "not_sourced",
+    "name": "Senior interest cover ratio",
+    "direction": "min"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "labels": [
+    "Covenant"
+   ],
+   "props": {
+    "covenant_code": "senior_rar",
+    "threshold_status": "not_sourced",
+    "name": "Senior debt ratio",
+    "direction": "max"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "labels": [
+    "Event"
+   ],
+   "props": {
+    "date": "2025-09-21",
+    "kind": "regulatory_approval",
+    "name": "Northern Runway development consent granted"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:50",
+   "labels": [
+    "Event"
+   ],
+   "props": {
+    "date": "2026-06-23",
+    "kind": "legal_challenge",
+    "name": "High Court dismisses runway challenge"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:51",
+   "labels": [
+    "Event"
+   ],
+   "props": {
+    "date": "2026-02-10",
+    "kind": "financing_event",
+    "name": "Bond programme supplementary prospectus"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:52",
+   "labels": [
+    "Event"
+   ],
+   "props": {
+    "date": "2026-07-26",
+    "kind": "operational_incident",
+    "name": "Airport water supply failure"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "purpose": "concept-driven retrieval",
+    "started_at": "2026-07-29T07:23:56.886000000+00:00",
+    "model": "marengo3.0",
+    "id": "marengo3.0-1785309836"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "duration": 320.040635,
+    "provenance_class": "observed",
+    "filename": "hXE6OY5ZLTU__SussexWorld__GACC holds rally to challenge the Gatwick decision.mp4",
+    "kind": "rally_footage",
+    "publisher": "SussexWorld",
+    "url_sha256": "2526a9e52b61e61a01b298904dc711a569fe4153fbb3093fdb7e8895cfc2a223",
+    "id": "6a695738d3bc5a69c96d5cb9",
+    "url": "https://www.youtube.com/watch?v=hXE6OY5ZLTU"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:55",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "duration": 103.909297,
+    "provenance_class": "observed",
+    "filename": "hzPZsDHIREo__Runway Radar__Gatwick Airport Expansion Approved\uff1a 100,000 More Flights & 1.mp4",
+    "kind": "broadcast_news",
+    "publisher": "Runway Radar",
+    "url_sha256": "0f9ea67ea3da99b2e0d705262a2afc4f8a985e5f547d8bf6d9c1569c05ce0f84",
+    "id": "6a6957337724e937923764be",
+    "url": "https://www.youtube.com/watch?v=hzPZsDHIREo"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "duration": 511.651701,
+    "provenance_class": "observed",
+    "filename": "vuM3pFQ4vZg__TalkTV__\u201cIt\u2019s Not Going To Save The Economy\u201d \uff5c New Gatwick Runway To.mp4",
+    "kind": "commentary",
+    "publisher": "TalkTV",
+    "url_sha256": "2e5fb26665902bdcb8a474cb0ea6354e05fc44936d6b27756335ea7e0142bc5b",
+    "id": "6a695732f2ac38e18edb08bf",
+    "url": "https://www.youtube.com/watch?v=vuM3pFQ4vZg"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "duration": 559.299048,
+    "provenance_class": "observed",
+    "filename": "0rV_N6ktnRA__Channel 4 News__UK announces second Gatwick Airport runway.mp4",
+    "kind": "broadcast_news",
+    "publisher": "Channel 4 News",
+    "url_sha256": "f114c7b39e5dcb834a0cd2967b649d04e2515dff631a77eecce97003e7c01029",
+    "id": "6a69558df2ac38e18edafb96",
+    "url": "https://www.youtube.com/watch?v=0rV_N6ktnRA"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:58",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "duration": 69.497324,
+    "provenance_class": "observed",
+    "filename": "KLnxVX-m-Ng__The London Standard__Reeves\uff1a Gatwick second runway shows Government \u2018backing buil.mp4",
+    "kind": "broadcast_news",
+    "publisher": "The London Standard",
+    "url_sha256": "9acf99df4abdd8e72b9f7936745141208284e885d17e6222ed54568c770bd689",
+    "id": "6a694da1d3bc5a69c96d0ff8",
+    "url": "https://www.youtube.com/watch?v=KLnxVX-m-Ng"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:59",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "Getwork will be required to limit noise and rely more on public transport, the Green said these concessions don't go far enough. Labours",
+    "start": 103.9,
+    "end": 112.3,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:60",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "expansion and meet its legally binding carbon targets while",
+    "start": 99.5,
+    "end": 103.9,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:61",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "passengers could enjoy more flight options and potentially lower fares.",
+    "start": 39.9,
+    "end": 45.1,
+    "video_id": "6a6957337724e937923764be"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:62",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "this injection of cash into our economy. We said as a government we would back the builders and not the blockers, and that is exactly what we",
+    "start": 59,
+    "end": 66.3,
+    "video_id": "6a694da1d3bc5a69c96d0ff8"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:63",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "lower costs for a family holiday, and it will also mean more good jobs paying decent wages through this",
+    "start": 51.3,
+    "end": 59,
+    "video_id": "6a694da1d3bc5a69c96d0ff8"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:64",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "climate advisers doubt the government can rub a stamp all this expansion",
+    "start": 95.8,
+    "end": 99.5,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:65",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "of all arrivals at the airport come by public transport now and you know public transport in Britain you just magic it up",
+    "start": 147.6,
+    "end": 156.5,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:66",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "UK aviation Gatwick Airport has officially been given the green light for a two point two billion pounds expansion.",
+    "start": 0,
+    "end": 9.1,
+    "video_id": "6a6957337724e937923764be"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:67",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "Coming soon to get work a second runway taking off on top of the third runway at Heathrow expansion at Leighton and a reopening at Doncaster as the government",
+    "start": 0,
+    "end": 9.9,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:68",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "the next five years because of judicial reviews, because of the provisions that Alexander has demanded of Gatwick",
+    "start": 129.6,
+    "end": 138.6,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:69",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "government hunts economic growth wherever it can the new",
+    "start": 9.9,
+    "end": 14.4,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "runway would cost two point two billion pounds and mean up to one hundred thousand more flights the government says it'll create fourteen thousand new jobs and create a billion pounds of economic",
+    "start": 14.4,
+    "end": 23.3,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:71",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "start": 16.5,
+    "end": 26.5,
+    "video_id": "6a694da1d3bc5a69c96d0ff8"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:72",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "Sussex hub will increase flight capacity by one hundred thousand movements per year. The expansion",
+    "start": 14.1,
+    "end": 20.4,
+    "video_id": "6a6957337724e937923764be"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:73",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "economic activity but critics warn it will also not up one point five million tonnes of extra carbon",
+    "start": 23.3,
+    "end": 32.2,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:74",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "start": 0,
+    "end": 6.5,
+    "video_id": "6a694da1d3bc5a69c96d0ff8"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:75",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "officials say the project could create fourteen thousand jobs and inject around one billion pounds into the local and national economy passengers",
+    "start": 30.8,
+    "end": 39.9,
+    "video_id": "6a6957337724e937923764be"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:76",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "Unlike heatrows controversial third runway. Gatwick's plan is cheaper, quicker, and privately funded, costing passengers only about four pounds extra over ten years. years,",
+    "start": 50.1,
+    "end": 65,
+    "video_id": "6a6957337724e937923764be"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:77",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "airports you know this is the journey of mankind flying through the air should not be remarkable and being able to take off and land in",
+    "start": 441.3,
+    "end": 450.1,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:78",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "expansion includes a slightly moved northern runway. Designed to handle planes like the Airbus A three hundred twenty and Boeing seven hundred thirty seven officials",
+    "start": 20.4,
+    "end": 30.8,
+    "video_id": "6a6957337724e937923764be"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:79",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "could start soon. With flights taking off by summer twenty twenty nine, Gatwick's",
+    "start": 87.3,
+    "end": 93.6,
+    "video_id": "6a6957337724e937923764be"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:80",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "has also said he's going to reduce the number of judicial reviews you can get from three down to two or one make it much tougher to lodge lodge objections objections, believe it when",
+    "start": 174.4,
+    "end": 185,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:81",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "comes That out comes of out this of this is is how long the whole process has taken, how it's always been held up by pieces of paper, how shovels have not reached the Earth in fifteen years, and my guess will not reach the Earth for",
+    "start": 115,
+    "end": 129.6,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:82",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "lodge lodge objections objections, believe it when you see it. That's what I say indeed and of course there's the other sort of slightly inconvenient truth here",
+    "start": 183.1,
+    "end": 191.2,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:83",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "seven pages of provisions strictures and what you can and can't do so the the overriding thing that comes That out comes of out this of this is is",
+    "start": 107.3,
+    "end": 116.1,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:84",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "Gatwick Airport Limited, and the chief of which is they've got to guarantee that not forty seven percent but fifty four percent",
+    "start": 138.6,
+    "end": 147.6,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:85",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "it sort of does rather expose a curious contradiction in this government because we understand that there's more",
+    "start": 191.2,
+    "end": 199.3,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:86",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "small modular reactors and new nuclear power station in Suffolk backing energy projects and transport projects right around the country but",
+    "start": 35.9,
+    "end": 44.7,
+    "video_id": "6a694da1d3bc5a69c96d0ff8"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:87",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "start": 6.5,
+    "end": 16.5,
+    "video_id": "6a694da1d3bc5a69c96d0ff8"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:88",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "remains in control, navigating between voters concerned by climate",
+    "start": 157.8,
+    "end": 162.4,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:89",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "finished Finished very very good. Thank good. you very Thank you much very much. Well done, well done well done",
+    "start": 172.3,
+    "end": 177.9,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:90",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "Coast, or reaming for the big white markers that to learn her budget, the Chancellor has to prove she remains",
+    "start": 152.3,
+    "end": 157.8,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:91",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "in the cockpit Rachel",
+    "start": 32.2,
+    "end": 35.8,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:92",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "hurrah. It's expected to create fourteen thousand jobs raking a billion pounds annually. The only problem is it is facing legal challenges that if",
+    "start": 8.5,
+    "end": 16.9,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:93",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "got to be a bit thicker than the a twenty one I understand that and there are other considerations around it we understand that as well",
+    "start": 467.5,
+    "end": 476.3,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:94",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "decent wages through this injection of cash into our economy. We said as a government we would back the builders and not the blockers, and that is exactly what we are doing with this announcement. In",
+    "start": 65.8,
+    "end": 76.6,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:95",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "near daily dallying dallying naval naval glazing glazing, doing more research and going, well it's it's a runway you know in an expanding world",
+    "start": 415,
+    "end": 423.8,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:96",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "it needs to be boys get your shovels, build a straight road. Plenty of Tarmac away we go! Happy days!",
+    "start": 483.3,
+    "end": 491.5,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:97",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "one, a locality of the list will be endless. James Woodhysen is a journalist and social commentator James. Good to have you on with us. I mean you could have written this, couldn't",
+    "start": 25.3,
+    "end": 33.7,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:98",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "and should in theory create better fares and more competition and the ease of congestion that we see at airports",
+    "start": 432.6,
+    "end": 441.3,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:99",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "I swear in years to come people will look back at us at this zero and go how the hell did it take that long to build an airport it's like a straight road",
+    "start": 458.8,
+    "end": 467.5,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:100",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "inefficient form of transportation when it comes to the environment and CO twos and all the rest of it and yet at the same government is simultaneously",
+    "start": 208.5,
+    "end": 217.6,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:101",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "nine weeks, the chancellor will present the budget, but much of",
+    "start": 76.6,
+    "end": 79.6,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:102",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "Gatwick expansion takes place today, the UK's independent climate change committee independent body connected the government produced its",
+    "start": 210.9,
+    "end": 219.4,
+    "video_id": "6a695738d3bc5a69c96d5cb9"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:103",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "if prioritised by courts could take months to resolve. Matt you can only see this coming around the corner whether they're coming at this from an environmental one,",
+    "start": 16.9,
+    "end": 25.3,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:104",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "but can on manage a straight road build the flipping thing there's the place the place already exists there's where it needs to be boys",
+    "start": 476.3,
+    "end": 485,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:105",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "positive case for migration and how you value it because you know the numbers are quite big, aren't they? Hundreds of thousands of migrants will become eligible for the right to live here",
+    "start": 345,
+    "end": 353.3,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:106",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "step to see if it can be heard. We want to raise the amount of money for each step of the campaign as we go forward.",
+    "start": 311.7,
+    "end": 320,
+    "video_id": "6a695738d3bc5a69c96d5cb9"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:107",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "start": 196.5,
+    "end": 202.3,
+    "video_id": "6a695738d3bc5a69c96d5cb9"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:108",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "She of and jobs growth and to growth be found to be found through a raft of green sustainable based economies and industries and to talk about eco warriors",
+    "start": 115,
+    "end": 123.8,
+    "video_id": "6a695738d3bc5a69c96d5cb9"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:109",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "decade. We should instead wait for these so called sustainable aviation fuels to prove their worth and then if they do come",
+    "start": 243.8,
+    "end": 252.6,
+    "video_id": "6a695738d3bc5a69c96d5cb9"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:110",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "tomorrow? So we will be launching a crowd funding campaign on the crowd justice website website. Actually, it's being launched",
+    "start": 296.3,
+    "end": 305,
+    "video_id": "6a695738d3bc5a69c96d5cb9"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:111",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "Gatwick's expansion, balancing growth and environmental concerns. Will be one to watch subscribe",
+    "start": 93.6,
+    "end": 100.4,
+    "video_id": "6a6957337724e937923764be"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:112",
+   "labels": [
+    "Segment"
+   ],
+   "props": {
+    "transcript": "it looks like that the plans will be given the go ahead. What does that what's the next steps for your campaign if it is given the green light tomorrow? Well,",
+    "start": 261.3,
+    "end": 270.1,
+    "video_id": "6a695738d3bc5a69c96d5cb9"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:113",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "purpose": "observation extraction",
+    "started_at": "2026-07-29T07:25:31.896000000+00:00",
+    "model": "zai-org/glm-5.2",
+    "id": "extract-zai-org/glm-5.2-1785309931"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:114",
+   "labels": [
+    "Observation"
+   ],
+   "props": {
+    "provenance_class": "observed",
+    "modality": "spoken",
+    "confidence": 0.95,
+    "start": 14.1,
+    "scale": "thousands",
+    "concept_code": "air_traffic_movements",
+    "unit_kind": "count",
+    "text": "one hundred thousand movements per year",
+    "value": 100.0,
+    "video_id": "6a6957337724e937923764be"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:115",
+   "labels": [
+    "Observation"
+   ],
+   "props": {
+    "provenance_class": "observed",
+    "modality": "spoken",
+    "confidence": 0.95,
+    "start": 14.4,
+    "scale": "thousands",
+    "concept_code": "air_traffic_movements",
+    "unit_kind": "count",
+    "text": "one hundred thousand more flights",
+    "value": 100.0,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:116",
+   "labels": [
+    "Observation"
+   ],
+   "props": {
+    "provenance_class": "observed",
+    "modality": "spoken",
+    "confidence": 0.95,
+    "start": 8.5,
+    "scale": "units",
+    "unit_kind": "count",
+    "concept_code": "jobs_claimed",
+    "text": "fourteen thousand jobs",
+    "value": 14000.0,
+    "video_id": "6a695732f2ac38e18edb08bf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:117",
+   "labels": [
+    "Observation"
+   ],
+   "props": {
+    "provenance_class": "observed",
+    "modality": "spoken",
+    "confidence": 0.95,
+    "start": 14.4,
+    "scale": "units",
+    "unit_kind": "count",
+    "concept_code": "jobs_claimed",
+    "text": "create fourteen thousand new jobs",
+    "value": 14000.0,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:118",
+   "labels": [
+    "Observation"
+   ],
+   "props": {
+    "provenance_class": "observed",
+    "modality": "spoken",
+    "confidence": 0.95,
+    "start": 30.8,
+    "scale": "units",
+    "unit_kind": "count",
+    "concept_code": "jobs_claimed",
+    "text": "fourteen thousand jobs",
+    "value": 14000.0,
+    "video_id": "6a6957337724e937923764be"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:119",
+   "labels": [
+    "Observation"
+   ],
+   "props": {
+    "provenance_class": "observed",
+    "modality": "spoken",
+    "confidence": 0.95,
+    "start": 14.4,
+    "scale": "millions",
+    "currency": "GBP",
+    "unit_kind": "currency",
+    "concept_code": "scheme_cost",
+    "text": "runway would cost two point two billion pounds",
+    "value": 2200.0,
+    "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:120",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "purpose": "observation extraction",
+    "started_at": "2026-07-29T07:29:57.656000000+00:00",
+    "model": "zai-org/glm-5.2",
+    "id": "extract-zai-org/glm-5.2-1785310197"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:134",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "provenance_class",
+    "description": "Whether anyone is accountable for the source"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:135",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "provenance_class",
+    "description": "Produced by an accountable party in the deal document chain",
+    "value": "controlled"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:136",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "source_kind",
+    "description": "What sort of thing the source is"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:137",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "provenance_class",
+    "description": "Third-party observation nobody in the deal produced or warrants",
+    "value": "observed"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:138",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "source_kind",
+    "description": "Television news package",
+    "value": "broadcast_news"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:139",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "source_kind",
+    "description": "Campaign or protest recording",
+    "value": "rally_footage"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:140",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "source_kind",
+    "description": "Opinion or analysis programme",
+    "value": "commentary"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:141",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "source_kind",
+    "description": "Online article",
+    "value": "web_article"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:142",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "source_kind",
+    "description": "Bond offering document",
+    "value": "prospectus"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:143",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "source_kind",
+    "description": "Filed statutory accounts",
+    "value": "accounts"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:144",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "source_kind",
+    "description": "Regulatory news service announcement",
+    "value": "rns_announcement"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:145",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "source_kind",
+    "description": "Judgment of a court",
+    "value": "court_judgment"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:146",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "modality",
+    "description": "How evidence appeared in the video"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:147",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "source_kind",
+    "description": "The agreement defining the covenants",
+    "value": "common_terms_agreement"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:148",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "modality",
+    "description": "Said aloud",
+    "value": "spoken"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:149",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "modality",
+    "description": "Rendered on screen \u2014 lower third, graphic",
+    "value": "on_screen_text"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:150",
+   "labels": [
+    "Vocabulary"
+   ],
+   "props": {
+    "name": "unit_kind",
+    "description": "What kind of quantity a value is"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:151",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "modality",
+    "description": "Shown but not stated",
+    "value": "visual"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:152",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "unit_kind",
+    "description": "A number of things",
+    "value": "count"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:153",
+   "labels": [
+    "Term"
+   ],
+   "props": {
+    "vocabulary": "unit_kind",
+    "description": "A monetary amount",
+    "value": "currency"
+   }
+  }
+ ],
+ "relationships": [
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:134",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:137",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:136",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:138",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:136",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:139",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:136",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:140",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:136",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:141",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:136",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:142",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:136",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:143",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:136",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:144",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:136",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:145",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:136",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:147",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:146",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:148",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:146",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:149",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:146",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:151",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:150",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:152",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:150",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:153",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:150",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:0",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:150",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:1",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:150",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:2",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:150",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:4",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:3",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:5",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:3",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:6",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:3",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:7",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:3",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:9",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:8",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:10",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:8",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:12",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:11",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:13",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:11",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:15",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:14",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:16",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:14",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:17",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:14",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:19",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:18",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:20",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:18",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:22",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:21",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:23",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:21",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:24",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:21",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:25",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:21",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:27",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:26",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:28",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:26",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:29",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:26",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:30",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:26",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:32",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:31",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:33",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:31",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:34",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:31",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:35",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:45",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:46",
+   "type": "HAS_FACILITY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:46",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "GOVERNED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:42",
+   "type": "MEASURED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:46",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "GOVERNED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:43",
+   "type": "MEASURED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:59",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:59",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 1,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:59",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:60",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:60",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 2,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:60",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:61",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:55",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:61",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 3,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:61",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:62",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:58",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:62",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:62",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:63",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:58",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:63",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 5,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:63",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:64",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:64",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:64",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:65",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:65",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:65",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:66",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:55",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:66",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:66",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:67",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:67",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 9,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:67",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:68",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:68",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "passengers travelling through the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:68",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:69",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:69",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "passenger numbers at the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:69",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 5,
+    "probe": "passenger numbers at the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:71",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:58",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:71",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "passenger numbers at the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:71",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:72",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:55",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:72",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "passenger numbers at the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:72",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:73",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:73",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 9,
+    "probe": "passenger numbers at the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:73",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:74",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:58",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:74",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:36",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "how many people used the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:74",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:67",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 1,
+    "probe": "number of flights per year"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:75",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:55",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:75",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 2,
+    "probe": "number of flights per year"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:75",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:76",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:55",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:76",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 3,
+    "probe": "number of flights per year"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:76",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "number of flights per year"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:71",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 5,
+    "probe": "number of flights per year"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:77",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:77",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "number of flights per year"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:77",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:78",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:55",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:78",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "number of flights per year"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:78",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:73",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "number of flights per year"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:69",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 9,
+    "probe": "number of flights per year"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:79",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:55",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:79",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "number of flights per year"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:79",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:80",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:80",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 1,
+    "probe": "aircraft movements"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:80",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:81",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:81",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 2,
+    "probe": "aircraft movements"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:81",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:74",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 3,
+    "probe": "aircraft movements"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:65",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "aircraft movements"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:68",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 5,
+    "probe": "aircraft movements"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:82",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:82",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "aircraft movements"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:82",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:83",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:83",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "aircraft movements"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:83",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:84",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:84",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "aircraft movements"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:84",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:85",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:85",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "aircraft movements"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:85",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:72",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "flight capacity at the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:66",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "flight capacity at the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:86",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:58",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:86",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 9,
+    "probe": "flight capacity at the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:86",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:87",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:58",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:87",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "flight capacity at the airport"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:87",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:88",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:88",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 1,
+    "probe": "income earned per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:88",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:73",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 2,
+    "probe": "income earned per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 3,
+    "probe": "income earned per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:89",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:89",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "income earned per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:89",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:76",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 5,
+    "probe": "income earned per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:60",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "income earned per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:90",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:90",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "income earned per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:90",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:67",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "income earned per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:91",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:91",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 9,
+    "probe": "income earned per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:91",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:63",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "income earned per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:61",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "retail spend per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:71",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:38",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "retail spend per passenger"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 1,
+    "probe": "the cost of the runway scheme in billions"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:92",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:92",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 2,
+    "probe": "the cost of the runway scheme in billions"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:92",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:73",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 3,
+    "probe": "the cost of the runway scheme in billions"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:87",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "the cost of the runway scheme in billions"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:65",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 5,
+    "probe": "the cost of the runway scheme in billions"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:71",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "the cost of the runway scheme in billions"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:67",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "the cost of the runway scheme in billions"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:84",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "the cost of the runway scheme in billions"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:93",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:93",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 9,
+    "probe": "the cost of the runway scheme in billions"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:93",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:94",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:94",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "the cost of the runway scheme in billions"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:94",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:95",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:95",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 1,
+    "probe": "how much the expansion will cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:95",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:85",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 2,
+    "probe": "how much the expansion will cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:96",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:96",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "how much the expansion will cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:96",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:97",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:97",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "how much the expansion will cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:97",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:98",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:98",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "how much the expansion will cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:98",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:77",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "how much the expansion will cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:99",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:99",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 9,
+    "probe": "how much the expansion will cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:99",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:100",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:100",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "how much the expansion will cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:100",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:101",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:101",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 1,
+    "probe": "privately financed cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:101",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:102",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:102",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 2,
+    "probe": "privately financed cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:102",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:103",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:103",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 3,
+    "probe": "privately financed cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:103",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:81",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 5,
+    "probe": "privately financed cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:104",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:104",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "privately financed cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:104",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:105",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:105",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "privately financed cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:105",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:106",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:106",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "privately financed cost"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:106",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 1,
+    "probe": "jobs created by the expansion"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:75",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 2,
+    "probe": "jobs created by the expansion"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:92",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 3,
+    "probe": "jobs created by the expansion"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:98",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "jobs created by the expansion"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:85",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 5,
+    "probe": "jobs created by the expansion"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:107",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:107",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "jobs created by the expansion"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:107",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:73",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "jobs created by the expansion"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:108",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:108",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "jobs created by the expansion"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:108",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:109",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:109",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 9,
+    "probe": "jobs created by the expansion"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:109",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:110",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:110",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "jobs created by the expansion"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:110",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:87",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 1,
+    "probe": "employment benefits of the runway"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:76",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 3,
+    "probe": "employment benefits of the runway"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:89",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 4,
+    "probe": "employment benefits of the runway"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:86",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 5,
+    "probe": "employment benefits of the runway"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:71",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 6,
+    "probe": "employment benefits of the runway"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:68",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 7,
+    "probe": "employment benefits of the runway"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:83",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 8,
+    "probe": "employment benefits of the runway"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:111",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:55",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:111",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "employment benefits of the runway"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:111",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:112",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
+   "type": "PART_OF",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:112",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 9,
+    "probe": "how many jobs it will create"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:112",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:63",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "CANDIDATE_FOR",
+   "props": {
+    "rank": 10,
+    "probe": "how many jobs it will create"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:57",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "type": "REPORTS",
+   "props": {
+    "asserted_by": "human",
+    "basis": "manual \u2014 clip reviewed"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:55",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "type": "REPORTS",
+   "props": {
+    "asserted_by": "human",
+    "basis": "manual \u2014 clip reviewed"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "type": "REPORTS",
+   "props": {
+    "asserted_by": "human",
+    "basis": "manual \u2014 clip reviewed"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:56",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "type": "REPORTS",
+   "props": {
+    "asserted_by": "human",
+    "basis": "manual \u2014 clip reviewed"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:58",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "type": "REPORTS",
+   "props": {
+    "asserted_by": "human",
+    "basis": "manual \u2014 clip reviewed"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MAY_AFFECT",
+   "props": {
+    "validated_by": "john",
+    "asserted_by": "model",
+    "could_affect": false,
+    "evidence_sha256": "0f9ea67ea3da99b2e0d705262a2afc4f8a985e5f547d8bf6d9c1569c05ce0f84",
+    "human_note": "signed before the rebuild test",
+    "restored": true,
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=hzPZsDHIREo",
+    "validated_at": "2026-07-29T07:23:35.853000000+00:00",
+    "rationale": "Regulatory approval of a runway development does not directly change interest coverage metrics in the near term.",
+    "status": "validated",
+    "direction": "none"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MAY_AFFECT",
+   "props": {
+    "validated_by": "john",
+    "asserted_by": "model",
+    "could_affect": false,
+    "evidence_sha256": "f114c7b39e5dcb834a0cd2967b649d04e2515dff631a77eecce97003e7c01029",
+    "human_note": "signed before the rebuild test",
+    "restored": true,
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=0rV_N6ktnRA",
+    "validated_at": "2026-07-29T07:23:35.853000000+00:00",
+    "rationale": "Regulatory approval for runway development does not directly change interest coverage metrics in the near term.",
+    "status": "validated",
+    "direction": "none"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MAY_AFFECT",
+   "props": {
+    "validated_by": "john",
+    "asserted_by": "model",
+    "could_affect": false,
+    "evidence_sha256": "0f9ea67ea3da99b2e0d705262a2afc4f8a985e5f547d8bf6d9c1569c05ce0f84",
+    "human_note": "signed before the rebuild test",
+    "restored": true,
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=hzPZsDHIREo",
+    "validated_at": "2026-07-29T07:23:35.853000000+00:00",
+    "rationale": "Granting development consent does not by itself alter senior debt levels or asset ratios.",
+    "status": "validated",
+    "direction": "none"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MAY_AFFECT",
+   "props": {
+    "validated_by": "john",
+    "asserted_by": "model",
+    "could_affect": false,
+    "evidence_sha256": "f114c7b39e5dcb834a0cd2967b649d04e2515dff631a77eecce97003e7c01029",
+    "human_note": "signed before the rebuild test",
+    "restored": true,
+    "model": "zai-org/glm-5.2",
+    "evidence_url": "https://www.youtube.com/watch?v=0rV_N6ktnRA",
+    "validated_at": "2026-07-29T07:23:35.853000000+00:00",
+    "rationale": "Granting of development consent does not by itself alter senior debt levels or asset ratios.",
+    "status": "validated",
+    "direction": "none"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:114",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:72",
+   "type": "CITES",
+   "props": {
+    "modality": "spoken",
+    "start": 14.1,
+    "end": 20.4
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:114",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "OF_CONCEPT",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:114",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:113",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:115",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "type": "CITES",
+   "props": {
+    "modality": "spoken",
+    "start": 14.4,
+    "end": 23.3
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:115",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:37",
+   "type": "OF_CONCEPT",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:115",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:113",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:134",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:135",
+   "type": "HAS_TERM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:116",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:92",
+   "type": "CITES",
+   "props": {
+    "modality": "spoken",
+    "start": 8.5,
+    "end": 16.9
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:116",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "OF_CONCEPT",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:116",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:113",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:117",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "type": "CITES",
+   "props": {
+    "modality": "spoken",
+    "start": 14.4,
+    "end": 23.3
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:117",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "OF_CONCEPT",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:117",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:113",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:118",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:75",
+   "type": "CITES",
+   "props": {
+    "modality": "spoken",
+    "start": 30.8,
+    "end": 39.9
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:118",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:40",
+   "type": "OF_CONCEPT",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:118",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:113",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:119",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:70",
+   "type": "CITES",
+   "props": {
+    "modality": "spoken",
+    "start": 14.4,
+    "end": 23.3
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:119",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:39",
+   "type": "OF_CONCEPT",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:119",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:113",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:115",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:114",
+   "type": "CORROBORATES",
+   "props": {
+    "basis": "independent sources, same figure"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:117",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:116",
+   "type": "CORROBORATES",
+   "props": {
+    "basis": "independent sources, same figure"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:117",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:118",
+   "type": "CORROBORATES",
+   "props": {
+    "basis": "independent sources, same figure"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:116",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:118",
+   "type": "CORROBORATES",
+   "props": {
+    "basis": "independent sources, same figure"
+   }
+  }
+ ]
+}

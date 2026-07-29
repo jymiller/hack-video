@@ -1,0 +1,173 @@
+# Handoff — hack-video
+
+**Written 29 July 2026, early morning. The event is Thursday 30 July, 09:30–20:00,
+AWS Builder Loft, 525 Market St, San Francisco.**
+
+Read this first, then [`STATUS.md`](STATUS.md), then
+[`docs/06-the-run-of-show.md`](docs/06-the-run-of-show.md).
+
+---
+
+## Get running in three commands
+
+```bash
+cd <this directory>
+source .venv/bin/activate          # or: uv venv && uv pip install -r requirements.txt
+set -a; . ./.env; set +a           # symlink to ~/Downloads/source/hack-video/.env
+make demo                          # check + serve + graph state + the three URLs
+```
+
+If the graph is empty or wrong: `make rebuild` — 23 seconds, and human attestations
+survive it. `make check` reports the health of every moving part.
+
+---
+
+## What this is
+
+A four-page local app against the hackathon's vendor stack, plus a Neo4j graph whose
+**schema encodes an argument** rather than decorating one.
+
+| Page | URL | What it does |
+|---|---|---|
+| Video | `/` | TwelveLabs — index, drag-drop, cross-video search, **click a hit and the video seeks to that second**, streaming Pegasus analysis |
+| Archive | `/archive.html` | Internet Archive metadata + full-text search, fetch straight into the corpus |
+| Research | `/research.html` | You.com quick search and deep research; jobs run server-side and survive navigation |
+| Graph | `/graph.html` | Neo4j — concept coverage, the attestation queue, read-only Cypher |
+| Explainer | `/explainers/the-graph.html` | The whole schema on one page, reading live from the database |
+
+---
+
+## The thesis, in one paragraph
+
+Credit systems consume a **controlled document supply chain** — things a lender is sent by
+somebody accountable. News footage is none of that. So sources are either `controlled` or
+`observed`; observed sources produce `Observation`s and **may never produce a `Fact` or reach
+a covenant**. The payoff is measured, not asserted: 96 links between video and concept across
+five broadcasters, and **zero reach either covenant concept**. The graph declines to bridge a
+gap that does not exist, and saying so is the product.
+
+Full model: [`docs/05-the-data-model.md`](docs/05-the-data-model.md).
+
+---
+
+## Measured facts (do not re-derive these)
+
+| Fact | Value |
+|---|---|
+| TwelveLabs indexing speed | **~0.3× realtime** — 20s for a 69s clip |
+| Current models | `marengo3.0`, `pegasus1.2`. `model_options` are **visual / audio only** |
+| Free tier used | ~27 min of 600 |
+| Pegasus modality | **Unreliable.** It labelled spoken content as on-screen text, then denied anything was spoken. Modality is derived by transcript-matching, never taken from the model |
+| Novita | 143 models, **zero do audio**. `json_schema` support varies; some wrap JSON in fences, some return only `reasoning_content` |
+| Model choice | `zai-org/glm-5.2` — chosen on schema support and latency (~17s), **not accuracy**: across five models, accuracy differences sat inside run-to-run noise (`graph/bakeoff.py`) |
+| Strands | Adoptable. 166s from nothing to a verified tool-calling agent, no AWS creds |
+| IA TV News archive | Metadata-searchable, **media blocked** (403 video, 401 captions). Full-text search works and is genuinely useful |
+| Voice | macOS `say`, Daniel (en_GB), 41.8s rendered, offline |
+
+---
+
+## Traps already paid for
+
+- **`Agent(model='zai-org/glm-5.2')` does not error.** Strands silently builds a `BedrockModel`
+  and dies at first invoke with `NoCredentialsError`. Pass an explicit `OpenAIModel`.
+- **`NOVITA_MODEL` in `hack-you/.env` is `deepseek-v4-flash`, not glm-5.2.** Code reading that
+  variable runs a different model and looks healthy doing it.
+- **`load_dotenv` on `hack-you/.env` injects AWS credentials** into the process, which can mask
+  an accidental Bedrock fallback. Use `dotenv_values`.
+- **`say -v <voice>` exits 0 for a voice that is not installed** and hands you the default,
+  byte-identical. Only hashing catches it. `graph/voice.py` validates first.
+- **TwelveLabs API encoding is inconsistent** — `/indexes` and `/analyze` are JSON; `/tasks`
+  and `/search` are multipart. All handled in `server.py`.
+- **Cypher variables do not survive a statement boundary.** `MERGE (d)-[:X]->(f)` as its own
+  statement silently creates two anonymous nodes. Bit us once.
+- **`NODE KEY` constraints are Enterprise-only** and abort the whole schema file on Community.
+
+---
+
+## The attestation rule — the core design
+
+A model may **only ever** write `status='proposed'`. No computation reads a proposed edge.
+Work is keyed on the **sha256 of the canonical source URL**: seen is seen. A pair a human has
+closed is never sent to the model again — a fully settled run makes zero API calls in 0.2s.
+
+`/api/graph/validate` requires a signature, returns 409 on an already-decided pair, and
+records `reopen` explicitly. Human decisions survive `make rebuild` via
+`graph/attestations.py`.
+
+---
+
+## Where things live
+
+```
+server.py              FastAPI proxy — all vendor calls, keys stay server-side
+static/                the four pages; no build step, edit and refresh
+graph/schema.cypher    constraints           graph/seed.cypher    vocabularies, concepts, deal
+graph/load.py          concept-driven retrieval from TwelveLabs
+graph/extract.py       segments -> Observations with typed values + corroboration
+graph/assert_impact.py the model's covenant assertions (skips settled pairs)
+graph/attestations.py  export/restore human decisions
+graph/voice.py         narration, offline      graph/bakeoff.py   the model comparison
+graph/strands_hello.py verified Strands agent  graph/dump/        full graph export (JSON)
+docs/05-the-data-model.md   the model     docs/06-the-run-of-show.md   the three minutes
+docs/explainers/*.html      six explainers, house style
+video/                 5 clips, 140MB, gitignored
+audio/                 rendered narration, gitignored
+attestations.json      the human decisions — this file is not rebuildable
+```
+
+**Credentials.** `.env` is a symlink to `~/Downloads/source/hack-video/.env`
+(`TWELVELABS_API_KEY`). Novita and You.com keys are read from
+`~/Downloads/source/hack-you/.env` by `server.py`. **No key is committed anywhere.**
+
+**Running services.** Neo4j in docker container `hackgraph` (bolt 7687, browser 7474,
+neo4j/hackvideo2026). The app on `:8000`. Both are disposable —
+`graph/dump/graph-export.json` holds all 141 nodes and 284 relationships.
+
+---
+
+## Enid boundary — read before writing anything
+
+Business context and use case are shared **by agreement**. The **trust-grading ladder is
+not**, and appears nowhere in this repo.
+
+John's decision on 29 July: variable names and reference-data names **do not need
+sanitising**. So `covenant_code`, `unit_kind`, `canonical_scale`, the `unit_kind` / `scale`
+term sets, and the `cta_senior_*` concept codes stay as they are.
+
+The repo is **private**. An earlier scope note in `docs/05` falsely claimed nothing was
+reproduced; it has been corrected to say what is actually true.
+
+---
+
+## Open — and only John can close these
+
+**Blocking, unsent, and it is now the day before:**
+
+1. Is registration confirmed, or is that link an invite?
+2. **What must the 16:00 submission contain?** It sets the 14:30 freeze.
+3. **Is pre-built work allowed?** This changes everything — if yes, all of this walks in with
+   him; if no, it must be rebuilt live inside 3h30m.
+4. What are the prizes and judging criteria?
+
+**Technical, decided but not done:**
+
+- **Beat 4 of the demo has no data.** The model falling for the water outage genuinely
+  happened on 28 July, but that event has **no source in the corpus**, so under the URL-hash
+  rule it is no longer assessed. Fix: add a water-outage clip (candidates found 28 July),
+  index, link, let the model assess it. ~15 min. This was the next task when the session ended.
+- **Covenant thresholds are `not_sourced`** and deliberately null. A You.com search surfaced
+  the actual Gatwick Funding prospectus PDF on gatwickairport.com — that is the lead.
+- **No controlled-lane source is loaded.** Both lanes exist in the schema; only `observed` has
+  data. Loading the prospectus would populate the other side.
+- **Extraction reads transcripts only**, so every modality came back `spoken`. The on-screen
+  figures Pegasus reported are not captured; that needs a per-segment OCR pass.
+
+---
+
+## Standing rules that do not move
+
+- **Freeze at 14:30.** After it, only three moves are legal: SUBTRACT, SUBMIT, REHEARSE.
+- The watchable moment gets named before anything is built.
+- A number changing on screen is not a watchable moment, nor any disguise of it.
+- **Absence is reported, never filled.** "Not sourced" and "unknown" are valid answers.
+- Live in the room is 1–0. Submitted with nobody there is 0–3.
