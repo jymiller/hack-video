@@ -4,7 +4,7 @@ IDX ?= $(shell curl -s --max-time 20 -H "x-api-key: $$TWELVELABS_API_KEY" \
         https://api.twelvelabs.io/v1.3/indexes 2>/dev/null | \
         $(PY) -c "import json,sys;d=json.load(sys.stdin)['data'];print(next((i['_id'] for i in d if i['video_count']>0),''))" 2>/dev/null)
 
-.PHONY: help graph rebuild rebuild-hard up down serve check clean-graph reset status assert attest-save attest-load
+.PHONY: help graph rebuild rebuild-hard up down serve check clean-graph reset status assert attest-save attest-load demo demo-reset voice
 
 help:
 	@echo "make up         start neo4j (idempotent, waits for bolt)"
@@ -99,3 +99,26 @@ down:
 reset: down
 	@docker rm -f hackgraph >/dev/null 2>&1 || true
 	@echo "container removed — 'make graph' will recreate it"
+
+# ---- demo ------------------------------------------------------------------
+# Puts the graph into the exact state the run-of-show assumes, so a rehearsal
+# and the real thing look identical. Safe to run repeatedly.
+demo-reset: up
+	@$(PY) graph/attestations.py export > attestations.json 2>/dev/null || true
+	@echo "--- graph state ---"
+	@$(MAKE) --no-print-directory status
+	@echo "--- narration ---"
+	@ls audio/*.aiff 2>/dev/null | wc -l | tr -d ' ' | xargs -I{} echo "  {} lines rendered"
+
+voice:
+	@$(PY) graph/voice.py --voice $(VOICE)
+VOICE ?= Daniel
+
+# Everything a cold laptop needs, in order.
+demo: check serve demo-reset
+	@echo
+	@echo "  Video     http://127.0.0.1:8000/"
+	@echo "  Graph     http://127.0.0.1:8000/graph.html"
+	@echo "  Explainer http://127.0.0.1:8000/explainers/the-graph.html"
+	@echo
+	@echo "  run of show: docs/06-the-run-of-show.md"
