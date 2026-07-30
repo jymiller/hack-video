@@ -135,15 +135,17 @@ even when the worklist is empty and no model call is made.
 The demo runs on the laptop. This exists so the 16:00 submission has a URL, and the
 dashboard's `GIT.REMOTE` field has something to point at.
 
-**Two manual steps remain, and neither can be scripted:**
+**It is live: <https://hack-video-v6kg.onrender.com>** — service `srv-d9lg36u7bikc738vvcvg`,
+free plan, `autoDeploy` on `main`, so a push rebuilds it. Free instances **sleep when idle**
+and the first hit after that takes ~50s: warm it before a judge clicks.
 
-1. **Add `hack-video` to Render's GitHub App.**
-   <https://github.com/settings/installations> → Render → Repository access.
-   Render already deploys four of your repos including two private ones, so the App
-   is installed and working — `hack-video` is simply not in the selected list, and
-   the API returns *"repository URL is invalid or unfetchable"* until it is.
-2. ~~Create a Neo4j Aura free instance.~~ **Done.** Instance `59fc2af7` is RUNNING and
-   **already populated** — 155 nodes, 375 relationships, verified identical to the dump.
+1. ~~Add `hack-video` to Render's GitHub App.~~ **Not actually the blocker.** The repo was
+   already in the App's selected list. The first create returned *"repository URL is
+   invalid or unfetchable"* and a straight retry with the identical payload returned 201.
+   Cause never established — most likely a stale repo list on Render's side. If a future
+   create fails this way, **retry before changing anything.**
+2. ~~Create a Neo4j Aura free instance.~~ **Done and populated** — instance `59fc2af7`,
+   RUNNING, **158 nodes / 382 relationships**, matching the dump.
    Credentials live in `.env.aura` (gitignored).
 
    **`NEO4J_USER` is the instance id `59fc2af7`, not `neo4j`.** Aura 2026.06 uses the
