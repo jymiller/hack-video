@@ -26,3 +26,6 @@ video/
 
 # Rendered narration — regenerate with `make voice`
 audio/
+
+# attest-save writes here before replacing the real file
+.attest.tmp.json

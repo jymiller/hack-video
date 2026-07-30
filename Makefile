@@ -49,9 +49,21 @@ clean-graph: up
 # Human decisions are not rebuildable — they exist only because somebody read the
 # evidence and signed. A rebuild that silently destroyed them would be the same
 # mistake as letting the model overwrite them.
+#
+# Writes via a temp file and REFUSES to replace a good file with an empty export.
+# Without that guard, pointing any rebuild at a fresh database — an empty Aura
+# instance, say — exports zero rows and overwrites the only copy of the decisions
+# with []. The file is the one artefact here that cannot be regenerated.
 attest-save: up
-	@$(PY) graph/attestations.py export > attestations.json
-	@echo "saved -> attestations.json"
+	@$(PY) graph/attestations.py export > .attest.tmp.json
+	@if grep -q '"event"' .attest.tmp.json; then \
+	  mv .attest.tmp.json attestations.json; \
+	  echo "saved -> attestations.json"; \
+	else \
+	  rm -f .attest.tmp.json; \
+	  echo "REFUSED: export held no decisions — attestations.json left untouched."; \
+	  echo "         (expected when the target database is empty, e.g. a fresh Aura)"; \
+	fi
 
 attest-load: up
 	@test -s attestations.json && $(PY) graph/attestations.py restore < attestations.json \
