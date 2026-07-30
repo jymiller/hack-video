@@ -142,15 +142,28 @@ dashboard's `GIT.REMOTE` field has something to point at.
    Render already deploys four of your repos including two private ones, so the App
    is installed and working — `hack-video` is simply not in the selected list, and
    the API returns *"repository URL is invalid or unfetchable"* until it is.
-2. **Create a Neo4j Aura free instance** at <https://console.neo4j.io>, then populate
-   it from the laptop:
+2. ~~Create a Neo4j Aura free instance.~~ **Done.** Instance `59fc2af7` is RUNNING and
+   **already populated** — 155 nodes, 375 relationships, verified identical to the dump.
+   Credentials live in `.env.aura` (gitignored).
+
+   **`NEO4J_USER` is the instance id `59fc2af7`, not `neo4j`.** Aura 2026.06 uses the
+   instance id as the database user; `neo4j` fails auth. Measured, not assumed.
+
+   To rebuild it, or to stand up another copy:
    ```
-   NEO4J_URI=neo4j+s://<id>.databases.neo4j.io NEO4J_USER=neo4j \
-   NEO4J_PASSWORD=<pw> make restore
+   set -a; . ./.env.aura; set +a
+   docker cp graph/schema.cypher hackgraph:/tmp/s.cypher
+   docker exec -e NEO4J_PASSWORD="$NEO4J_PASSWORD" hackgraph \
+     cypher-shell -a "$NEO4J_URI" -u "$NEO4J_USER" -f /tmp/s.cypher
+   .venv/bin/python graph/import_dump.py
    ```
-   `load.py` reads the TwelveLabs cloud index, so this needs no local media and no
-   graph importer has to exist. Skip it and the service still deploys — pages, search
-   and video all work, graph endpoints 500.
+
+   **Never point `make restore` at Aura.** Its `clean-graph`, `schema` and `seed` steps
+   go through `docker exec hackgraph cypher-shell`, which hits the **local** container
+   whatever `NEO4J_URI` says — it would wipe the demo graph and only half-populate the
+   remote one. `graph/import_dump.py` is the right tool: exact, offline, free, and it
+   carries the Observations, corroboration edges and signed attestations instead of
+   re-deriving them with ~95 model calls.
 
 Then, once:
 

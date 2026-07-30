@@ -13,11 +13,23 @@
 #                    signature is good for 7 days from generation; regenerate and
 #                    update the env var if the link must outlive that.
 #   NEO4J_*          points at Neo4j Aura rather than the local docker container.
-#                    Populate Aura from the laptop with:
-#                      NEO4J_URI=neo4j+s://<id>.databases.neo4j.io \
-#                      NEO4J_USER=neo4j NEO4J_PASSWORD=<pw> make restore
-#                    load.py reads the TwelveLabs cloud index, so no local media is
-#                    needed and no graph importer has to exist.
+#                    NEO4J_USER is the INSTANCE ID, not "neo4j" — Aura 2026.06 uses the
+#                    instance id as the database user, and "neo4j" fails auth. Verified.
+#
+#                    Populate Aura by IMPORTING THE DUMP, not with `make restore`:
+#                      set -a; . ./.env.aura; set +a
+#                      docker cp graph/schema.cypher hackgraph:/tmp/s.cypher
+#                      docker exec -e NEO4J_PASSWORD="$NEO4J_PASSWORD" hackgraph \
+#                        cypher-shell -a "$NEO4J_URI" -u "$NEO4J_USER" -f /tmp/s.cypher
+#                      .venv/bin/python graph/import_dump.py
+#
+#                    DO NOT point `make restore` at Aura. Its clean-graph, schema and
+#                    seed steps run through `docker exec hackgraph cypher-shell`, which
+#                    always hits the LOCAL container regardless of NEO4J_URI — so it
+#                    would wipe the demo graph while writing only some steps to Aura.
+#                    The import is also exact and free: no TwelveLabs calls, no ~95
+#                    model calls, and it carries the Observations, the corroboration
+#                    edges and the signed attestations rather than re-deriving them.
 #
 # Every value below marked sync:false is set in the Render dashboard or via the API,
 # never committed.
