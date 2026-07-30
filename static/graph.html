@@ -98,6 +98,22 @@
            border-bottom:1px solid var(--al-edge); }
   .ghead:first-child { margin-top:0; }
 
+  /* collapsible groups — the refusal opens, the rest fold */
+  .grp + .grp { margin-top:var(--pad); }
+  button.ghead { display:flex; align-items:baseline; gap:9px; width:100%;
+                 background:none; border:0; border-bottom:1px solid var(--al-edge);
+                 border-radius:0; text-align:left; cursor:pointer; margin:0 0 9px;
+                 padding:7px 2px; }
+  button.ghead:hover { background:var(--row-hover); }
+  button.ghead .tw { color:var(--dim); font-size:10px; width:9px; }
+  button.ghead .gt { font:600 11px/1.4 var(--sans); letter-spacing:.09em;
+                     text-transform:uppercase; color:var(--fg); }
+  button.ghead .gn { font:600 11px/1.4 var(--mono); color:var(--dim);
+                     border:1px solid var(--line); border-radius:var(--r); padding:0 5px; }
+  button.ghead .gs { font:400 11.5px/1.4 var(--sans); color:var(--dim);
+                     text-transform:none; letter-spacing:0; margin-left:auto; }
+  .grp[data-open="false"] .gbody { display:none; }
+
   /* chassis dims a rejected card to .8 — on this page the rejection IS the
      finding, so it is shown at full strength and marked by rule and tint. */
   body .asrt { padding:12px var(--pad); margin-bottom:9px; }
@@ -254,6 +270,9 @@
         <span id="qcount" class="muted"></span>
         <span class="muted">Nothing here counts until somebody signs it. A guess a person
           refused stays on the record — it is not deleted, and nothing reads it.</span>
+        <button class="sm" id="foldBtn" data-next="true"
+                onclick="foldAll(this.dataset.next === 'true')"
+                style="margin-left:auto">expand all</button>
       </div>
       <div id="qlist"></div>
     </div>
@@ -418,11 +437,53 @@ async function loadQueue() {
     `<b style="color:var(--fg)">${rs.length} assertions</b> ·
      ${n('proposed')} awaiting · ${n('validated')} validated · ${n('rejected')} rejected`;
 
-  $('qlist').innerHTML =
-    (decided.length ? `<div class="ghead">Decided — a human signed each of these</div>` +
-      decided.map(card).join('') : '') +
-    (open.length ? `<div class="ghead">Awaiting a human</div>` +
-      open.map(card).join('') : '');
+  // The refusal is the finding, so it opens. Everything else folds — twelve cards
+  // is a wall, and a wall is what stopped this section being readable.
+  const rejected = decided.filter(r => r.status === 'rejected');
+  const validated = decided.filter(r => r.status === 'validated');
+
+  $('qlist').innerHTML = [
+    grp('rej', 'A human overruled the model', rejected, true,
+        'the model was confidently wrong, and the disagreement is kept'),
+    grp('val', 'A human agreed', validated, false,
+        'signed, and therefore readable by a computation'),
+    grp('opn', 'Still waiting on a human', open, false,
+        'inert — no computation reads any of these'),
+  ].join('');
+  paintFold();
+}
+
+function grp(id, title, rows, open, sub) {
+  if (!rows.length) return '';
+  return `<section class="grp" id="g-${id}" data-open="${open}">
+    <button class="ghead fold" onclick="fold('${id}')" aria-expanded="${open}">
+      <span class="tw">${open ? '▾' : '▸'}</span>
+      <span class="gt">${esc(title)}</span>
+      <span class="gn">${rows.length}</span>
+      <span class="gs">${esc(sub)}</span>
+    </button>
+    <div class="gbody">${rows.map(card).join('')}</div>
+  </section>`;
+}
+
+function fold(id, force) {
+  const g = $('g-' + id);
+  const open = force === undefined ? g.dataset.open !== 'true' : force;
+  g.dataset.open = open;
+  g.querySelector('.fold').setAttribute('aria-expanded', open);
+  g.querySelector('.tw').textContent = open ? '▾' : '▸';
+  paintFold();
+}
+
+function foldAll(open) {
+  ['rej', 'val', 'opn'].forEach(id => { if ($('g-' + id)) fold(id, open); });
+}
+
+function paintFold() {
+  const gs = [...document.querySelectorAll('.grp')];
+  const anyShut = gs.some(g => g.dataset.open !== 'true');
+  const b = $('foldBtn');
+  if (b) { b.textContent = anyShut ? 'expand all' : 'collapse all'; b.dataset.next = anyShut; }
 }
 
 const DIR = { increases: 'increases', decreases: 'decreases', none: 'does not move' };
