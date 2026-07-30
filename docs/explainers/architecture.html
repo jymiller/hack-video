@@ -1,0 +1,234 @@
+<title>Material Witness — The Architecture</title>
+
+<style>
+  :root {
+    --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA;
+    --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16;  --hot-bg:#F8E5DC;
+    --warn:#8A6512; --warn-bg:#F6EDD8;
+    --disp:"Futura","Avenir Next Condensed","Avenir Next",system-ui,sans-serif;
+    --body:"Avenir Next","Avenir",-apple-system,"Segoe UI",sans-serif;
+    --mono:"SF Mono","IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+      --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+      --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  }
+  :root[data-theme="dark"] { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
+    --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
+    --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  :root[data-theme="light"] { --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
+    --rule:#C3CCD6; --rule-soft:#DDE3EA; --edge:#1F6F7C; --edge-bg:#DCEDEF;
+    --hot:#B03A16; --hot-bg:#F8E5DC; --warn:#8A6512; --warn-bg:#F6EDD8; }
+
+  * { box-sizing:border-box; }
+  .sheet { background:var(--ground); color:var(--ink); font-family:var(--body);
+           font-size:16px; line-height:1.5; padding:0 22px 48px; }
+  .wrap { max-width:1180px; margin:0 auto; }
+
+  .mast { padding:30px 0 14px; border-bottom:3px solid var(--ink); margin-bottom:8px;
+          display:flex; align-items:flex-end; gap:26px; flex-wrap:wrap; }
+  .mast .l { flex:1 1 460px; }
+  .strip { font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+           color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px 18px; margin-bottom:12px; }
+  h1 { font-family:var(--disp); font-size:clamp(30px,4.4vw,48px); line-height:1; font-weight:500;
+       letter-spacing:.01em; margin:0 0 10px; text-transform:uppercase; }
+  .standfirst { font-family:var(--disp); font-size:clamp(16px,2vw,20px); line-height:1.25;
+                color:var(--ink-soft); margin:0; text-transform:uppercase; letter-spacing:.03em; }
+  .howto { font-size:15px; line-height:1.45; color:var(--ink-soft); margin:12px 0 0; max-width:66ch;
+           border-top:1px solid var(--rule); padding-top:10px; }
+  .howto b { font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+             color:var(--ink); font-weight:600; }
+  .seal { border:2px solid var(--ink); padding:11px 16px; text-align:right; }
+  .seal b { font-family:var(--mono); font-size:23px; font-weight:600; display:block; line-height:1;
+            letter-spacing:-.02em; }
+  .seal span { font-family:var(--mono); font-size:9px; letter-spacing:.13em; text-transform:uppercase;
+               color:var(--ink-soft); display:block; margin-top:5px; }
+
+  figure { margin:22px 0 0; }
+  svg { width:100%; height:auto; display:block; }
+  .dg-box { fill:var(--card); stroke:var(--rule); stroke-width:1.5; }
+  .dg-ctrl { stroke:var(--edge); stroke-width:2.5; }
+  .dg-obs  { stroke:var(--hot);  stroke-width:2.5; }
+  .dg-gate { fill:var(--warn-bg); stroke:var(--warn); stroke-width:2.5; }
+  .dg-cov  { fill:var(--edge-bg); stroke:var(--edge); stroke-width:3; }
+  .dg-t  { font-family:"Futura","Avenir Next Condensed",system-ui,sans-serif; font-weight:500;
+           text-transform:uppercase; letter-spacing:.03em; fill:var(--ink); }
+  .dg-s  { font-family:"Avenir Next",-apple-system,sans-serif; fill:var(--ink-soft); }
+  .dg-m  { font-family:"SF Mono",ui-monospace,Menlo,monospace; letter-spacing:.02em; }
+  .dg-lbl{ font-family:"SF Mono",ui-monospace,Menlo,monospace; font-size:11px; letter-spacing:.14em;
+           text-transform:uppercase; fill:var(--ink-soft); }
+  .dg-num{ font-family:"SF Mono",ui-monospace,Menlo,monospace; font-size:13px; font-weight:700;
+           fill:var(--ink); }
+  .dg-lane { font-family:"Futura","Avenir Next Condensed",system-ui,sans-serif; font-size:19px;
+             font-weight:500; text-transform:uppercase; letter-spacing:.1em; text-anchor:middle; }
+  .dg-lane-s { font-family:"SF Mono",ui-monospace,Menlo,monospace; font-size:10px; letter-spacing:.1em;
+               text-transform:uppercase; fill:var(--ink-soft); text-anchor:middle; }
+  .flowc { stroke:var(--edge); stroke-width:2.5; fill:none; }
+  .flowo { stroke:var(--hot);  stroke-width:2.5; fill:none; }
+  .flowd { stroke:var(--warn); stroke-width:2; fill:none; stroke-dasharray:6 5; }
+
+  .note { border-left:4px solid var(--warn); background:var(--warn-bg); padding:16px 20px; margin-top:26px; }
+  .note b { font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+            color:var(--warn); display:block; margin-bottom:7px; font-weight:600; }
+  .note p { margin:0; font-size:16.5px; line-height:1.45; }
+  .note p + p { margin-top:9px; }
+
+  .stack { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--rule);
+           border:1px solid var(--rule); margin-top:24px; }
+  @media (max-width:800px) { .stack { grid-template-columns:1fr 1fr; } }
+  .stack > div { background:var(--card); padding:15px 17px; }
+  .stack .v { font-family:var(--disp); font-size:17px; font-weight:500; text-transform:uppercase;
+              letter-spacing:.02em; margin:0 0 4px; }
+  .stack p { margin:0; font-size:13px; color:var(--ink-soft); line-height:1.4; }
+  .foot { font-family:var(--mono); font-size:11px; letter-spacing:.05em; color:var(--ink-soft);
+          margin-top:18px; display:flex; gap:8px 22px; flex-wrap:wrap; }
+  .foot code { background:var(--rule-soft); padding:1px 5px; }
+</style>
+
+<div class="sheet">
+<div class="wrap">
+
+  <div class="mast">
+    <div class="l">
+      <div class="strip"><span>Material Witness</span><span>Architecture</span><span>Gatwick corpus</span></div>
+      <h1>Testimony is admitted.<br>It is never sworn.</h1>
+      <p class="standfirst">What a lender is sent runs one way. What the world merely saw runs another —
+        and stops short of the covenant, by construction.</p>
+      <p class="howto"><b>How to read this</b> — two lanes, both running left to right through the same five
+        stages. Follow the top lane to the end. Then follow the bottom one, and watch where it stops.</p>
+    </div>
+    <div class="seal">
+      <b>106 → 0</b>
+      <span>Links from video<br>Reaching a covenant</span>
+    </div>
+  </div>
+
+  <figure>
+  <svg viewBox="0 0 1250 600" role="img" aria-label="Two lanes run left to right through five stages. The controlled document lane reaches the covenant through a human gate. The observed video lane is stopped before it.">
+
+    <!-- ============ lane bands ============ -->
+    <rect x="0" y="52" width="1250" height="150" fill="var(--edge-bg)" opacity=".5"/>
+    <rect x="0" y="288" width="1250" height="150" fill="var(--hot-bg)" opacity=".5"/>
+
+    <!-- ============ numbered stage headers ============ -->
+    <line x1="92" y1="40" x2="1226" y2="40" stroke="var(--rule)" stroke-width="1"/>
+    <text class="dg-num" x="92"   y="30">1</text><text class="dg-lbl" x="110"  y="30">Sources</text>
+    <text class="dg-num" x="356"  y="30">2</text><text class="dg-lbl" x="374"  y="30">Reading</text>
+    <text class="dg-num" x="620"  y="30">3</text><text class="dg-lbl" x="638"  y="30">Neo4j graph</text>
+    <text class="dg-num" x="866"  y="30">4</text><text class="dg-lbl" x="884"  y="30">The gate</text>
+    <text class="dg-num" x="1072" y="30">5</text><text class="dg-lbl" x="1090" y="30">Tested on</text>
+
+    <!-- ============ lane names, in the gutter ============ -->
+    <text class="dg-lane" x="-127" y="22" transform="rotate(-90)" fill="var(--edge)">Controlled</text>
+    <text class="dg-lane-s" x="-127" y="40" transform="rotate(-90)">Somebody is accountable</text>
+    <text class="dg-lane" x="-363" y="22" transform="rotate(-90)" fill="var(--hot)">Observed</text>
+    <text class="dg-lane-s" x="-363" y="40" transform="rotate(-90)">Nobody vouched for it</text>
+
+    <!-- ================= CONTROLLED LANE (top) ================= -->
+    <rect class="dg-box dg-ctrl" x="92"  y="76" width="220" height="98" rx="3"/>
+    <text class="dg-t"  x="108" y="112" font-size="21">Filings, accounts</text>
+    <text class="dg-s"  x="108" y="136" font-size="13.5">Signed. Attributable.</text>
+    <text class="dg-s"  x="108" y="154" font-size="13.5">And months late.</text>
+
+    <rect class="dg-box" x="356" y="76" width="220" height="98" rx="3"/>
+    <text class="dg-t"  x="372" y="112" font-size="20">Parser</text>
+    <text class="dg-s"  x="372" y="136" font-size="13.5">Typed values, each with</text>
+    <text class="dg-s"  x="372" y="154" font-size="13.5">a page reference.</text>
+
+    <rect class="dg-box dg-ctrl" x="620" y="76" width="196" height="98" rx="3"/>
+    <text class="dg-m"  x="636" y="118" font-size="22" font-weight="600" fill="var(--edge)">(:Fact)</text>
+    <text class="dg-s"  x="636" y="144" font-size="13">Vouched for.</text>
+
+    <!-- ================= OBSERVED LANE (bottom) ================= -->
+    <rect class="dg-box dg-obs" x="92"  y="312" width="220" height="98" rx="3"/>
+    <text class="dg-t"  x="108" y="348" font-size="21">News video</text>
+    <text class="dg-s"  x="108" y="372" font-size="13.5">Six broadcasters.</text>
+    <text class="dg-s"  x="108" y="390" font-size="13.5">On air the same afternoon.</text>
+
+    <rect class="dg-box" x="356" y="312" width="220" height="98" rx="3"/>
+    <text class="dg-t"  x="372" y="348" font-size="20">TwelveLabs</text>
+    <text class="dg-s"  x="372" y="372" font-size="13.5">Picture, sound, speech →</text>
+    <text class="dg-s"  x="372" y="390" font-size="13.5">a segment with a timecode.</text>
+
+    <rect class="dg-box dg-obs" x="620" y="312" width="196" height="98" rx="3"/>
+    <text class="dg-m"  x="636" y="350" font-size="19" font-weight="600" fill="var(--hot)">(:Observation)</text>
+    <text class="dg-s"  x="636" y="376" font-size="13">Unvouched. Immediate.</text>
+
+    <!-- ================= THE GATE ================= -->
+    <rect class="dg-gate" x="866" y="76" width="176" height="98" rx="3"/>
+    <text class="dg-t"  x="882" y="110" font-size="19" fill="var(--warn)">A person</text>
+    <text class="dg-s"  x="882" y="133" font-size="13">Signs or rejects.</text>
+    <text class="dg-s"  x="882" y="151" font-size="13">Timestamped. Kept.</text>
+
+    <rect class="dg-box" x="866" y="206" width="176" height="72" rx="3"/>
+    <text class="dg-t"  x="882" y="231" font-size="17">The model</text>
+    <text class="dg-m"  x="882" y="253" font-size="12" fill="var(--ink-soft)">status='proposed'</text>
+    <text class="dg-s"  x="882" y="270" font-size="12">Nothing reads it.</text>
+    <path class="flowd" d="M954 206 L954 182"/>
+    <polygon points="954,176 949,186 959,186" fill="var(--warn)"/>
+    <text class="dg-m" x="968" y="198" font-size="11.5" fill="var(--warn)">proposes only</text>
+
+    <!-- ================= COVENANT ================= -->
+    <rect class="dg-cov" x="1072" y="76" width="154" height="98" rx="3"/>
+    <text class="dg-t"  x="1088" y="108" font-size="18" fill="var(--edge)">Covenant</text>
+    <text class="dg-m"  x="1088" y="132" font-size="12" fill="var(--edge)">senior_icr</text>
+    <text class="dg-m"  x="1088" y="150" font-size="12" fill="var(--edge)">senior_rar</text>
+
+    <!-- ================= CONTROLLED ARROWS ================= -->
+    <path class="flowc" d="M312 125 L348 125"/><polygon points="356,125 344,119 344,131" fill="var(--edge)"/>
+    <path class="flowc" d="M576 125 L612 125"/><polygon points="620,125 608,119 608,131" fill="var(--edge)"/>
+    <path class="flowc" d="M816 125 L858 125"/><polygon points="866,125 854,119 854,131" fill="var(--edge)"/>
+    <path class="flowc" d="M1042 125 L1064 125"/><polygon points="1072,125 1060,119 1060,131" fill="var(--edge)"/>
+
+    <!-- ================= OBSERVED ARROWS ================= -->
+    <path class="flowo" d="M312 361 L348 361"/><polygon points="356,361 344,355 344,367" fill="var(--hot)"/>
+    <path class="flowo" d="M576 361 L612 361"/><polygon points="620,361 608,355 608,367" fill="var(--hot)"/>
+
+    <!-- the blocked run -->
+    <path class="flowo" d="M816 361 L924 361"/>
+    <line x1="938" y1="318" x2="938" y2="404" stroke="var(--hot)" stroke-width="7"/>
+    <line x1="922" y1="345" x2="954" y2="377" stroke="var(--hot)" stroke-width="5"/>
+    <line x1="954" y1="345" x2="922" y2="377" stroke="var(--hot)" stroke-width="5"/>
+    <text class="dg-t" x="976" y="350" font-size="19" fill="var(--hot)">May never</text>
+    <text class="dg-t" x="976" y="372" font-size="19" fill="var(--hot)">reach a covenant</text>
+    <text class="dg-s" x="976" y="394" font-size="12.5">Enforced in the schema.</text>
+
+    <!-- the useful path -->
+    <path class="flowd" d="M718 312 L718 286 Q718 276 728 276 L946 276"/>
+    <polygon points="954,276 942,270 942,282" fill="var(--warn)"/>
+    <text class="dg-m" x="728" y="266" font-size="12.5" fill="var(--warn)">but it tells you where to look, months early</text>
+
+    <!-- ================= footer measure ================= -->
+    <line x1="92" y1="480" x2="1226" y2="480" stroke="var(--rule)" stroke-width="1"/>
+    <text class="dg-lbl" x="92" y="508">Measured on every build, not asserted</text>
+    <text class="dg-t"   x="92" y="546" font-size="24">106 links from video to concept, across six broadcasters.</text>
+    <text class="dg-t"   x="92" y="576" font-size="24" fill="var(--hot)">Zero of them reach a covenant.</text>
+  </svg>
+  </figure>
+
+  <div class="note">
+    <b>On the word "material"</b>
+    <p>A breach is <strong>material</strong> when it changes what a lender may do about it. That is a question
+      about the numbers in a filing — never a question about what was on the news.</p>
+    <p>So the footage is a witness, not a signatory. <strong>It can tell you where to look, months before the
+      paperwork arrives. It can never tell you a breach occurred.</strong> Keeping those two things apart is
+      the entire architecture.</p>
+  </div>
+
+  <div class="stack">
+    <div><div class="v">TwelveLabs</div><p>Indexes the corpus. Returns segments with timecodes — the anchor every claim points back to.</p></div>
+    <div><div class="v">Neo4j</div><p>Holds both lanes. The finding is an absence, and a graph is where you can <em>count</em> one.</p></div>
+    <div><div class="v">Strands · GPT-5.6</div><p>Read-only agent over the live graph. Tool-calling, no AWS credentials needed.</p></div>
+    <div><div class="v">FastAPI</div><p>Four pages, no build step. Every vendor call proxied — keys never reach the browser.</p></div>
+  </div>
+
+  <div class="foot">
+    <span><code>make rebuild</code> — 23s, human decisions survive it</span>
+    <span><code>make status</code> — video segments reaching a covenant must be 0</span>
+  </div>
+
+</div>
+</div>

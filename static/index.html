@@ -2,36 +2,34 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>TwelveLabs Playground</title>
+<title>Material Witness — News analysis</title>
 <link rel="stylesheet" href="/chassis.css">
 </head>
 <body>
 
 <header>
-  <span class="brand">TWELVELABS</span>
+  <a class="brand" href="/">
+    <span class="bn">Material Witness</span>
+    <span class="bk">evidence review</span>
+  </a>
   <nav>
-    <a href="/" class="on">Video</a>
-    <a href="/archive.html">Archive</a>
-    <a href="/research.html">Research</a>
-    <a href="/graph.html">Graph</a>
+    <a href="/" class="on">News analysis</a>
+    <a href="/graph.html">Reasoning</a>
   </nav>
-  <select id="idxSel" style="max-width:300px"></select>
-  <button onclick="loadIndexes()" title="refresh">↻</button>
-  <button onclick="renameIndex()" title="rename selected index">✎ rename</button>
-  <input id="newIdx" placeholder="new index name" style="max-width:150px">
-  <button onclick="createIndex()">＋ create</button>
   <span style="flex:1"></span>
   <span id="stat" class="vfd">READY</span>
+  <!-- the corpus is fixed for this app; the picker stays in the DOM because the
+       search call is keyed on it, but it is not a control anyone can nudge -->
+  <select id="idxSel" hidden></select>
 </header>
 
 <main>
-  <!-- LEFT: source browser -->
+  <!-- LEFT: what is in the corpus -->
   <div class="col">
     <div class="sect grow">
-      <h2><span class="lbl">Library</span> <span id="libCount" class="muted"></span></h2>
+      <h2><span class="lbl">Corpus</span>
+          <span class="muted"><span id="libCount"></span></span></h2>
       <div class="body">
-        <div id="drop">drop a video file here</div>
-        <button id="allBtn" onclick="indexAll()" style="width:100%; margin-bottom:8px"></button>
         <div id="localList"></div>
       </div>
     </div>
@@ -42,7 +40,7 @@
     <div class="sect">
       <h2><span class="lbl">Viewer</span> <span id="playerName" class="muted"></span></h2>
       <div class="body">
-        <video id="player" controls></video>
+        <video id="player" controls preload="metadata" playsinline></video>
         <div class="row" style="margin-top:7px">
           <span class="vfd" style="min-width:90px" id="tcode">0.0s</span>
           <span style="flex:1"></span>
@@ -53,10 +51,11 @@
     </div>
 
     <div class="sect grow">
-      <h2><span class="lbl">Search</span> <span class="muted">marengo · across every video in the index</span></h2>
+      <h2><span class="lbl">Search</span> <span class="muted">marengo · across every clip in the corpus</span></h2>
       <div class="body stack">
         <div class="row">
-          <input id="q" placeholder="what are you looking for?"
+          <input id="q" value="jobs created by the expansion"
+                 placeholder="what are you looking for?"
                  onkeydown="if(event.key==='Enter')search()">
           <button class="p" onclick="search()">GO</button>
         </div>
@@ -64,7 +63,7 @@
           <label><input type="checkbox" id="oVis" checked style="width:auto"> visual</label>
           <label><input type="checkbox" id="oAud" checked style="width:auto"> audio</label>
           <span style="flex:1"></span>
-          <span id="hitCount"></span>
+          <span id="hitCount" class="count"></span>
         </div>
         <div id="hits"></div>
       </div>
@@ -74,7 +73,7 @@
   <!-- RIGHT: slow work -->
   <div class="col">
     <div class="sect grow">
-      <h2><span class="lbl">Analyze</span> <span class="muted">pegasus · one video at a time</span></h2>
+      <h2><span class="lbl">Analyze</span> <span class="muted">pegasus · one clip at a time</span></h2>
       <div class="body stack">
         <textarea id="prompt">List every monetary figure, number, place name and organisation in this video. For each, give the timecode and say whether it was spoken aloud or shown as on-screen text.</textarea>
         <div class="row">
@@ -89,7 +88,7 @@
           </select>
           <button class="p" onclick="analyze()">RUN</button>
         </div>
-        <pre id="out" class="muted">select a video, then run a prompt</pre>
+        <pre id="out" class="muted">no analysis run yet</pre>
       </div>
     </div>
 
@@ -110,7 +109,7 @@
 const $ = id => document.getElementById(id);
 const player = $('player');
 let curIndex = null, curVideo = null, vidMap = {};
-let localFiles = [], indexedByName = {}, busy = {}, vidDur = {}, logN = 0;
+let localFiles = [], indexedByName = {}, vidDur = {}, logN = 0;
 
 const short = n => n.split('__').slice(1).join(' · ').replace('.mp4', '') || n;
 const chan  = n => n.split('__')[1] || n;
@@ -152,46 +151,23 @@ async function api(meth, path, body, isForm) {
 async function loadIndexes() {
   const j = await api('GET', '/api/indexes');
   const sel = $('idxSel');
-  const prev = curIndex;
   sel.innerHTML = '';
-  (j.data || []).forEach(i => {
-    const models = (i.models || []).map(m => m.model_name).join('+');
+  // the populated corpus first, so the demo can never open against an empty index
+  const list = (j.data || []).slice().sort((a, b) => (b.video_count || 0) - (a.video_count || 0));
+  list.forEach(i => {
     const o = document.createElement('option');
     o.value = i._id;
-    o.textContent = `${i.index_name} — ${models} — ${i.video_count} vids`;
+    o.textContent = i.index_name;
     sel.appendChild(o);
   });
-  sel.onchange = () => { curIndex = sel.value; loadVideos(); };
   if (!sel.options.length) return;
-  const stillThere = prev && [...sel.options].some(o => o.value === prev);
-  sel.value = stillThere ? prev : sel.options[0].value;
+  sel.value = sel.options[0].value;
   curIndex = sel.value;
-  if (!stillThere) loadVideos();
-}
-
-async function renameIndex() {
-  if (!curIndex) return stat('select an index', 'var(--err)');
-  const cur = $('idxSel').selectedOptions[0].textContent.split(' — ')[0];
-  const name = prompt('Rename index (videos and ids are unaffected):', cur);
-  if (!name || name === cur) return;
-  await api('PUT', `/api/indexes/${curIndex}`, { index_name: name });
-  const keep = curIndex;
-  await loadIndexes();
-  $('idxSel').value = keep; curIndex = keep;
-  stat('renamed', 'var(--ok)');
-}
-
-async function createIndex() {
-  const name = $('newIdx').value.trim();
-  if (!name) return stat('name required', 'var(--err)');
-  await api('POST', '/api/indexes', { index_name: name });
-  $('newIdx').value = '';
-  loadIndexes();
+  await loadVideos();
 }
 
 async function loadLocal() {
   localFiles = await api('GET', '/api/local-videos');
-  renderLocal();
 }
 
 function durOf(videoId) { return (vidDur || {})[videoId]; }
@@ -203,36 +179,26 @@ function renderLocal() {
     .map(([n, id]) => ({ name: n, remote: true, duration: durOf(id) }));
   const rows = [...localFiles, ...extra];
 
-  const missing = rows.filter(v => !indexedByName[v.name] && !busy[v.name]).length;
-  $('libCount').textContent = `${rows.length - missing}/${rows.length} indexed`;
-  $('allBtn').disabled = missing === 0;
-  $('allBtn').textContent = missing ? `＋ index the ${missing} not yet indexed` : '✓ all indexed';
+  $('libCount').textContent = rows.length ? `${rows.length} clips` : '';
 
   $('localList').innerHTML = '';
   rows.forEach(v => {
     const vid = indexedByName[v.name];
     const d = document.createElement('div');
     d.className = 'item' + (vid && vid === curVideo ? ' sel' : '');
-    let right;
-    if (busy[v.name])   right = `<span class="badge b-run">${busy[v.name]}</span>`;
-    else if (vid)       right = `<span class="m">${mmss(v.duration)}</span>`;
-    else                right = `<span class="badge">＋ index</span>`;
+    const right = vid ? `<span class="m">${mmss(v.duration)}</span>`
+                      : `<span class="badge">not indexed</span>`;
     d.innerHTML = `<span class="n">${vid ? '' : '<span class="dot"></span>'}${short(v.name)}</span>
                    <span class="m">${right}</span>`;
-    d.title = vid ? 'indexed — click to open in viewer'
-                  : `not indexed — click to index (${mmss(v.duration)}, ${v.size_mb}MB)`;
-    d.onclick = () => {
-      if (busy[v.name]) return;
-      if (vid) selectVideo(vid, v.name);
-      else indexLocal(v.name);
-    };
+    if (vid) {
+      d.title = 'click to open in the viewer';
+      d.onclick = () => selectVideo(vid, v.name);
+    } else {
+      d.title = 'present locally, not in the index';
+      d.style.cursor = 'default';
+    }
     $('localList').appendChild(d);
   });
-}
-
-async function indexAll() {
-  const todo = localFiles.filter(v => !indexedByName[v.name] && !busy[v.name]);
-  for (const v of todo) await indexLocal(v.name);
 }
 
 async function loadVideos() {
@@ -257,58 +223,8 @@ function selectVideo(id, fn, el) {
   renderLocal();
 }
 
-async function pollTask(taskId, name) {
-  let last = '';
-  const t0 = Date.now();
-  while (true) {
-    const j = await api('GET', `/api/tasks/${taskId}`);
-    const el = ((Date.now() - t0) / 1000).toFixed(0);
-    if (j.status !== last) {
-      last = j.status;
-      if (name) { busy[name] = `${j.status} ${el}s`; renderLocal(); }
-      stat(`${chan(name || '')} ${j.status} ${el}s`, 'var(--warn)');
-    }
-    if (j.status === 'ready' || j.status === 'failed') {
-      if (name) delete busy[name];
-      stat(`${chan(name || '')} ${j.status} ${el}s`,
-           j.status === 'ready' ? 'var(--ok)' : 'var(--err)');
-      await loadVideos(); loadIndexes();
-      return;
-    }
-    await new Promise(r => setTimeout(r, 3000));
-  }
-}
-
-async function indexLocal(name) {
-  if (!curIndex) return stat('select an index', 'var(--err)');
-  busy[name] = 'uploading'; renderLocal();
-  const j = await api('POST', '/api/index-local', { index_id: curIndex, name });
-  if (j._id) return pollTask(j._id, name);
-  delete busy[name]; renderLocal();
-  stat('upload failed', 'var(--err)');
-}
-
-const drop = $('drop');
-['dragenter','dragover'].forEach(e => drop.addEventListener(e, ev => {
-  ev.preventDefault(); drop.classList.add('over');
-}));
-['dragleave','drop'].forEach(e => drop.addEventListener(e, ev => {
-  ev.preventDefault(); drop.classList.remove('over');
-}));
-drop.addEventListener('drop', async ev => {
-  const f = ev.dataTransfer.files[0];
-  if (!f || !curIndex) return stat('need a file and an index', 'var(--err)');
-  stat(`uploading ${f.name.slice(0,18)}`, 'var(--warn)');
-  const fd = new FormData();
-  fd.append('index_id', curIndex);
-  fd.append('file', f);
-  const j = await api('POST', '/api/upload', fd, true);
-  await loadLocal();
-  if (j._id) pollTask(j._id, f.name);
-});
-
 async function search() {
-  if (!curIndex) return stat('select an index', 'var(--err)');
+  if (!curIndex) return stat('no corpus loaded', 'var(--err)');
   const opts = [];
   if ($('oVis').checked) opts.push('visual');
   if ($('oAud').checked) opts.push('audio');
@@ -343,7 +259,7 @@ function usePreset() {
 }
 
 async function analyze() {
-  if (!curVideo) return stat('select a video first', 'var(--err)');
+  if (!curVideo) return stat('select a clip first', 'var(--err)');
   $('out').textContent = ''; $('out').className = '';
   stat('analyzing', 'var(--warn)');
   const t0 = Date.now();
@@ -371,8 +287,15 @@ async function analyze() {
   stat(`analyzed ${((Date.now()-t0)/1000).toFixed(1)}s`, 'var(--ok)');
 }
 
-loadIndexes();
-loadLocal();
+// Open loaded, not cold: the run of show requires a clip already in the viewer
+// and paused. Nothing autoplays and nothing seeks.
+(async () => {
+  await loadLocal();
+  await loadIndexes();
+  renderLocal();
+  const first = localFiles.find(v => indexedByName[v.name]);
+  if (first) selectVideo(indexedByName[first.name], first.name);
+})();
 </script>
 <script src="/credits.js"></script>
 <script>renderCredits(['twelvelabs'], ['ffmpeg','ytdlp','fastapi']);</script>
