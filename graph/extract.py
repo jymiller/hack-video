@@ -30,7 +30,9 @@ KEY = os.environ["NOVITA_API_KEY"]
 MODEL = os.environ.get("HACK_MODEL", "zai-org/glm-5.2")
 URL = "https://api.novita.ai/v3/openai/chat/completions"
 
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = GraphDatabase.driver(os.environ.get("NEO4J_URI", "bolt://localhost:7687"),
+                     auth=(os.environ.get("NEO4J_USER", "neo4j"),
+                           os.environ.get("NEO4J_PASSWORD", "hackvideo2026")))
 http = httpx.Client(timeout=180.0)
 
 SCHEMA = {

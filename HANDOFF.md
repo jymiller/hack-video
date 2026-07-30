@@ -17,8 +17,11 @@ set -a; . ./.env; set +a           # symlink to ~/Downloads/source/hack-video/.e
 make demo                          # check + serve + graph state + the three URLs
 ```
 
-If the graph is empty or wrong: `make rebuild` — 23 seconds, and human attestations
-survive it. `make check` reports the health of every moving part.
+If the graph is empty or wrong: **`make restore`**, not `make rebuild`. `rebuild` stops
+after the load pass and leaves zero Observations, zero corroboration edges and zero
+proposed assertions — it takes 23 seconds and quietly breaks beats 2 and 4. `restore`
+runs the extraction and assertion passes too: minutes, and it needs the network.
+Neither is a stage fallback. `make check` reports the health of every moving part.
 
 ---
 

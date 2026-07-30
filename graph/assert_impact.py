@@ -65,7 +65,9 @@ def parse(text):
                 pass
     return None
 
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = GraphDatabase.driver(os.environ.get("NEO4J_URI", "bolt://localhost:7687"),
+                     auth=(os.environ.get("NEO4J_USER", "neo4j"),
+                           os.environ.get("NEO4J_PASSWORD", "hackvideo2026")))
 http = httpx.Client(timeout=180.0)
 
 PROMPT = """You are assessing whether a news event could affect a debt covenant.

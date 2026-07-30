@@ -10,10 +10,12 @@ the right edge even though Neo4j element ids change on every rebuild.
     python graph/attestations.py export   > attestations.json
     python graph/attestations.py restore  < attestations.json
 """
-import json, sys
+import os, json, sys
 from neo4j import GraphDatabase
 
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = GraphDatabase.driver(os.environ.get("NEO4J_URI", "bolt://localhost:7687"),
+                     auth=(os.environ.get("NEO4J_USER", "neo4j"),
+                           os.environ.get("NEO4J_PASSWORD", "hackvideo2026")))
 
 EXPORT = """
 MATCH (e:Event)-[m:MAY_AFFECT]->(c:Covenant)

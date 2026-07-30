@@ -15,7 +15,9 @@ BASE = "https://api.twelvelabs.io/v1.3"
 HDR = {"x-api-key": TL}
 INDEX = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("TL_INDEX")
 
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = GraphDatabase.driver(os.environ.get("NEO4J_URI", "bolt://localhost:7687"),
+                     auth=(os.environ.get("NEO4J_USER", "neo4j"),
+                           os.environ.get("NEO4J_PASSWORD", "hackvideo2026")))
 http = httpx.Client(timeout=120.0)
 
 

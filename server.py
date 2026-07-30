@@ -2,7 +2,7 @@ import os, json, glob, pathlib, subprocess, time
 import httpx
 from dotenv import load_dotenv
 from fastapi import FastAPI, UploadFile, Form, Request
-from fastapi.responses import StreamingResponse, FileResponse, JSONResponse
+from fastapi.responses import StreamingResponse, FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 load_dotenv()
@@ -13,8 +13,41 @@ BASE = "https://api.twelvelabs.io/v1.3"
 HDR = {"x-api-key": KEY}
 VIDEO_DIR = pathlib.Path("video")
 
-app = FastAPI()
+# The deployed instance has no video/ directory — the clips are 171 MB of broadcast
+# footage and .gitignore keeps them out on purpose. They live in a PRIVATE S3 bucket
+# and MEDIA_URLS carries deploy-time presigned URLs, so Render holds time-limited
+# links rather than AWS credentials. Unset locally, where files come off disk.
+#   {"<filename>": {"url": "...", "size_mb": 27.8, "duration": 559}}
+MEDIA_URLS = json.loads(os.environ.get("MEDIA_URLS") or "{}")
+
+# PUBLIC_READONLY is set on the deployed instance and unset locally, so the demo
+# laptop keeps every control while a public URL cannot spend money or destroy data.
+# Without it, /openapi.json publishes twelve write routes with try-it-out, including
+# an unauthenticated DELETE that takes the corpus with it.
+PUBLIC = bool(os.environ.get("PUBLIC_READONLY"))
+
+app = FastAPI(**({"docs_url": None, "redoc_url": None, "openapi_url": None} if PUBLIC else {}))
 client = httpx.AsyncClient(timeout=600.0)
+
+# POSTs that only read. /search queries TwelveLabs; /graph/query is guarded Cypher.
+PUBLIC_POST_OK = {"/api/search", "/api/graph/query"}
+# GETs that leak something. /you/status returns the account balance.
+PUBLIC_GET_BLOCKED = {"/api/you/status"}
+
+
+@app.middleware("http")
+async def readonly_gate(request: Request, call_next):
+    if PUBLIC:
+        path, method = request.url.path, request.method
+        blocked = (path in PUBLIC_GET_BLOCKED) or (
+            method not in ("GET", "HEAD") and path not in PUBLIC_POST_OK
+        )
+        if blocked:
+            return JSONResponse(
+                {"error": "read-only deployment",
+                 "detail": f"{method} {path} is disabled on the public instance"},
+                status_code=403)
+    return await call_next(request)
 
 
 async def tl(method, path, **kw):
@@ -82,6 +115,11 @@ def duration(p: pathlib.Path):
 
 @app.get("/api/local-videos")
 async def local_videos():
+    if MEDIA_URLS:
+        return [
+            {"name": n, "size_mb": m.get("size_mb"), "duration": m.get("duration")}
+            for n, m in sorted(MEDIA_URLS.items())
+        ]
     return [
         {
             "name": p.name,
@@ -335,7 +373,9 @@ async def job_del(job_id: str):
 
 from neo4j import GraphDatabase
 
-neo = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+neo = GraphDatabase.driver(os.environ.get("NEO4J_URI", "bolt://localhost:7687"),
+                     auth=(os.environ.get("NEO4J_USER", "neo4j"),
+                           os.environ.get("NEO4J_PASSWORD", "hackvideo2026")))
 
 
 def cy(q, **kw):
@@ -491,14 +531,22 @@ async def graph_query(req: Request):
 
 @app.get("/media/{name}")
 async def media(name: str):
+    # 307 keeps the method and lets the browser's own Range requests go straight to S3,
+    # which is what makes click-to-seek work on the deployed instance.
+    if name in MEDIA_URLS:
+        return RedirectResponse(MEDIA_URLS[name]["url"], status_code=307)
     p = VIDEO_DIR / name
     if not p.exists():
         return JSONResponse({"error": "not found"}, status_code=404)
     return FileResponse(p, media_type="video/mp4")
 
 
-# mounted before "/" — order matters, Starlette takes the first match
-app.mount("/docs", StaticFiles(directory="docs", html=True), name="docs")
+# mounted before "/" — order matters, Starlette takes the first match.
+# NOT mounted on the public instance: locally FastAPI's own Swagger route shadows
+# /docs, but PUBLIC_READONLY disables Swagger, which would expose this mount and with
+# it the run of show, the open questions and the Enid boundary note.
+if not PUBLIC:
+    app.mount("/docs", StaticFiles(directory="docs", html=True), name="docs")
 # Served from the app, not opened as file://, so the explainers can read live
 # graph data same-origin instead of shipping hardcoded samples.
 app.mount("/explainers", StaticFiles(directory="docs/explainers", html=True), name="explainers")

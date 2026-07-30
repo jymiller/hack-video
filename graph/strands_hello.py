@@ -20,8 +20,9 @@ from strands.models.openai import OpenAIModel
 # every multi-turn cycle and WARNs about it. Cosmetic, but it spams the console.
 logging.getLogger("strands.models.openai").setLevel(logging.ERROR)
 
-NEO4J_URI = "bolt://localhost:7687"
-NEO4J_AUTH = ("neo4j", "hackvideo2026")
+NEO4J_URI = os.environ.get("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_AUTH = (os.environ.get("NEO4J_USER", "neo4j"),
+              os.environ.get("NEO4J_PASSWORD", "hackvideo2026"))
 
 NOVITA_BASE_URL = "https://api.novita.ai/v3/openai"
 # Deliberately NOT read from NOVITA_MODEL: that var in hack-you/.env says

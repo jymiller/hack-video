@@ -3,10 +3,12 @@
 Identity of a source is its URL. Seen-ness is a hash comparison — nothing
 fuzzier. If the hash is known we have processed it; if not, we have not.
 """
-import hashlib, re
+import os, hashlib, re
 from neo4j import GraphDatabase
 
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = GraphDatabase.driver(os.environ.get("NEO4J_URI", "bolt://localhost:7687"),
+                     auth=(os.environ.get("NEO4J_USER", "neo4j"),
+                           os.environ.get("NEO4J_PASSWORD", "hackvideo2026")))
 
 YT = re.compile(r"^([A-Za-z0-9_-]{11})__")
 

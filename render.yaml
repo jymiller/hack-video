@@ -1,0 +1,53 @@
+# Render blueprint for the submission artifact — NOT the demo.
+#
+# The demo runs on the laptop: video, narration audio and Neo4j all local, so it
+# survives the wifi-off rehearsal. This deployment exists so the 16:00 submission
+# has a URL a judge can open. It differs from local in three deliberate ways:
+#
+#   PUBLIC_READONLY  every spend-or-destroy route 403s, Swagger and /openapi.json
+#                    are off, /api/you/status is closed, and the /docs markdown
+#                    mount is not registered.
+#   MEDIA_URLS       the six clips are 171 MB and gitignored, so they live in a
+#                    private S3 bucket and this carries presigned URLs. Render holds
+#                    time-limited links, never AWS credentials. THEY EXPIRE — the
+#                    signature is good for 7 days from generation; regenerate and
+#                    update the env var if the link must outlive that.
+#   NEO4J_*          points at Neo4j Aura rather than the local docker container.
+#                    Populate Aura from the laptop with:
+#                      NEO4J_URI=neo4j+s://<id>.databases.neo4j.io \
+#                      NEO4J_USER=neo4j NEO4J_PASSWORD=<pw> make restore
+#                    load.py reads the TwelveLabs cloud index, so no local media is
+#                    needed and no graph importer has to exist.
+#
+# Every value below marked sync:false is set in the Render dashboard or via the API,
+# never committed.
+
+services:
+  - type: web
+    name: hack-video
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    # Deliberately the static index, not a graph endpoint: the service must come up
+    # healthy before Aura exists, otherwise the first deploy fails on a missing database.
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.12"
+      - key: PUBLIC_READONLY
+        value: "1"
+      # Without this the process will not import — server.py reads it at module level.
+      - key: TWELVELABS_API_KEY
+        sync: false
+      - key: YDC_API_KEY
+        sync: false
+      - key: MEDIA_URLS
+        sync: false
+      - key: NEO4J_URI
+        sync: false
+      - key: NEO4J_USER
+        sync: false
+      - key: NEO4J_PASSWORD
+        sync: false

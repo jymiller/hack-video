@@ -57,6 +57,7 @@
       <div class="body stack">
         <div class="row">
           <input id="q" placeholder="what are you looking for?"
+                 value="jobs created by the expansion"
                  onkeydown="if(event.key==='Enter')search()">
           <button class="p" onclick="search()">GO</button>
         </div>
@@ -117,6 +118,13 @@ const chan  = n => n.split('__')[1] || n;
 const mmss  = s => s == null ? '' : `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
 
 player.addEventListener('timeupdate', () => $('tcode').textContent = player.currentTime.toFixed(1) + 's');
+
+// A media failure is otherwise silent: the hit count stays green, the frame freezes,
+// and it reads as a mis-click. Say it out loud instead.
+player.addEventListener('error', () => {
+  const src = decodeURIComponent((player.currentSrc || '').split('/').pop() || 'no source');
+  stat('media failed — ' + short(src), 'var(--err)');
+});
 
 function stat(m, c) { $('stat').textContent = m.toUpperCase(); $('stat').style.color = c || 'var(--vfd)'; }
 

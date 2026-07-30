@@ -113,9 +113,32 @@ Then, and only then, open in this order and **leave all four tabs open**:
 |---|---|
 | TwelveLabs search is slow or down | The graph already holds the segments. Skip to the coverage table — the finding does not need a live search |
 | Neo4j is down | `make up` takes ~20s. Talk over it: this is why the rebuild is one command |
-| The whole graph is wrong | `make rebuild` — 23 seconds, and attestations survive it |
+| The whole graph is wrong | **Do not run `make rebuild` on stage.** Skip to the coverage table and talk. See below |
 | Wifi is gone entirely | Video plays, audio plays, graph is local. **Only live search dies.** Say so plainly and carry on |
 | A judge asks for the covenant threshold | *"Not sourced. The graph says so rather than inventing one."* That is a better answer than a number |
+
+### Why `make rebuild` is not a stage fallback — measured 29 July
+
+This document used to promise *"`make rebuild` — 23 seconds, and attestations survive it."*
+The attestations part is true. The rest is not, and it would have cost the demo.
+
+`make graph` runs schema → seed → load → urls → link. It **never runs `extract.py` or
+`assert_impact.py`**. So a rebuild returns:
+
+| | before | after a rebuild |
+|---|---|---|
+| Observations | 6 | **0** |
+| CORROBORATES | 4 | **0** |
+| proposed MAY_AFFECT | 7 | **0** |
+| attestations | 5 | 5 (restored) |
+
+**Beat 2 dies entirely** — no corroboration panel. **Beat 4 loses its contrast**, because
+every remaining assertion is already decided, which this document elsewhere calls
+"looks staged". It also needs 14 live TwelveLabs searches, so it fails with no wifi.
+
+On stage, if the graph is wrong: **say the graph is local and pre-built, and go to the
+coverage table.** Offstage, `make restore` does the full job — graph, then extraction,
+then assertions, then attestations — in minutes rather than seconds, and needs network.
 
 ---
 

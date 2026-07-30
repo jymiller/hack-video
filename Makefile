@@ -4,7 +4,7 @@ IDX ?= $(shell curl -s --max-time 20 -H "x-api-key: $$TWELVELABS_API_KEY" \
         https://api.twelvelabs.io/v1.3/indexes 2>/dev/null | \
         $(PY) -c "import json,sys;d=json.load(sys.stdin)['data'];print(next((i['_id'] for i in d if i['video_count']>0),''))" 2>/dev/null)
 
-.PHONY: help graph rebuild rebuild-hard up down serve check clean-graph reset status assert attest-save attest-load demo demo-reset voice
+.PHONY: help graph rebuild rebuild-hard restore up down serve check clean-graph reset status assert attest-save attest-load demo demo-reset voice
 
 help:
 	@echo "make up         start neo4j (idempotent, waits for bolt)"
@@ -57,8 +57,19 @@ attest-load: up
 	@test -s attestations.json && $(PY) graph/attestations.py restore < attestations.json \
 	  || echo "no attestations.json — nothing to restore"
 
-# Safe rebuild: decisions survive it.
+# Safe rebuild: decisions survive it. But it stops after `graph`, so it does NOT
+# restore Observations, CORROBORATES or proposed edges — beat 2 and beat 4 both need
+# those. Not a stage fallback. See docs/06-the-run-of-show.md.
 rebuild: attest-save clean-graph graph attest-load
+	@$(MAKE) --no-print-directory status
+
+# The rebuild that actually restores the demo. Minutes, not seconds, and needs network.
+# attest-load runs BEFORE assert on purpose: once the human decisions are back in the
+# graph, assert_impact sees them as settled and never re-asks the model about a pair a
+# human has already closed. Reversing these two would re-send closed pairs.
+restore: attest-save clean-graph graph attest-load
+	@echo "==> extract"; $(PY) graph/extract.py
+	@echo "==> assert";  $(PY) graph/assert_impact.py
 	@$(MAKE) --no-print-directory status
 
 # When you really do want a clean slate, decisions included.
