@@ -1,89 +1,139 @@
-# hack-video
+# Material Witness
 
-> ## ⚠️ WORKING DRAFT — nothing here is settled
->
-> This repo is thinking-in-progress for a hackathon **two days away**. Ideas below are
-> proposals, not decisions. Several rest on facts nobody has verified yet, and at least one
-> will probably turn out to be wrong. **Read [`STATUS.md`](STATUS.md) before acting on any
-> of it** — it separates what we know from what we have merely assumed.
+**What is news footage actually worth to a credit desk?**
 
-Build repo for **Hack the Video Agent Context Graph** — Thursday **30 July 2026**,
-AWS Builder Loft, 525 Market St, San Francisco.
-
-Sponsors and tools: **OpenAI · Neo4j · AWS · TwelveLabs · Strands Agents**
+Live: **https://hack-video-v6kg.onrender.com** · Built for *Hack the Video Agent Context
+Graph*, 30 July 2026, AWS Builder Loft, San Francisco.
 
 ---
 
-## The event, in one table
+Credit systems consume a **controlled document supply chain** — things a lender is sent by
+somebody accountable. Filings, accounts, compliance certificates. News footage is none of
+that, and a system that quietly treats a broadcast like a filing is lying about where its
+numbers came from.
+
+So this indexes six UK broadcasters covering Gatwick's second runway with **TwelveLabs**,
+extracts entities, topics and timed segments with **GPT-5.6**, and writes it all into a
+**Neo4j** graph whose schema encodes that argument rather than decorating it.
+
+---
+
+## The finding, measured rather than asserted
+
+Sources are `controlled` or `observed`. Observed sources produce `Observation`s and **may
+never produce a `Fact` or supply a covenant number**.
 
 | | |
 |---|---|
-| **Format** | In person, one day, San Francisco |
-| **Doors** | 09:30 · talks 10:00 · **hacking opens 11:00** |
-| **Gate 1** | **16:00 — submissions due** |
-| **Gate 2** | **17:15 — demos and live judging.** Awards 19:00 |
-| **Freeze** | **14:30** — the 16:00 submission minus 90 minutes |
-| **Real build window** | **3 hours 30 minutes** |
-| **Prizes** | Not announced. *"Prize categories and judging details are still to come"* |
-| **Judging criteria** | Not published |
-| **Team** | Solo or team |
+| Links between video and concept | **106** |
+| Broadcasters | **6** |
+| Of those links reaching either covenant | **0** |
 
-**The build brief, from the organisers:** create a video agent that ingests raw video,
-understands it across vision, audio and speech with TwelveLabs, and writes what it finds
-into a Neo4j context graph — entities, scenes, tags, and the relationships between them.
+Not a gap in the corpus. News does not carry covenant data, and the graph declining to
+bridge that gap is the product.
 
-### Why the freeze is 14:30 and not later
+## The bridge — where video earns its place
 
-The agenda reads like a full day. It isn't. Two gates, and **the earlier one binds**: a
-submitted artifact at 16:00 sets the freeze at 14:30, where the 17:15 demo alone would have
-given 15:15. Getting that wrong costs 45 minutes of slack, and slack is the strongest
-relationship in this desk's whole record.
+The negative finding alone dead-ends. The useful half is this shape:
+
+```
+Observation ──SUGGESTS_RISK──▶ Risk ◀──EXPOSED_TO── Covenant ──▶ Threshold
+                              (sink)                            ▲
+                                                          Fact ─┘  (controlled only)
+```
+
+A `Risk` is a *channel of exposure* — capital programme delivery, volume demand, regulated
+revenue reset. It carries **no value, no unit, no direction, no threshold**. Both arrows
+point into it, so getting from a clip to a covenant means traversing `EXPOSED_TO`
+**backwards** — visible in the query text, on screen, to the person being asked to believe
+it. Safety by type, not by policy: the next engineer breaks policies, and cannot break types.
+
+> **Video can move where a credit analyst looks. It can never move what they read.**
+
+## A model may only ever propose
+
+Every model-written edge is `status='proposed'` and **inert** — no computation reads it
+until a human signs. A rejection is **kept**, never deleted.
+
+On 29 July the model proposed that an eleven-hour water outage could hit the interest cover
+ratio. It could not: no flight was cancelled, the airport never closed, water was back
+across the campus inside eleven hours. A human rejected it, signed and timestamped, and
+that "no" is still in the graph. Settled pairs are never sent to the model again — a fully
+settled run makes zero API calls in 0.2s.
+
+## The number the video never touched
+
+| Covenant | Test | Latest | Headroom |
+|---|---|---|---|
+| Senior ICR | min 1.50 | 3.59 | 139% |
+| **Senior RAR** | **max 0.70** | **0.61** | **12.9%** |
+
+Both from Gatwick Airport Limited's own audited accounts, cited on the node. Ask the agent
+which covenant is tightest and it names Senior RAR — then refuses to let any footage speak
+to whether it will breach.
 
 ---
 
-## What we are proposing to build
+## Stack
 
-**A video agent that watches news footage and works out whether it threatens a borrower's
-loan covenants.**
-
-The corpus is **London Gatwick Airport** — a real, publicly financed borrower with £2.5bn
-of listed secured bonds through Gatwick Funding Ltd, disclosed covenants (Senior interest
-cover ratio and Senior debt ratio), and two events extensively on video.
-
-**And the two events point in opposite directions, which is the whole idea:**
-
-| | The drone, Dec 2018 | The pandemic, from Mar 2020 |
-|---|---|---|
-| Coverage | Wall-to-wall, worldwide | Diffuse, months of it |
-| Flights cancelled | ~1,000 | — |
-| Passengers affected | ~140,000 | Traffic collapsed |
-| **Cost to Gatwick** | **~£1.4m** | **~£2bn pre-tax loss, 2020** |
-| **Covenant outcome** | **Nothing** | **Lenders waived Senior ICR and Senior RAR in Aug 2021** |
-
-A system that reacts to the loudest footage gets this exactly backwards. One that follows
-the footage through to passenger volumes, then earnings, then the ratio the bonds are
-tested on, gets it right. **That is the argument for a context graph** — and every number
-above is public and checkable.
-
----
-
-## What's in here
-
-| Document | Covers |
+| | Doing what |
 |---|---|
-| [`STATUS.md`](STATUS.md) | **Read first.** Decided vs assumed vs unknown |
-| [`docs/01-the-event.md`](docs/01-the-event.md) | The clock, the two gates, the gate surface |
-| [`docs/02-the-corpus.md`](docs/02-the-corpus.md) | Gatwick, the credit structure, the trap case, the Internet Archive holdings |
-| [`docs/03-the-vendors.md`](docs/03-the-vendors.md) | TwelveLabs and the rest, judged by the vendor test |
-| [`docs/04-open-questions.md`](docs/04-open-questions.md) | Everything unresolved, by owner |
-| [`docs/explainers/`](docs/explainers/) | The same material as visual HTML pages |
+| **TwelveLabs** | Marengo + Pegasus indexing, cross-video search, 512-dim segment embeddings, Jockey knowledge store |
+| **OpenAI GPT-5.6** | Terra for the agent, Luna for entity/topic extraction — Responses API, structured outputs |
+| **Neo4j** | 231 nodes, 651 relationships, vector index over segment transcripts |
+| **Strands Agents** | Tool-calling agent, five read-only tools |
+| **Render · Neo4j Aura** | The deployed app and its database |
+| **You.com** | Research surface used to source the filings |
+
+## Run it
+
+```bash
+uv venv && uv pip install -r requirements.txt
+set -a; . ./.env; set +a
+make demo
+```
+
+`make check` reports the health of every moving part. `make rebuild` rebuilds the graph
+from nothing in ~23 seconds — and human attestations survive it, because they are the one
+thing here that is not rebuildable.
+
+```bash
+make agent Q="which covenant has the least headroom?"
+make vsearch Q="how many people will get work from this?"
+```
+
+## Where things live
+
+```
+server.py               FastAPI — all vendor calls, keys stay server-side
+static/                 the pages; no build step, no CDN, edit and refresh
+graph/db.py             one place the database lives
+graph/load.py           concept-driven retrieval from TwelveLabs
+graph/extract.py        segments -> Observations with typed values + corroboration
+graph/entities.py       entities and topics, canonicalised across videos
+graph/embed.py          Marengo embeddings + the vector index
+graph/risk.py           the risk layer and its proposals
+graph/agent.py          the Strands agent
+graph/attestations.py   export/restore human decisions
+graph/export.py         lossless dump; discovers temporal types at dump time
+docs/05-the-data-model.md   the model    docs/06-the-run-of-show.md   the three minutes
+```
 
 ---
 
-## Where the rest of it lives
+## What this does not claim
 
-Campaign Desk, the operations app that screens and plans these events, is in
-[`jymiller/hackathon-prep`](https://github.com/jymiller/hackathon-prep).
-The DataHub hackathon on 10 August has its own repo,
-[`jymiller/hack-datahub`](https://github.com/jymiller/hack-datahub) — and if Gatwick works
-here, it should replace the invented corpus over there too.
+The containment barrier has had **exactly one live test** — the water-outage proposal a
+human refused — and it held. Claiming more would be overclaiming: a scan of all 63 segment
+transcripts for 21 finance and regulation terms (inflation, RPI, RAB, gearing, covenant,
+interest cover, price control, landing fee…) returns **zero hits**. The corpus is
+financially mute, so the barrier has mostly been holding back material that was never going
+to reach a covenant anyway.
+
+Entity canonicalisation collapsed "Gatwick Airport" to one node across five broadcasters
+through surface forms as mangled as *"get work"* and *"Getwork"* — but it left `Gatwick
+Airport` and `Gatwick Airport Limited` as two nodes, and `graph/entities.py status` reports
+that rather than hiding it.
+
+Observed values on `Test` nodes are illustrative. Covenant structures, thresholds and
+breach directions are real and cited.
