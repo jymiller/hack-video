@@ -1,0 +1,318 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>So what — Material Witness</title>
+<link rel="stylesheet" href="/chassis.css">
+<style>
+  /* One narrative, read top to bottom. chassis.css owns type and colour. */
+  main { display:block; overflow-y:auto; padding:var(--pad) var(--pad) 0; }
+  .wrap { max-width:940px; margin:0 auto; padding-bottom:var(--pad); }
+  .wrap > * + * { margin-top:var(--pad); }
+
+  .hero { padding:6px 2px 0; }
+  .hero .kick { font:600 11px/1 var(--sans); letter-spacing:.2em; text-transform:uppercase;
+                color:var(--dim); }
+  .hero h1 { font:400 34px/1.18 var(--serif); margin:12px 0 0; max-width:22ch; }
+  .hero p { font:400 15px/1.6 var(--sans); color:var(--ink-2); max-width:66ch; margin:12px 0 0; }
+
+  .step > h2 .num { font:600 11px/1 var(--mono); color:var(--dim); margin-right:8px; }
+
+  /* the two covenants */
+  .covs { display:grid; grid-template-columns:1fr 1fr; gap:var(--pad); }
+  @media (max-width:760px) { .covs { grid-template-columns:1fr; } }
+  .cov2 { border:1px solid var(--al-edge); border-radius:var(--r); padding:13px 15px;
+          background:var(--glass); }
+  .cov2.tight { border-color:var(--rule-warn); background:var(--tint-warn); border-left:4px solid var(--warn); }
+  .cov2 .nm { font:400 16px/1.25 var(--serif); color:var(--fg); }
+  .cov2 .cd { font:600 11px/1.5 var(--mono); color:var(--dim); }
+  .cov2 .big { font:500 30px/1.1 var(--mono); font-variant-numeric:tabular-nums; margin:9px 0 0; }
+  .cov2 .lim { font:400 13px/1.5 var(--sans); color:var(--ink-2); }
+  .cov2 .room { font:600 13px/1.5 var(--sans); margin-top:7px; }
+  .cov2.tight .room { color:var(--warn); }
+  .cov2.easy .room { color:var(--ok); }
+  .cov2 .say { font:400 12.5px/1.55 var(--sans); color:var(--ink-2);
+               border-top:1px solid var(--line); margin-top:10px; padding-top:9px; }
+
+  /* what the news carried */
+  .claims { display:flex; flex-direction:column; gap:0; }
+  .cl { display:grid; grid-template-columns:150px minmax(0,1fr) auto; gap:14px;
+        align-items:baseline; padding:11px 2px; border-bottom:1px solid var(--line); }
+  @media (max-width:700px) { .cl { grid-template-columns:1fr; gap:4px; } }
+  .cl .fig { font:500 19px/1.2 var(--mono); font-variant-numeric:tabular-nums; color:var(--fg); }
+  .cl .q { font:400 13.5px/1.5 var(--sans); color:var(--ink-2); }
+  .cl .land { font:600 11.5px/1.4 var(--sans); text-align:right; }
+  .cl .land.hit { color:var(--warn); }
+  .cl .land.soft { color:var(--ink-2); }
+  .cl .land.none { color:var(--dim); }
+
+  /* the reasoning diagram */
+  svg.rd { display:block; width:100%; max-width:860px; height:auto; margin:4px auto 0; }
+  svg.rd .bx { fill:var(--glass); stroke:var(--al-edge); stroke-width:1; }
+  svg.rd .bx.hot { fill:var(--tint-warn); stroke:var(--warn); stroke-width:1.8; }
+  svg.rd .bx.cold { fill:var(--al); stroke:var(--al-edge); }
+  svg.rd .t1 { font:600 12.5px var(--sans); fill:var(--fg); }
+  svg.rd .t2 { font:400 11px var(--sans); fill:var(--dim); }
+  svg.rd .t3 { font:500 11px var(--mono); fill:var(--ink-2); }
+  svg.rd .ln { stroke:var(--ink-2); stroke-width:1.5; fill:none; }
+  svg.rd .ln.hot { stroke:var(--warn); stroke-width:2.2; }
+  svg.rd .ln.dead { stroke:var(--dim); stroke-width:1.2; stroke-dasharray:3 4; }
+  svg.rd .hd { fill:var(--ink-2); }
+  svg.rd .hd.hot { fill:var(--warn); }
+
+  .sowhat { border:1px solid var(--rule-warn); background:var(--tint-warn);
+            border-left:4px solid var(--warn); border-radius:var(--r); padding:16px 19px; }
+  .sowhat .k { font:600 11px/1 var(--sans); letter-spacing:.14em; text-transform:uppercase;
+               color:var(--warn); }
+  .sowhat p { font:400 15.5px/1.6 var(--serif); color:var(--fg); margin:10px 0 0; max-width:64ch; }
+  .sowhat p + p { margin-top:9px; }
+  .sowhat b { font-weight:700; }
+
+  .inv { width:100%; border-collapse:collapse; }
+  .inv th { text-align:left; }
+  .inv td.n { text-align:right; font:500 13px var(--mono); font-variant-numeric:tabular-nums; }
+  .note2 { font:400 12.5px/1.6 var(--sans); color:var(--ink-2);
+           border-top:1px solid var(--line); margin-top:11px; padding-top:10px; }
+  .note2 b { color:var(--fg); font-weight:650; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand">MATERIAL WITNESS</span>
+  <nav>
+    <a href="/story.html" class="on">So what</a>
+    <a href="/">News analysis</a>
+    <a href="/graph.html">Reasoning</a>
+  </nav>
+  <span style="flex:1"></span>
+  <span id="size" class="muted"></span>
+  <span id="stat" class="vfd">READY</span>
+</header>
+
+<main>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="kick">Gatwick Funding Limited · senior secured notes</div>
+    <h1>The loudest story of the summer was the one that mattered least.</h1>
+    <p>Six UK broadcasters covered Gatwick between June and July. This is what the coverage
+       was worth to somebody holding the debt — which of the two loan promises it bears on,
+       and which it does not.</p>
+  </div>
+
+  <!-- 1 -------------------------------------------------------------- -->
+  <section class="sect step">
+    <h2><span class="lbl"><span class="num">01</span>The deal has two promises. Only one of them is tight.</span>
+      <span class="muted">from the borrower's own audited accounts</span></h2>
+    <div class="body">
+      <div class="covs" id="covs"></div>
+      <p class="note2" id="dealnote"></p>
+    </div>
+  </section>
+
+  <!-- 2 -------------------------------------------------------------- -->
+  <section class="sect step">
+    <h2><span class="lbl"><span class="num">02</span>What the news actually carried</span>
+      <span class="muted">every figure spoken on air, with where it lands</span></h2>
+    <div class="body">
+      <div class="claims" id="claims"></div>
+      <p class="note2">
+        <b>And the story that led the bulletins isn't in this list.</b> An eleven-hour water
+        outage closed no runway and cancelled no flight, so it carries no figure that bears on
+        either promise. The model proposed it might hit interest cover anyway. A human refused
+        that, in writing, and the refusal is kept — see <a href="/graph.html#queue">Reasoning</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- 3 -------------------------------------------------------------- -->
+  <section class="sect step">
+    <h2><span class="lbl"><span class="num">03</span>Where those figures land</span>
+      <span class="muted">news → channel of exposure → the promise that carries it</span></h2>
+    <div class="body">
+      <svg class="rd" viewBox="0 0 860 268" role="img"
+           aria-label="The 2.2 billion scheme cost lands on capital programme delivery, which Senior RAR carries at high likelihood and high impact. Senior RAR is the covenant with 12.9 percent of headroom. The 100,000 movements figure lands on traffic and volume demand, which only Senior ICR carries, and Senior ICR has 139 percent of headroom. The 14,000 jobs figure lands on nothing.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path class="hd" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path class="hd hot" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+
+        <text class="t2" x="96"  y="16" text-anchor="middle">SAID ON AIR</text>
+        <text class="t2" x="430" y="16" text-anchor="middle">CHANNEL OF EXPOSURE</text>
+        <text class="t2" x="768" y="16" text-anchor="middle">THE PROMISE</text>
+
+        <!-- row 1: the one that matters -->
+        <rect class="bx hot" x="10" y="34" width="176" height="52" rx="6"/>
+        <text class="t1" x="98" y="57" text-anchor="middle">£2.2bn scheme cost</text>
+        <text class="t3" x="98" y="74" text-anchor="middle">Channel 4 · 14.4s</text>
+
+        <path class="ln hot" d="M190,60 H336" marker-end="url(#a2)"/>
+
+        <rect class="bx hot" x="340" y="34" width="184" height="52" rx="6"/>
+        <text class="t1" x="432" y="57" text-anchor="middle">Capital programme</text>
+        <text class="t1" x="432" y="74" text-anchor="middle">delivery</text>
+
+        <path class="ln hot" d="M528,60 H676" marker-end="url(#a2)"/>
+
+        <rect class="bx hot" x="680" y="34" width="170" height="52" rx="6"/>
+        <text class="t1" x="765" y="55" text-anchor="middle">Senior RAR</text>
+        <text class="t3" x="765" y="73" text-anchor="middle">carried high / high</text>
+
+        <!-- row 2 -->
+        <rect class="bx" x="10" y="106" width="176" height="52" rx="6"/>
+        <text class="t1" x="98" y="129" text-anchor="middle">100,000 movements</text>
+        <text class="t3" x="98" y="146" text-anchor="middle">Channel 4 · Runway Radar</text>
+
+        <path class="ln" d="M190,132 H336" marker-end="url(#a1)"/>
+
+        <rect class="bx" x="340" y="106" width="184" height="52" rx="6"/>
+        <text class="t1" x="432" y="129" text-anchor="middle">Traffic and volume</text>
+        <text class="t1" x="432" y="146" text-anchor="middle">demand</text>
+
+        <path class="ln" d="M528,132 H676" marker-end="url(#a1)"/>
+
+        <rect class="bx cold" x="680" y="106" width="170" height="52" rx="6"/>
+        <text class="t1" x="765" y="127" text-anchor="middle">Senior ICR</text>
+        <text class="t3" x="765" y="145" text-anchor="middle">139% of headroom</text>
+
+        <!-- row 3: the dead end -->
+        <rect class="bx cold" x="10" y="178" width="176" height="52" rx="6"/>
+        <text class="t1" x="98" y="201" text-anchor="middle">14,000 jobs</text>
+        <text class="t3" x="98" y="218" text-anchor="middle">three broadcasters</text>
+
+        <path class="ln dead" d="M190,204 H330"/>
+        <text class="t2" x="432" y="208" text-anchor="middle">no channel — an advocacy figure</text>
+
+        <text class="t2" x="430" y="256" text-anchor="middle">every one of these links is a model's guess, and none of them carries a number across</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 4 -------------------------------------------------------------- -->
+  <section class="sect step">
+    <h2><span class="lbl"><span class="num">04</span>So what</span>
+      <span class="muted">the reason any of this was worth building</span></h2>
+    <div class="body">
+      <div class="sowhat">
+        <div class="k">The finding</div>
+        <p><b>Go and read the gearing test, not the cover test.</b> The £2.2bn is debt-funded
+           capital spending, and it lands on the one channel that Senior RAR carries at high
+           likelihood <i>and</i> high impact. Senior RAR is the promise with
+           <b>12.9% of room</b>. Senior ICR — which everything else on the page touches — has
+           <b>139%</b>.</p>
+        <p>None of that came from the footage. The footage supplied no ratio, moved no number,
+           and could not have: it told a reader <i>which of two tests to go and open</i>. The
+           filing that settles it arrives months later. That gap is the whole product.</p>
+        <p><b>And the discipline is the other half.</b> The water outage led every bulletin and
+           was worth nothing. A model said otherwise and a person overruled it. A system that
+           reacts to the loudest footage gets this exactly backwards.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -------------------------------------------------------------- -->
+  <section class="sect step">
+    <h2><span class="lbl"><span class="num">05</span>What is actually in the database</span>
+      <span class="muted">read live — nothing here is typed by hand</span></h2>
+    <div class="body">
+      <table class="inv" id="inv"></table>
+      <p class="note2" id="invnote"></p>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<script src="/common.js"></script>
+<script>
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cy = async q => (await api('POST', '/api/graph/query', { cypher: q })).rows || [];
+
+function stat(t, c) { const e = $('stat'); e.textContent = t; e.style.color = c || ''; }
+
+async function load() {
+  try {
+    const s = await api('GET', '/api/graph/stats');
+    const n = s.nodes.reduce((a, x) => a + x.n, 0), e = s.edges.reduce((a, x) => a + x.n, 0);
+    $('size').textContent = `${n} nodes · ${e} edges`;
+
+    // 1 — the two promises
+    const cov = await cy(`MATCH (c:Covenant) OPTIONAL MATCH (f:Fact)-[:TESTS]->(c)
+      RETURN c.covenant_code AS code, c.name AS name, c.direction AS dir,
+             c.threshold_value AS lim, c.latest_value AS val,
+             c.threshold_citation AS cite ORDER BY c.covenant_code`);
+    $('covs').innerHTML = cov.map(r => {
+      const room = r.dir === 'min' ? (r.val - r.lim) / r.lim : (r.lim - r.val) / r.lim;
+      const pct = Math.round(room * 1000) / 10;
+      const tight = pct < 50;
+      return `<div class="cov2 ${tight ? 'tight' : 'easy'}">
+        <div class="nm">${esc(r.name)}</div>
+        <div class="cd">${esc(r.code)}</div>
+        <div class="big">${esc(r.val)}</div>
+        <div class="lim">must stay ${r.dir === 'min' ? 'above' : 'below'} <b>${esc(r.lim)}</b></div>
+        <div class="room">${pct}% of room${tight ? ' — this is the tight one' : ''}</div>
+        <div class="say">${tight
+          ? 'Gearing. Senior net debt against the asset base the regulator recognises. Debt-funded capital spending moves it.'
+          : 'Cover. How many times over the cash covers the interest bill. Comfortable, and nothing in this coverage moves it much.'}</div>
+      </div>`;
+    }).join('');
+    const c0 = cov[0] || {};
+    $('dealnote').innerHTML = `Both figures are the borrower's own, from <b>${esc(c0.cite || 'the audited accounts')}</b>.
+      No number on this page came from a broadcast.`;
+
+    // 2 — what the news carried
+    const obs = await cy(`MATCH (o:Observation)-[:CITES]->(seg:Segment)-[:PART_OF]->(src:Source)
+      OPTIONAL MATCH (o)-[sr:SUGGESTS_RISK]->(r:Risk)
+      RETURN o.concept_code AS concept, o.value AS value, o.scale AS scale,
+             o.unit_kind AS unit, o.text AS text, src.publisher AS pub,
+             r.name AS risk ORDER BY o.value DESC`);
+    const seen = new Set();
+    const fmt = o => o.unit === 'currency'
+        ? '£' + (o.scale === 'millions' && o.value >= 1000 ? (o.value / 1000) + 'bn' : o.value + 'm')
+      : o.scale === 'thousands' ? (o.value * 1000).toLocaleString()
+      : Number(o.value).toLocaleString();
+    $('claims').innerHTML = obs.filter(o => {
+      const k = o.concept + o.value; if (seen.has(k)) return false; seen.add(k); return true;
+    }).map(o => {
+      const cls = o.risk ? (o.concept === 'scheme_cost' ? 'hit' : 'soft') : 'none';
+      return `<div class="cl">
+        <div class="fig">${fmt(o)}</div>
+        <div class="q">&ldquo;${esc(o.text)}&rdquo; <span class="muted">— ${esc(o.pub)}</span></div>
+        <div class="land ${cls}">${o.risk ? esc(o.risk) : 'lands on nothing'}</div>
+      </div>`;
+    }).join('');
+
+    // 5 — the inventory
+    const rows = [
+      ['Deals', s.nodes.find(x => x.label === 'Deal')?.n || 0, 'Gatwick Funding Limited'],
+      ['Loan promises', s.nodes.find(x => x.label === 'Covenant')?.n || 0, 'senior_icr · senior_rar'],
+      ['Broadcasters', 6, 'Channel 4 · TalkTV · Firstpost · SussexWorld · Runway Radar · London Standard'],
+      ['Video moments', s.nodes.find(x => x.label === 'Segment')?.n || 0, 'each with a timecode and a transcript'],
+      ['Things named on air', s.nodes.find(x => x.label === 'Entity')?.n || 0, 'merged across broadcasters'],
+      ['Figures extracted', s.nodes.find(x => x.label === 'Observation')?.n || 0, 'from what was spoken'],
+      ['Facts from filings', s.nodes.find(x => x.label === 'Fact')?.n || 0, 'the only source a number may come from'],
+      ['Channels of exposure', s.nodes.find(x => x.label === 'Risk')?.n || 0, 'what a promise can be moved by'],
+    ];
+    $('inv').innerHTML = '<tr><th>What</th><th class="n" style="text-align:right">Count</th><th>Which</th></tr>' +
+      rows.map(r => `<tr><td><b>${r[0]}</b></td><td class="n">${r[1]}</td>
+        <td class="muted">${esc(r[2])}</td></tr>`).join('');
+    $('invnote').innerHTML = `<b>One deal, not three.</b> The Walney Extension and High Speed 1
+      models live in a separate Neo4j instance seeded from the covenant reference data — they
+      have covenants and thresholds but no footage, so they are not in this graph and nothing
+      on this page reads them. Bringing them in would mean indexing video for a wind farm and
+      a railway.`;
+    stat('READY', 'var(--ok)');
+  } catch (e) {
+    stat('load failed', 'var(--err)');
+    $('dealnote').innerHTML = `<span style="color:var(--err)">Could not read the graph: ${esc(e)}</span>`;
+  }
+}
+load();
+</script>
+<script src="/credits.js"></script>
+<script>renderCredits(['neo4j'], ['fastapi']);</script>
+</body>
+</html>
