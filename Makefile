@@ -4,7 +4,7 @@ IDX ?= $(shell curl -s --max-time 20 -H "x-api-key: $$TWELVELABS_API_KEY" \
         https://api.twelvelabs.io/v1.3/indexes 2>/dev/null | \
         $(PY) -c "import json,sys;d=json.load(sys.stdin)['data'];print(next((i['_id'] for i in d if i['video_count']>0),''))" 2>/dev/null)
 
-.PHONY: help graph rebuild rebuild-hard up down serve check clean-graph reset status assert attest-save attest-load demo demo-reset voice ks ks-status ask embed embed-verify vsearch agent
+.PHONY: help graph rebuild rebuild-hard up down serve check clean-graph reset status assert attest-save attest-load demo demo-reset voice ks ks-status ask embed embed-verify vsearch agent graph-dump
 
 help:
 	@echo "make up         start neo4j (idempotent, waits for bolt)"
@@ -119,6 +119,9 @@ agent:
 	@$(PY) -m graph.agent "$(Q)"
 
 # Semantic search over segment transcripts. Marengo 512-dim, cosine.
+graph-dump:
+	@$(PY) -m graph.export dump
+
 embed:
 	@$(PY) -m graph.embed backfill
 

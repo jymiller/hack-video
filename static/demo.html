@@ -172,7 +172,7 @@
       <div class="body">
         <div id="rail"></div>
         <div class="railnote">
-          <kbd>&rarr;</kbd> next &nbsp; <kbd>&larr;</kbd> back &nbsp; <kbd>1</kbd>&ndash;<kbd>7</kbd> jump<br>
+          <kbd>&rarr;</kbd> next &nbsp; <kbd>&larr;</kbd> back &nbsp; <kbd>1</kbd>&ndash;<kbd id="jumpMax">8</kbd> jump<br>
           <span id="warm" style="display:block; margin-top:7px">prewarming&hellip;</span>
         </div>
       </div>
@@ -431,6 +431,38 @@ RETURN c.covenant_code AS covenant, c.name AS name, c.direction AS direction,
 
 const STEPS = [
 {
+  t: 'Material Witness',
+  say: 'Credit runs on documents somebody is accountable for. News footage is not that — so what is it actually worth to a credit desk?',
+  prov: ['GET /api/graph/stats', 'the graph this demo reads from, live'],
+  run: async out => {
+    const s = await (await fetch('/api/graph/stats')).json();
+    const n = s.nodes.reduce((a, x) => a + x.n, 0), e = s.edges.reduce((a, x) => a + x.n, 0);
+    const top = s.nodes.slice(0, 6).map(x => `${x.label} ${x.n}`).join(' · ');
+    out.innerHTML = `
+      <div style="padding:38px 8px 30px">
+        <div style="font:400 11px/1 var(--sans); letter-spacing:.22em; text-transform:uppercase;
+                    color:var(--dim); margin-bottom:18px">Gatwick · covenant reach</div>
+        <h1 style="font:400 46px/1.05 var(--serif); margin:0 0 14px">Material Witness</h1>
+        <p style="font:400 17px/1.5 var(--serif); color:var(--ink-2); max-width:56ch; margin:0 0 26px">
+          Six UK broadcasters on one runway decision, indexed with TwelveLabs, read by
+          GPT&#8209;5.6, and written into a graph that will not let a broadcast become a fact.</p>
+        <div style="display:flex; gap:26px; flex-wrap:wrap; padding-top:20px;
+                    border-top:1px solid var(--line)">
+          <div><div class="muted">Video → concept links</div>
+               <div style="font:600 26px/1.2 var(--mono)">106</div></div>
+          <div><div class="muted">Broadcasters</div>
+               <div style="font:600 26px/1.2 var(--mono)">6</div></div>
+          <div><div class="muted">Reaching a covenant</div>
+               <div style="font:600 26px/1.2 var(--mono); color:var(--err)">0</div></div>
+          <div><div class="muted">Graph</div>
+               <div style="font:600 26px/1.2 var(--mono)">${n} <span class="muted"
+                    style="font-size:13px">nodes · ${e} edges</span></div></div>
+        </div>
+        <div class="muted" style="margin-top:16px">${esc(top)}</div>
+      </div>`;
+  },
+},
+{
   t: 'The moment',
   say: 'A stranger types a question in English, and the video seeks itself to the second where the answer is spoken.',
   prov: ['POST /api/search', `{ "index_id": "${IDX}", "query": "jobs created by the expansion" }\n\nGET /api/graph/query  →  Source.id → filename, publisher (local; no network)\nGET /media/<filename>`],
@@ -609,6 +641,7 @@ $('out').innerHTML = STEPS.map((_, i) => `<div id="pane${i}" style="display:none
 const pane = i => $('pane' + i);
 
 function paintRail() {
+  const jm = $('jumpMax'); if (jm) jm.textContent = Math.min(9, STEPS.length);
   $('rail').innerHTML = STEPS.map((s, i) => {
     const st = state[i];
     return `<div class="r${i === cur ? ' on' : ''}" data-i="${i}">
@@ -668,7 +701,7 @@ document.addEventListener('keydown', e => {
   if (t === 'INPUT' || t === 'TEXTAREA' || t === 'VIDEO' || e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
   else if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
-  else if (e.key >= '1' && e.key <= '7') { e.preventDefault(); go(+e.key - 1); }
+  else if (e.key >= '1' && e.key <= '9' && +e.key <= STEPS.length) { e.preventDefault(); go(+e.key - 1); }
 });
 
 /* discreet prewarm — wakes Neo4j so step 2 is not the one that pays for it */
