@@ -1,0 +1,690 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Demo — the run of show</title>
+<link rel="stylesheet" href="/chassis.css">
+<style>
+  /* Structure only. chassis.css owns type and colour. */
+  main { grid-template-columns: 248px 1fr; }
+
+  /* ---- the step rail ---------------------------------------------------- */
+  .rail .body { padding: 0; }
+  .r {
+    display: flex; gap: 9px; align-items: baseline;
+    padding: 9px var(--pad); cursor: pointer;
+    border-bottom: 1px solid var(--line);
+    box-shadow: inset 3px 0 0 transparent;
+    transition: background-color .12s ease;
+  }
+  .r:hover { background: var(--row-hover); }
+  .r.on { background: var(--tint-ac); box-shadow: inset 3px 0 0 var(--teal); }
+  .r .num {
+    font: 600 11.5px/1.45 var(--mono); color: var(--dim);
+    min-width: 13px; font-variant-numeric: tabular-nums;
+  }
+  .r.on .num { color: var(--teal); }
+  .r .tl { font: 500 12.5px/1.35 var(--sans); color: var(--ink-2); flex: 1; }
+  .r.on .tl { font-weight: 650; color: var(--fg); }
+  .r .st { width: 6px; height: 6px; border-radius: 50%; background: transparent; flex-shrink: 0; }
+  .r .st.ok { background: var(--ok); }
+  .r .st.err { background: var(--err); }
+  .r .st.busy { background: var(--warn); }
+
+  .railnote {
+    padding: 10px var(--pad); color: var(--dim);
+    font: 400 11.5px/1.5 var(--sans);
+  }
+  .railnote kbd {
+    font: 600 11px/1.3 var(--mono); background: #f0eee9;
+    border: 1px solid #dfdcd4; border-radius: var(--r); padding: 1px 4px; color: #1a1a17;
+  }
+
+  /* ---- the stage -------------------------------------------------------- */
+  .stage .body { display: flex; flex-direction: column; gap: var(--pad); }
+  .stage .body > * { flex-shrink: 0; }   /* scroll the panel; never squeeze a step */
+  .say {
+    font: 400 15.5px/1.5 var(--serif); color: var(--fg);
+    border-left: 3px solid var(--teal); padding: 2px 0 2px 12px;
+  }
+  .out { min-height: 40px; }
+
+  /* provenance — the receipt */
+  .prov { border-top: 1px solid var(--line); padding-top: 10px; margin-top: auto; }
+  .prov .plabel {
+    font: 600 10.5px/1.3 var(--sans); letter-spacing: .1em;
+    text-transform: uppercase; color: var(--dim); display: block; margin-bottom: 5px;
+  }
+  .prov pre {
+    font-size: 11.5px; line-height: 1.5; color: var(--ink-2);
+    background: var(--glass-2); border: 1px solid var(--line);
+    border-left: 2px solid var(--al-edge);
+    padding: 8px 10px; border-radius: var(--r); max-height: 168px; overflow: auto;
+  }
+
+  .errbox {
+    background: var(--tint-err); border: 1px solid var(--rule-err);
+    border-left: 3px solid var(--err); border-radius: var(--r);
+    padding: 11px 13px;
+  }
+  .errbox .et { font: 650 13px/1.4 var(--sans); color: var(--err); }
+  .errbox .em { font: 400 12.5px/1.55 var(--mono); color: var(--ink-2); margin: 6px 0 9px; word-break: break-word; }
+
+  .wait { color: var(--dim); font: 400 12.5px/1.5 var(--sans); }
+
+  /* ---- step 1 ----------------------------------------------------------- */
+  .s1 { display: grid; grid-template-columns: 1fr 396px; gap: var(--pad); align-items: start; }
+  @media (max-width: 1180px) { .s1 { grid-template-columns: 1fr; } }
+  .hits { max-height: 46vh; overflow-y: auto; }
+  .hit .rk {
+    font: 700 12px/1.3 var(--mono); color: var(--dim);
+    min-width: 18px; font-variant-numeric: tabular-nums;
+  }
+  .hit.top { border-left-width: 6px; background: var(--tint-ac); }
+  .hit.playing { background: var(--tint-ac); border-color: var(--teal); }
+  .cue {
+    font: 400 12.5px/1.5 var(--sans); color: var(--ink-2);
+    background: var(--glass-2); border: 1px solid var(--line);
+    border-radius: var(--r); padding: 8px 10px;
+  }
+
+  /* ---- tables ----------------------------------------------------------- */
+  table.qt, table.cov { width: 100%; border-collapse: collapse; }
+  .qt th, .cov th { text-align: left; }
+  .qt td { vertical-align: top; }
+  .cov .n { text-align: right; }
+  .tw { border: 1px solid var(--al-edge); border-radius: var(--r); background: var(--glass); overflow-x: auto; }
+  .sf {
+    display: inline-block; font: 500 12px/1.5 var(--mono);
+    background: #f0eee9; border: 1px solid #dfdcd4; border-radius: var(--r);
+    padding: 0 6px; margin: 0 4px 4px 0; color: #1a1a17;
+  }
+  .sf.odd { border-color: var(--rule-warn); background: var(--tint-warn); color: var(--warn); }
+
+  /* ---- the bridge diagram ----------------------------------------------- */
+  .diag { border: 1px solid var(--al-edge); border-radius: var(--r); background: var(--glass); padding: 6px; overflow-x: auto; }
+  .diag svg { display: block; width: 100%; min-width: 640px; height: auto; }
+  .dlab { font: 600 10.5px var(--sans); letter-spacing: .1em; text-transform: uppercase; fill: var(--dim); }
+  .dn { fill: var(--glass); stroke: var(--al-edge); stroke-width: 1; }
+  .dn.obs { stroke: var(--teal); }
+  .dn.risk { stroke: #1a1a17; stroke-width: 1.5; }
+  .dn.cov { stroke: var(--ok); }
+  .dt1 { font: 650 11.5px var(--sans); fill: var(--fg); }
+  .dt2 { font: 400 10.5px var(--mono); fill: var(--dim); }
+  .de { fill: none; stroke: var(--warn); stroke-width: 1.5; stroke-dasharray: 5 3; }
+  .de2 { fill: none; stroke: #1a1a17; stroke-width: 1.5; }
+  .dedge-lab { font: 600 10px var(--mono); letter-spacing: .04em; }
+
+  .note {
+    background: var(--glass-2); border: 1px solid var(--al-edge);
+    border-left: 3px solid var(--al-edge); border-radius: var(--r);
+    padding: 10px 12px;
+  }
+  .note .nt { font: 650 12.5px/1.4 var(--sans); color: var(--fg); }
+  .note ul { margin: 7px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 12.5px; line-height: 1.6; }
+  .note li + li { margin-top: 4px; }
+
+  /* ---- step 6 ----------------------------------------------------------- */
+  .tally { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tal {
+    border: 1px solid var(--al-edge); border-radius: var(--r);
+    background: var(--glass-2); padding: 7px 12px; min-width: 104px;
+  }
+  .tal .tk { font: 600 10.5px/1.3 var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--dim); }
+  .tal .tv { font: 600 17px/1.25 var(--mono); font-variant-numeric: tabular-nums; color: var(--fg); }
+  .tal.p  { border-left: 3px solid var(--vfd); }
+  .tal.v  { border-left: 3px solid var(--ok); }
+  .tal.rj { border-left: 3px solid var(--err); }
+  .asrt .hd { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; margin-bottom: 3px; }
+  .asrt .cc { font: 600 12px/1.4 var(--mono); color: var(--teal); }
+
+  /* ---- step 7 ----------------------------------------------------------- */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--pad); }
+  @media (max-width: 980px) { .cards { grid-template-columns: 1fr; } }
+  .cd { border: 1px solid var(--al-edge); border-radius: var(--r); background: var(--glass); padding: 12px var(--pad); }
+  .cd .cn2 { font: 400 15px/1.25 var(--serif); color: var(--fg); }
+  .cd .cq { font: 600 11px/1.3 var(--mono); color: var(--dim); letter-spacing: .04em; }
+  .cd .big {
+    font: 500 30px/1.15 var(--mono); font-variant-numeric: tabular-nums;
+    color: var(--fg); margin: 9px 0 2px;
+  }
+  .cd .vs { font: 400 12.5px/1.5 var(--sans); color: var(--ink-2); }
+  .cd .head { font: 600 12.5px/1.5 var(--sans); color: var(--ok); margin-top: 7px; }
+  .cd .cite { font: 400 11.5px/1.5 var(--sans); color: var(--dim); border-top: 1px solid var(--line); margin-top: 9px; padding-top: 8px; }
+
+  footer .nav { display: flex; gap: 8px; align-items: center; }
+  .pos { font: 600 12px/1.3 var(--mono); color: var(--dim); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand">DEMO</span>
+  <span id="stepTitle" style="font:400 15px/1.2 var(--serif); color:var(--fg)"></span>
+  <span style="flex:1"></span>
+  <span id="stat" class="vfd">READY</span>
+</header>
+
+<main>
+  <div class="col">
+    <div class="sect grow rail">
+      <h2><span class="lbl">Run of show</span></h2>
+      <div class="body">
+        <div id="rail"></div>
+        <div class="railnote">
+          <kbd>&rarr;</kbd> next &nbsp; <kbd>&larr;</kbd> back &nbsp; <kbd>1</kbd>&ndash;<kbd>7</kbd> jump<br>
+          <span id="warm" style="display:block; margin-top:7px">prewarming&hellip;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="sect grow stage">
+      <h2>
+        <span class="lbl" id="hTitle"></span>
+        <span>
+          <span class="muted" id="hMeta"></span>
+          <button class="sm" id="rerun" onclick="run(true)" style="margin-left:10px">re-run</button>
+        </span>
+      </h2>
+      <div class="body">
+        <div class="say" id="say"></div>
+        <div class="out" id="out"></div>
+        <div class="prov" id="prov"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="nav">
+    <button id="back" onclick="go(cur-1)">&larr; Back</button>
+    <button class="p" id="next" onclick="go(cur+1)">Next &rarr;</button>
+  </div>
+  <span class="pos" id="pos"></span>
+  <span style="flex:1"></span>
+  <span class="cthanks">Gatwick · covenant reach</span>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const IDX = '6a694d8b7724e9379237179d';
+
+/* ---------- plumbing ---------------------------------------------------- */
+function stat(m, c) { $('stat').textContent = String(m).toUpperCase().slice(0, 60); $('stat').style.color = c || 'var(--vfd)'; }
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const mmss = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const trunc = (s, n) => { s = String(s ?? ''); return s.length > n ? s.slice(0, n - 1) + '…' : s; };
+
+async function jget(path) {
+  const r = await fetch(path);
+  const j = await r.json().catch(() => null);
+  if (!r.ok) throw new Error((j && j.error) || `${r.status} ${r.statusText}`);
+  return j;
+}
+async function jpost(path, body) {
+  const r = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => null);
+  if (!r.ok) throw new Error((j && j.error) || `${r.status} ${r.statusText}`);
+  return j;
+}
+async function cypher(q) {
+  const j = await jpost('/api/graph/query', { cypher: q });
+  if (j.error) throw new Error(j.error);
+  return j.rows || [];
+}
+
+/* Source map: video_id -> {publisher, filename}. Comes from Neo4j, so the
+   video/publisher names survive the wifi-off rehearsal. */
+let SRC = null;
+async function srcMap() {
+  if (SRC) return SRC;
+  const rows = await cypher("MATCH (s:Source) WHERE s.filename IS NOT NULL RETURN s.id AS id, s.publisher AS publisher, s.filename AS filename");
+  SRC = {};
+  rows.forEach(r => SRC[r.id] = { publisher: r.publisher, filename: r.filename });
+  return SRC;
+}
+
+function tbl(rows, cols) {
+  if (!rows.length) return `<div class="note"><span class="nt">No rows returned.</span></div>`;
+  const th = cols.map(c => `<th>${esc(c.h)}</th>`).join('');
+  const tr = rows.map(r => `<tr>${cols.map(c => {
+    const v = c.f ? c.f(r) : esc(r[c.k]);
+    return `<td class="${c.cls ? c.cls(r) : ''}">${v == null || v === '' ? '<span class="muted">&mdash;</span>' : v}</td>`;
+  }).join('')}</tr>`).join('');
+  return `<div class="tw"><table class="qt"><thead><tr>${th}</tr></thead><tbody>${tr}</tbody></table></div>`;
+}
+
+/* ---------- the bridge diagram (static; nothing animates) --------------- */
+function diagram(rows) {
+  const COLW = 196, PITCH = 54, NH = 38, TOP = 46;
+  const cols = [[], [], []];
+  const key = [r => 'o:' + r.quote, r => 'r:' + r.risk, r => 'c:' + r.covenant];
+  const lab = [
+    r => [trunc(r.quote, 30), r.publisher || r.observation],
+    r => [trunc(r.risk, 26), 'Risk'],
+    r => [r.covenant, 'Covenant'],
+  ];
+  const idx = [{}, {}, {}];
+  rows.forEach(r => [0, 1, 2].forEach(i => {
+    const k = key[i](r);
+    if (!(k in idx[i])) { idx[i][k] = cols[i].length; cols[i].push({ k, t: lab[i](r), full: i === 0 ? r.quote : (i === 1 ? r.risk : r.covenant) }); }
+  }));
+  const maxN = Math.max(1, ...cols.map(c => c.length));
+  const H = TOP + maxN * PITCH + 10;
+  const X = [8, 262, 516];
+  const pos = (ci, ni) => {
+    const n = cols[ci].length, area = H - TOP - 10;
+    return TOP + (area - n * PITCH) / 2 + ni * PITCH + (PITCH - NH) / 2;
+  };
+
+  let edges = '';
+  rows.forEach(r => {
+    const oi = idx[0][key[0](r)], ri = idx[1][key[1](r)], ci = idx[2][key[2](r)];
+    const oy = pos(0, oi) + NH / 2, ry = pos(1, ri) + NH / 2, cy2 = pos(2, ci) + NH / 2;
+    // SUGGESTS_RISK: observation -> risk (dashed, proposed and inert)
+    edges += `<path class="de" d="M${X[0] + COLW} ${oy} C${X[0] + COLW + 32} ${oy}, ${X[1] - 32} ${ry}, ${X[1] - 8} ${ry}" marker-end="url(#ah-w)"/>`;
+    // EXPOSED_TO: covenant -> risk (solid, structural; arrow points INTO risk)
+    edges += `<path class="de2" d="M${X[2]} ${cy2} C${X[2] - 32} ${cy2}, ${X[1] + COLW + 32} ${ry}, ${X[1] + COLW + 8} ${ry}" marker-end="url(#ah-k)"/>`;
+  });
+
+  let nodes = '';
+  cols.forEach((c, ci) => c.forEach((n, ni) => {
+    const y = pos(ci, ni), cls = ['obs', 'risk', 'cov'][ci];
+    nodes += `<g><title>${esc(n.full)}</title>
+      <rect class="dn ${cls}" x="${X[ci]}" y="${y}" width="${COLW}" height="${NH}" rx="2"/>
+      <text class="dt1" x="${X[ci] + 10}" y="${y + 16}">${esc(n.t[0])}</text>
+      <text class="dt2" x="${X[ci] + 10}" y="${y + 29}">${esc(trunc(n.t[1], 30))}</text></g>`;
+  }));
+
+  const heads = ['Observation · from video', 'Risk', 'Covenant'];
+  const hx = [X[0], X[1], X[2]];
+  const headers = heads.map((h, i) => `<text class="dlab" x="${hx[i]}" y="16">${esc(h)}</text>`).join('');
+
+  return `<div class="diag"><svg viewBox="0 0 720 ${H}" xmlns="http://www.w3.org/2000/svg" role="img"
+      aria-label="Observation suggests risk; covenant exposed to the same risk">
+    <defs>
+      <marker id="ah-w" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0 0 L8 4 L0 8 z" fill="var(--warn)"/></marker>
+      <marker id="ah-k" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0 0 L8 4 L0 8 z" fill="#1a1a17"/></marker>
+    </defs>
+    ${headers}
+    <text class="dedge-lab" x="${X[0] + COLW + 14}" y="34" fill="var(--warn)">SUGGESTS_RISK</text>
+    <text class="dedge-lab" x="${X[1] + COLW + 14}" y="34" fill="#1a1a17">&#8592; EXPOSED_TO</text>
+    ${edges}${nodes}
+  </svg></div>`;
+}
+
+/* ---------- step 1: the video ------------------------------------------- */
+let curSrc = '';
+function seek(file, t, el) {
+  const v = $('vid');
+  if (!v) return;
+  document.querySelectorAll('.hit').forEach(h => h.classList.remove('playing'));
+  if (el) el.classList.add('playing');
+  const url = '/media/' + encodeURIComponent(file);
+  const start = () => { try { v.currentTime = t; } catch (e) {} v.play().catch(() => {}); };
+  if (curSrc !== url) {
+    curSrc = url; v.src = url;
+    v.addEventListener('loadedmetadata', start, { once: true });
+    v.load();
+  } else start();
+}
+
+async function step1(out) {
+  const map = await srcMap();
+  out.innerHTML = `<div class="s1">
+    <div>
+      <video id="vid" controls preload="metadata"></video>
+      <div class="row" style="margin-top:0">
+        <span class="muted" id="nowPlaying">click a hit &mdash; the video seeks to the second</span>
+      </div>
+    </div>
+    <div>
+      <div class="row" style="margin-bottom:8px">
+        <input id="q" value="jobs created by the expansion" spellcheck="false">
+        <button class="p" id="goSearch">Search</button>
+      </div>
+      <div class="muted" id="hitMeta" style="margin-bottom:8px">not run yet</div>
+      <div class="hits" id="hits"></div>
+    </div>
+  </div>`;
+
+  // Load the rank-1 clip cold-start-free, per pre-flight.
+  const c4 = Object.entries(map).find(([, v]) => v.publisher === 'Channel 4 News');
+  if (c4) { curSrc = '/media/' + encodeURIComponent(c4[1].filename); $('vid').src = curSrc; }
+
+  const doSearch = async () => {
+    const hits = $('hits'), meta = $('hitMeta');
+    $('goSearch').disabled = true;
+    meta.textContent = 'searching…'; hits.innerHTML = '';
+    try {
+      const j = await jpost('/api/search', { index_id: IDX, query: $('q').value });
+      const data = j.data || [];
+      if (!data.length) { meta.innerHTML = '<b>No hits returned.</b>'; return; }
+      const srcs = new Set(data.map(h => h.video_id));
+      meta.innerHTML = `<b>${data.length} hits</b> · ${srcs.size} sources`;
+      hits.innerHTML = data.map((h, i) => {
+        const s = map[h.video_id] || {};
+        return `<div class="hit${i === 0 ? ' top' : ''}" data-f="${esc(s.filename || '')}" data-t="${h.start}">
+          <div class="t"><span class="rk">${h.rank ?? i + 1}</span>
+            <span>${mmss(h.start)}</span>
+            <span class="src">${esc(s.publisher || h.video_id)}</span></div>
+          <div class="x">${esc(trunc(h.transcription, 190))}</div></div>`;
+      }).join('');
+      hits.querySelectorAll('.hit').forEach(el => el.onclick = () => {
+        const f = el.dataset.f;
+        if (!f) { $('nowPlaying').textContent = 'no local file for this hit'; return; }
+        seek(f, parseFloat(el.dataset.t), el);
+        $('nowPlaying').innerHTML = `playing <b>${esc(f.split('__')[1] || f)}</b> from ${mmss(parseFloat(el.dataset.t))}`;
+      });
+      stat('SEARCH OK', 'var(--ok)');
+    } catch (e) {
+      meta.innerHTML = `<span style="color:var(--err)"><b>Search failed.</b> ${esc(e.message)}</span>`;
+      hits.innerHTML = `<div class="note"><span class="nt">The network is the only thing this step needs.</span>
+        <ul><li>The graph already holds these segments &mdash; steps 2 to 7 are local and still work.</li>
+        <li>Click <b>Search</b> to retry.</li></ul></div>`;
+      stat('SEARCH FAILED', 'var(--err)');
+      throw e;
+    } finally { $('goSearch').disabled = false; }
+  };
+  $('goSearch').onclick = () => doSearch().catch(() => {});
+  $('q').onkeydown = e => { if (e.key === 'Enter') doSearch().catch(() => {}); };
+  await doSearch();
+}
+
+/* ---------- the steps --------------------------------------------------- */
+const Q2 = `MATCH (a:Observation)-[r:CORROBORATES]->(b:Observation)
+MATCH (sa:Source {id: a.video_id})
+MATCH (sb:Source {id: b.video_id})
+RETURN a.concept_code AS concept, a.value AS value, a.scale AS scale,
+       sa.publisher AS pub_a, a.text AS quote_a,
+       sb.publisher AS pub_b, b.text AS quote_b, r.basis AS basis
+ORDER BY concept, pub_a`;
+
+const Q3 = `MATCH (seg:Segment)-[m:MENTIONS]->(e:Entity {name: 'Gatwick Airport'})
+MATCH (seg)-[:PART_OF]->(src:Source)
+RETURN src.publisher AS publisher,
+       count(DISTINCT seg) AS segments,
+       collect(DISTINCT m.surface_form) AS surface_forms
+ORDER BY segments DESC`;
+
+const Q5 = `MATCH (o:Observation)-[s:SUGGESTS_RISK]->(k:Risk)<-[x:EXPOSED_TO]-(c:Covenant)
+MATCH (src:Source {id: o.video_id})
+RETURN src.publisher AS publisher, o.concept_code AS observation, o.text AS quote,
+       s.status AS status, s.confidence AS confidence,
+       k.name AS risk, c.covenant_code AS covenant, x.manifestation AS manifestation
+ORDER BY observation, covenant`;
+
+const Q5B = `MATCH (o:Observation) WHERE NOT (o)-[:SUGGESTS_RISK]->(:Risk)
+MATCH (s:Source {id: o.video_id})
+RETURN o.concept_code AS concept, o.text AS quote, s.publisher AS publisher`;
+
+const Q7 = `MATCH (f:Fact)-[:OF_CONCEPT]->(co:Concept)<-[:MEASURED_BY]-(c:Covenant)
+MATCH (f)-[:FROM]->(src:Source)
+RETURN c.covenant_code AS covenant, c.name AS name, c.direction AS direction,
+       c.threshold_value AS threshold, f.value AS actual,
+       toString(f.as_of) AS as_of, f.provenance_class AS provenance,
+       src.id AS source, src.publisher AS publisher, c.threshold_citation AS citation`;
+
+const STEPS = [
+{
+  t: 'The moment',
+  say: 'A stranger types a question in English, and the video seeks itself to the second where the answer is spoken.',
+  prov: ['POST /api/search', `{ "index_id": "${IDX}", "query": "jobs created by the expansion" }\n\nGET /api/graph/query  →  Source.id → filename, publisher (local; no network)\nGET /media/<filename>`],
+  run: step1,
+},
+{
+  t: 'Corroboration',
+  say: 'The same figure, spoken independently by different publishers, linked because it is the same figure — the machine is reading, not tagging.',
+  prov: ['POST /api/graph/query', Q2],
+  run: async out => {
+    const rows = await cypher(Q2);
+    out.innerHTML = tbl(rows, [
+      { h: 'Concept', f: r => `<b>${esc(r.concept)}</b>` },
+      { h: 'Figure', f: r => `<span style="font:600 12.5px var(--mono)">${esc(r.value)}</span> <span class="muted">${esc(r.scale)}</span>` },
+      { h: 'Publisher', f: r => `<span class="src" style="color:var(--teal); font-weight:600">${esc(r.pub_a)}</span><div class="muted">&ldquo;${esc(r.quote_a)}&rdquo;</div>` },
+      { h: 'Corroborated by', f: r => `<span class="src" style="color:var(--teal); font-weight:600">${esc(r.pub_b)}</span><div class="muted">&ldquo;${esc(r.quote_b)}&rdquo;</div>` },
+      { h: 'Basis', f: r => `<span class="muted">${esc(r.basis)}</span>` },
+    ]) + `<div class="note" style="margin-top:12px"><span class="nt">${rows.length} corroboration links.</span>
+      <ul><li>Hold on to the 14,000 jobs figure. It is corroborated three ways here, and in step 5 it still reaches nothing.
+      Corroboration is not materiality.</li></ul></div>`;
+  },
+},
+{
+  t: 'The entity merge',
+  say: 'Five broadcasters, nineteen segments, one node — including two segments where the transcript heard “Getwork”.',
+  prov: ['POST /api/graph/query', Q3],
+  run: async out => {
+    const rows = await cypher(Q3);
+    const odd = /^(get work|getwork|the airport|airport|sussex hub|the project|runway|northern runway)$/i;
+    const segs = rows.reduce((a, r) => a + (r.segments || 0), 0);
+    const forms = new Set(); rows.forEach(r => (r.surface_forms || []).forEach(f => forms.add(f)));
+    out.innerHTML = tbl(rows, [
+      { h: 'Publisher', f: r => `<b>${esc(r.publisher)}</b>` },
+      { h: 'Segments', f: r => `<span style="font:600 13px var(--mono)">${esc(r.segments)}</span>`, cls: () => 'num' },
+      { h: 'Surface forms in the transcript', f: r => (r.surface_forms || []).map(f => `<span class="sf${odd.test(f) ? ' odd' : ''}">${esc(f)}</span>`).join('') },
+    ]) + `<div class="note" style="margin-top:12px"><span class="nt">One Entity node. ${segs} segments, ${rows.length} publishers, ${forms.size} distinct surface forms.</span>
+      <ul><li>Nothing in that table is a string match. &ldquo;Getwork&rdquo; and &ldquo;get work&rdquo; are speech-recognition errors;
+      &ldquo;Sussex hub&rdquo; and &ldquo;the airport&rdquo; are ordinary English. All of it resolves to the same node.</li>
+      <li>Without this, every count in the next three steps is wrong.</li></ul></div>`;
+  },
+},
+{
+  t: 'The zero',
+  say: 'One hundred and six links between video and concept, across six broadcasters. Zero reach a covenant.',
+  prov: ['GET /api/graph/coverage', `MATCH (co:Concept)
+OPTIONAL MATCH (seg:Segment)-[:CANDIDATE_FOR]->(co)
+OPTIONAL MATCH (seg)-[:PART_OF]->(src:Source)
+OPTIONAL MATCH (cov:Covenant)-[:MEASURED_BY]->(co)
+RETURN co.code AS concept, co.name AS name, co.unit_kind AS unit,
+       co.reachable_by AS lane, count(DISTINCT seg) AS segments,
+       count(DISTINCT src) AS sources, collect(DISTINCT cov.covenant_code)[0] AS covenant
+ORDER BY segments DESC, concept`],
+  run: async out => {
+    const rows = await jget('/api/graph/coverage');
+    const body = rows.map(r => {
+      const z = !r.segments;
+      return `<tr>
+        <td><b>${esc(r.name)}</b><div class="muted" style="font-family:var(--mono); font-size:11.5px">${esc(r.concept)}</div></td>
+        <td><span class="lane">${esc(r.lane)}</span></td>
+        <td>${r.covenant ? `<span class="badge b-err">${esc(r.covenant)}</span>` : '<span class="muted">&mdash;</span>'}</td>
+        <td class="n ${z ? 'zero' : 'some'}">${r.segments}</td>
+        <td class="n ${z ? 'zero' : 'some'}">${r.sources}</td></tr>`;
+    }).join('');
+    const covz = rows.filter(r => !r.segments && r.covenant);
+    out.innerHTML = `<div class="tw"><table class="cov">
+      <thead><tr><th>Concept</th><th>Lane</th><th>Covenant</th><th class="n">Segments</th><th class="n">Sources</th></tr></thead>
+      <tbody>${body}</tbody></table></div>
+      <div class="note" style="margin-top:12px"><span class="nt">Four rows read zero. Two of them are covenant-tested: ${covz.map(r => `<code>${esc(r.concept)}</code>`).join(' and ')}.</span>
+      <ul><li>Not filtered, not hidden, not filled with an estimate. The table is read, not animated.</li>
+      <li>News does not carry covenant data. A graph that pretended otherwise would be lying.</li></ul></div>`;
+  },
+},
+{
+  t: 'The bridge',
+  say: 'Video reaches the risk. It never reaches the number — and you can see that in the direction of the arrows.',
+  prov: ['POST /api/graph/query', Q5 + '\n\n/* and, for what was deliberately NOT linked: */\n' + Q5B],
+  run: async out => {
+    const [rows, orphans] = await Promise.all([cypher(Q5), cypher(Q5B)]);
+    const edges = new Map();
+    rows.forEach(r => edges.set(r.quote + '|' + r.risk, r));
+    out.innerHTML = diagram(rows)
+      + `<div class="note" style="margin-top:12px"><span class="nt">Risk is a sink. It has no outgoing edges at all.</span>
+        <ul><li><code>SUGGESTS_RISK</code> points into Risk. <code>EXPOSED_TO</code> also points into Risk, <b>from</b> the Covenant.</li>
+        <li>So reaching a covenant from a video means traversing <code>EXPOSED_TO</code> <b>backwards</b> — that is the
+        <code>&lt;-[x:EXPOSED_TO]-</code> in the query below. The graph does not assert that path; it only permits you to read it.</li>
+        <li>All ${edges.size} <code>SUGGESTS_RISK</code> edges are <b>proposed</b> and inert. Nothing reads them.</li></ul></div>`
+      + `<div style="margin-top:12px">` + tbl([...edges.values()], [
+        { h: 'From video', f: r => `<b>${esc(r.publisher)}</b><div class="muted">&ldquo;${esc(r.quote)}&rdquo;</div>` },
+        { h: 'Risk', k: 'risk' },
+        { h: 'Status', f: r => `<span class="badge b-run">${esc(r.status)}</span>` },
+        { h: 'Conf.', f: r => `<span style="font-family:var(--mono)">${esc(r.confidence)}</span>` },
+      ]) + `</div>`
+      + `<div class="note" style="margin-top:12px; border-left-color:var(--err)">
+        <span class="nt">What was deliberately not linked — ${orphans.length} observations reach no risk at all:</span>
+        <ul>${orphans.map(o => `<li><b>${esc(o.publisher)}</b> &ldquo;${esc(o.quote)}&rdquo; <span class="muted">(${esc(o.concept)})</span></li>`).join('')}
+        <li style="margin-top:6px">The 14,000 jobs figure is an advocacy number, contested on tape in the TalkTV and SussexWorld clips.
+        The water outage is not linked either: it was a terminal-services failure, not an air-operations one. Absence here is a decision, and it is queryable.</li></ul></div>`;
+  },
+},
+{
+  t: 'The human',
+  say: 'The model proposed that a water outage could hit the interest cover covenant. A human rejected it — and the rejection is kept, not deleted.',
+  prov: ['GET /api/graph/assertions', `MATCH (e:Event)-[m:MAY_AFFECT]->(c:Covenant)
+RETURN elementId(m) AS id, e.name AS event, toString(e.date) AS date, e.kind AS kind,
+       c.covenant_code AS covenant, c.direction AS covenant_direction,
+       m.status AS status, m.asserted_by AS asserted_by, m.direction AS direction,
+       m.rationale AS rationale, m.model AS model,
+       m.validated_by AS validated_by, toString(m.validated_at) AS validated_at
+ORDER BY m.status, e.date`],
+  run: async out => {
+    const rows = await jget('/api/graph/assertions');
+    const n = s => rows.filter(r => r.status === s).length;
+    const ord = { rejected: 0, proposed: 1, validated: 2 };
+    const sorted = [...rows].sort((a, b) => (ord[a.status] ?? 9) - (ord[b.status] ?? 9));
+    out.innerHTML = `<div class="tally">
+        <div class="tal p"><div class="tk">Proposed</div><div class="tv">${n('proposed')}</div></div>
+        <div class="tal v"><div class="tk">Validated</div><div class="tv">${n('validated')}</div></div>
+        <div class="tal rj"><div class="tk">Rejected</div><div class="tv">${n('rejected')}</div></div>
+        <div class="tal"><div class="tk">Written by model</div><div class="tv">0</div></div>
+      </div>
+      <div class="note" style="margin-top:12px"><span class="nt">The model proposes and may only ever propose.</span>
+      <ul><li>Every <code>MAY_AFFECT</code> edge is inert until a human signs it. A rejected proposal is kept for the record and read by nothing.</li></ul></div>
+      <div style="margin-top:12px">` + sorted.map(r => {
+        const cls = r.status === 'validated' ? 'validated' : r.status === 'rejected' ? 'rejected' : '';
+        const badge = r.status === 'validated' ? 'b-ok' : r.status === 'rejected' ? 'b-err' : 'b-run';
+        return `<div class="asrt ${cls}">
+          <div class="hd">
+            <span class="ev">${esc(r.event)}</span>
+            <span class="cc">${esc(r.covenant)}</span>
+            <span class="badge ${badge}">${esc(r.status)}</span>
+            <span class="badge">${esc(r.direction)}</span>
+          </div>
+          <div class="why">${esc(r.rationale)}</div>
+          <div class="who" style="margin-top:6px">
+            proposed by <b>${esc(r.model || r.asserted_by)}</b> · event ${esc(r.date)}
+            ${r.validated_by ? ` · <b>${esc(r.status)} by ${esc(r.validated_by)}</b> at ${esc((r.validated_at || '').replace('T', ' ').slice(0, 19))}` : ' · awaiting a human'}
+          </div></div>`;
+      }).join('') + `</div>`;
+  },
+},
+{
+  t: 'The number video never touched',
+  say: 'Here are the two numbers that actually decide the covenant — and not one frame of footage was involved in either.',
+  prov: ['POST /api/graph/query', Q7],
+  run: async out => {
+    const rows = await cypher(Q7);
+    if (!rows.length) { out.innerHTML = `<div class="note"><span class="nt">No rows returned.</span></div>`; return; }
+    out.innerHTML = `<div class="cards">` + rows.map(r => {
+      const max = r.direction === 'max';
+      const head = max ? (1 - r.actual / r.threshold) * 100 : (r.actual / r.threshold - 1) * 100;
+      return `<div class="cd">
+        <div class="cn2">${esc(r.name)}</div>
+        <div class="cq">${esc(r.covenant)} · ${esc(r.direction)} ${esc(r.threshold)}</div>
+        <div class="big">${esc(r.actual)}</div>
+        <div class="vs">against a ${max ? 'cap' : 'floor'} of <b>${esc(r.threshold)}</b></div>
+        <div class="head">${head.toFixed(1)}% headroom</div>
+        <div class="cite">${esc(r.publisher)} · <code>${esc(r.source)}</code> · as of ${esc(r.as_of)}
+          <div style="margin-top:5px">${esc(r.citation)}</div>
+          <div style="margin-top:5px">provenance: <b>${esc(r.provenance)}</b> — not observed, not inferred</div></div>
+      </div>`;
+    }).join('') + `</div>
+      <div class="note" style="margin-top:12px"><span class="nt">Both come from Gatwick Airport Limited's own audited accounts. Neither could ever have come from the footage.</span>
+      <ul><li>That is the point. The video buys <b>lead time</b> — the broadcast exists the same afternoon, the filing that settles it arrives months later.</li>
+      <li>An observation cannot change a covenant test. It tells you which test to go and look at, early.</li></ul></div>`;
+  },
+},
+];
+
+/* ---------- stepper ----------------------------------------------------- */
+let cur = 0;
+const state = STEPS.map(() => ({ done: false, err: false }));
+
+/* One persistent pane per step. Going back must show that step again, not
+   whatever was rendered last — and it keeps the video and the hit list alive. */
+$('out').innerHTML = STEPS.map((_, i) => `<div id="pane${i}" style="display:none"></div>`).join('');
+const pane = i => $('pane' + i);
+
+function paintRail() {
+  $('rail').innerHTML = STEPS.map((s, i) => {
+    const st = state[i];
+    return `<div class="r${i === cur ? ' on' : ''}" data-i="${i}">
+      <span class="num">${i + 1}</span><span class="tl">${esc(s.t)}</span>
+      <span class="st ${st.err ? 'err' : st.done ? 'ok' : ''}"></span></div>`;
+  }).join('');
+  $('rail').querySelectorAll('.r').forEach(el => el.onclick = () => go(+el.dataset.i));
+}
+
+function go(i) {
+  if (i < 0 || i >= STEPS.length) return;
+  cur = i;
+  const s = STEPS[i];
+  $('hTitle').textContent = s.t;
+  $('stepTitle').textContent = `${i + 1}. ${s.t}`;
+  $('hMeta').textContent = `step ${i + 1} of ${STEPS.length}`;
+  $('pos').textContent = `${String(i + 1).padStart(2, '0')} / ${String(STEPS.length).padStart(2, '0')}`;
+  $('say').textContent = s.say;
+  $('prov').innerHTML = `<span class="plabel">${esc(s.prov[0])}</span><pre>${esc(s.prov[1])}</pre>`;
+  $('back').disabled = i === 0;
+  $('next').disabled = i === STEPS.length - 1;
+  STEPS.forEach((_, j) => pane(j).style.display = j === i ? '' : 'none');
+  document.querySelector('.stage .body').scrollTop = 0;
+  paintRail();
+  if (state[i].done) stat('STEP ' + (i + 1) + ' OK', 'var(--ok)');
+  run(false);
+}
+
+async function run(force) {
+  const i = cur, s = STEPS[i], out = pane(i);
+  if (state[i].done && !force) return;           // already on screen in its own pane
+  out.innerHTML = `<div class="wait">running…</div>`;
+  state[i].err = false; paintRail();
+  stat('RUNNING ' + (i + 1), 'var(--vfd)');
+  try {
+    await s.run(out);
+    state[i].done = true; state[i].err = false;
+    stat('STEP ' + (i + 1) + ' OK', 'var(--ok)');
+  } catch (e) {
+    state[i].done = false; state[i].err = true;
+    // Step 1 renders its own inline failure and still leaves the box usable.
+    if (!out.querySelector('.s1')) {
+      out.innerHTML = `<div class="errbox">
+        <div class="et">Step ${i + 1} could not run.</div>
+        <div class="em">${esc(e.message)}</div>
+        <button class="sm" onclick="run(true)">Retry this step</button>
+        <span class="muted" style="margin-left:10px">Every other step is independent and still works.</span>
+      </div>`;
+    }
+    stat('STEP ' + (i + 1) + ' FAILED', 'var(--err)');
+  }
+  paintRail();
+}
+
+document.addEventListener('keydown', e => {
+  const t = e.target.tagName;
+  if (t === 'INPUT' || t === 'TEXTAREA' || t === 'VIDEO' || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+  else if (e.key >= '1' && e.key <= '7') { e.preventDefault(); go(+e.key - 1); }
+});
+
+/* discreet prewarm — wakes Neo4j so step 2 is not the one that pays for it */
+(async () => {
+  try {
+    const s = await jget('/api/graph/stats');
+    const nodes = (s.nodes || []).reduce((a, r) => a + r.n, 0);
+    const rels = (s.edges || []).reduce((a, r) => a + r.n, 0);
+    $('warm').textContent = `graph warm · ${nodes} nodes / ${rels} rels`;
+    srcMap().catch(() => {});
+  } catch (e) {
+    $('warm').innerHTML = `<span style="color:var(--err)">graph cold — ${esc(e.message)}</span>`;
+  }
+})();
+
+go(0);
+</script>
+</body>
+</html>

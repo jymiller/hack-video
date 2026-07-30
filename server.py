@@ -186,6 +186,40 @@ async def agent_ask(req: Request):
     return StreamingResponse(gen(), media_type="application/x-ndjson")
 
 
+# Plain English in, Cypher out, whole nodes back. Same queue+thread shape as /api/agent
+# above: the work is a blocking generator on a worker thread and its stages arrive as
+# NDJSON, so the page can show the schema read, then the Cypher, then the rows — the
+# generated query is on screen a second or two before the answer is, which is the part
+# an analyst actually wants to audit. Read-only is enforced inside graph.nl2cypher by
+# running the query in a Neo4j READ transaction, not by inspecting the string.
+@app.post("/api/nl2cypher")
+async def nl2cypher_ask(req: Request):
+    import asyncio, queue, threading
+    body = await req.json()
+    q = queue.Queue()
+
+    def run():
+        try:
+            from graph.nl2cypher import MODEL_ID, run as nl_run
+            q.put({"model": MODEL_ID})
+            for ev in nl_run(body["question"]):
+                q.put(ev)
+        except Exception as e:
+            q.put({"error": str(e)[:400]})
+        finally:
+            q.put(None)
+
+    async def gen():
+        threading.Thread(target=run, daemon=True).start()
+        while True:
+            ev = await asyncio.to_thread(q.get)
+            if ev is None:
+                break
+            yield json.dumps(ev, default=str) + "\n"
+
+    return StreamingResponse(gen(), media_type="application/x-ndjson")
+
+
 # Knowledge store — the `responses` surface, multi-turn Q&A over the same assets the
 # GATWICK index holds. Not on the run-of-show; here so the capability exists if asked.
 # Deliberately not streamed: intermediate per-video analyses interleave with the final
