@@ -111,7 +111,11 @@ Cite the publisher and timestamp whenever you use video evidence."""
 
 def build(callback_handler=None):
     if not os.environ.get("OPENAI_API_KEY"):
-        sys.exit("OPENAI_API_KEY not set — add it to .env")
+        # Not sys.exit: this runs on a worker thread behind /api/agent, and SystemExit
+        # is a BaseException, so `except Exception` there would not catch it — the
+        # thread would die silently and the stream would just stop, which reads as a
+        # hang rather than a missing key.
+        raise RuntimeError("OPENAI_API_KEY not set — add it to .env, or to the host's environment")
     # Responses API, not chat completions: GPT-5.6 refuses function tools on
     # /v1/chat/completions unless reasoning is off entirely. max_output_tokens bounds
     # reasoning and output together — leave headroom or multi-tool answers truncate.
