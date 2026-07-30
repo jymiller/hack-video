@@ -115,7 +115,7 @@ Then, and only then, open in this order and **leave all four tabs open**:
 | Neo4j is down | `make up` takes ~20s. Talk over it: this is why the rebuild is one command |
 | The whole graph is wrong | **Do not run `make rebuild` on stage.** Skip to the coverage table and talk. See below |
 | Wifi is gone entirely | Video plays, audio plays, graph is local. **Only live search dies.** Say so plainly and carry on |
-| A judge asks for the covenant threshold | *"Not sourced. The graph says so rather than inventing one."* That is a better answer than a number |
+| A judge asks for the covenant threshold | **It is sourced now.** *"Senior ICR must stay above 1.50 and it was 3.59. Senior debt ratio must stay below 0.70 and it was 0.61 — nine points of headroom. Both from Gatwick's own accounts for the year ended 31 March 2018, which is the controlled lane, and the only lane allowed to answer that question."* |
 
 ### Why `make rebuild` is not a stage fallback — measured 29 July
 

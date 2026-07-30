@@ -566,8 +566,14 @@
    ],
    "props": {
     "covenant_code": "senior_icr",
-    "threshold_status": "not_sourced",
+    "threshold_citation": "Annual Report and Financial Statements for the year ended 31 March 2018 (company 1991018), financial covenants table",
+    "threshold_default": 1.1,
+    "threshold_status": "sourced",
+    "threshold_value": 1.5,
     "name": "Senior interest cover ratio",
+    "latest_value": 3.59,
+    "threshold_source": "gal-arfs-2018",
+    "latest_as_of": "2018-03-31",
     "direction": "min"
    }
   },
@@ -578,8 +584,14 @@
    ],
    "props": {
     "covenant_code": "senior_rar",
-    "threshold_status": "not_sourced",
+    "threshold_citation": "Annual Report and Financial Statements for the year ended 31 March 2018 (company 1991018), financial covenants table",
+    "threshold_default": 0.85,
+    "threshold_value": 0.7,
+    "threshold_status": "sourced",
     "name": "Senior debt ratio",
+    "latest_value": 0.61,
+    "threshold_source": "gal-arfs-2018",
+    "latest_as_of": "2018-03-31",
     "direction": "max"
    }
   },
@@ -1882,6 +1894,58 @@
     "started_at": "2026-07-29T16:59:41.506000000+00:00",
     "model": "zai-org/glm-5.2",
     "id": "zai-org/glm-5.2-1785344381"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:155",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "provenance_class": "controlled",
+    "company_number": "1991018",
+    "filename": "Gatwick Airport Limited ARFS March 2018.pdf",
+    "kind": "accounts",
+    "as_of": "2018-03-31",
+    "publisher": "Gatwick Airport Limited",
+    "id": "gal-arfs-2018",
+    "url_sha256": "416d34bba3957ef0b7d79ca76e9dcc67812553695448df9bef0c61795350cd5b",
+    "title": "Annual Report and Financial Statements for the year ended 31 March 2018",
+    "url": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dw639ca5a8/images/Corporate-PDFs/Reports%20financial%20/Other_Financial_Documents/Previous_annual_reports/Gatwick%20Airport%20Limited%20ARFS%20March%202018.pdf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:156",
+   "labels": [
+    "Fact"
+   ],
+   "props": {
+    "provenance_class": "controlled",
+    "as_stated": "3.59 (2017: 3.96)",
+    "quote": "The Senior ICR for the year ended 31 March 2018 was 3.59 (2017: 3.96).",
+    "as_of": "2018-03-31",
+    "prior_value": 3.96,
+    "unit_kind": "ratio_x",
+    "concept_code": "cta_senior_icr",
+    "value": 3.59,
+    "concept_unit_mismatch": false
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:157",
+   "labels": [
+    "Fact"
+   ],
+   "props": {
+    "provenance_class": "controlled",
+    "as_stated": "0.61 (2017: 0.51)",
+    "quote": "As at 31 March 2018, the Group's Senior RAR ratio was 0.61 (2017: 0.51).",
+    "as_of": "2018-03-31",
+    "prior_value": 0.51,
+    "unit_kind": "ratio_x",
+    "concept_code": "cta_senior_rar",
+    "value": 0.61,
+    "concept_unit_mismatch": true
    }
   }
  ],
@@ -4638,6 +4702,48 @@
     "status": "proposed",
     "direction": "increases"
    }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:155",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:45",
+   "type": "EVIDENCES",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:156",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:155",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:156",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:42",
+   "type": "OF_CONCEPT",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:156",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "TESTS",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:157",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:155",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:157",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:43",
+   "type": "OF_CONCEPT",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:157",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "TESTS",
+   "props": {}
   }
  ]
 }

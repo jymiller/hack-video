@@ -124,7 +124,7 @@ attestations.json      the human decisions — this file is not rebuildable
 
 **Running services.** Neo4j in docker container `hackgraph` (bolt 7687, browser 7474,
 neo4j/hackvideo2026). The app on `:8000`. Both are disposable —
-`graph/dump/graph-export.json` holds all 155 nodes and 375 relationships. The node count
+`graph/dump/graph-export.json` holds all 158 nodes and 382 relationships. The node count
 drifts upward by one every time `make assert` runs — it writes an `ExtractionRun` audit node
 even when the worklist is empty and no model call is made.
 
@@ -224,10 +224,27 @@ reproduced; it has been corrected to say what is actually true.
   Do not spend time re-searching. Five other candidates exist and all are small channels —
   `bLprsy_tLs0` (LONDONER) is the best second source if corroboration is wanted, but it is a
   10-subscriber channel and that is a credibility trade John should make deliberately.
-- **Covenant thresholds are `not_sourced`** and deliberately null. A You.com search surfaced
+- ~~Covenant thresholds are `not_sourced`.~~ **Closed 30 July.** Both are sourced from
+  Gatwick Airport Limited's Annual Report and Financial Statements for the year ended
+  31 March 2018 (company 1991018), financial covenants table, via
+  `graph/load_controlled.py`: **Senior ICR trigger 1.50, default 1.10, actual 3.59**
+  (2017: 3.96); **Senior RAR trigger 0.70, default 0.85, actual 0.61** (2017: 0.51). The
+  document states all covenants were tested and complied with. This also filled the
+  **controlled lane**, which had zero sources and zero `Fact` nodes — so the two-lane
+  argument is now demonstrated rather than asserted: each covenant is reached by exactly
+  one Fact and zero video segments.
+- **A unit discrepancy is now visible on screen and was left visible on purpose.** The
+  seeded concept `cta_senior_rar` declares `unit_kind: percent`, but the governing
+  document states RAR as a ratio (0.61, not 61%). The Fact is stored as the document
+  states it and carries `concept_unit_mismatch: true`. Fixing the concept is a seed
+  change and a judgement call — decide it deliberately, do not let it be noticed on stage.
+- ~~A You.com search surfaced~~ *(superseded — the prospectus lead below is no longer the
+  only route to a threshold, but is still the better long-term source.)* A You.com search surfaced
   the actual Gatwick Funding prospectus PDF on gatwickairport.com — that is the lead.
-- **No controlled-lane source is loaded.** Both lanes exist in the schema; only `observed` has
-  data. Loading the prospectus would populate the other side.
+- ~~No controlled-lane source is loaded.~~ **Closed 30 July** — see the threshold item
+  above. One `controlled` source (the FY2018 accounts) and two `Fact`s now populate the
+  other side. The prospectus is still the better source for the covenant *definitions*,
+  but the demo no longer depends on it.
 - **Extraction reads transcripts only**, so every modality came back `spoken`. The on-screen
   figures Pegasus reported are not captured; that needs a per-segment OCR pass.
 

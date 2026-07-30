@@ -401,10 +401,17 @@ async def graph_coverage():
       MATCH (co:Concept)
       OPTIONAL MATCH (seg:Segment)-[:CANDIDATE_FOR]->(co)
       OPTIONAL MATCH (seg)-[:PART_OF]->(src:Source)
+      OPTIONAL MATCH (fact:Fact)-[:OF_CONCEPT]->(co)
       OPTIONAL MATCH (cov:Covenant)-[:MEASURED_BY]->(co)
       RETURN co.code AS concept, co.name AS name, co.unit_kind AS unit,
              co.reachable_by AS lane, count(DISTINCT seg) AS segments,
-             count(DISTINCT src) AS sources, collect(DISTINCT cov.covenant_code)[0] AS covenant
+             count(DISTINCT src) AS sources,
+             count(DISTINCT fact) AS facts,
+             collect(DISTINCT cov.covenant_code)[0] AS covenant,
+             collect(DISTINCT cov.direction)[0] AS covenant_direction,
+             collect(DISTINCT cov.threshold_value)[0] AS covenant_threshold,
+             collect(DISTINCT cov.threshold_status)[0] AS threshold_status,
+             collect(DISTINCT cov.latest_value)[0] AS latest_value
       ORDER BY segments DESC, concept""")
 
 

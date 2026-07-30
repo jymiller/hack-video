@@ -164,15 +164,30 @@ async function loadStats() {
 
 async function loadCoverage() {
   const rows = await api('GET', '/api/graph/coverage');
+  // Two lanes, side by side. Video segments and sources are the OBSERVED lane; Facts
+  // are the CONTROLLED one. The argument is the shape of these columns, not a caption:
+  // observed rows carry counts and no Fact, covenant rows carry a Fact and no video.
   $('cov').innerHTML = `<tr><th>Concept</th><th>Unit</th><th>Reachable by</th>
-    <th class="n">Segments</th><th class="n">Sources</th><th>Covenant</th></tr>` +
-    rows.map(r => `<tr>
-      <td><b>${r.concept}</b></td>
+    <th class="n">Video<br>segments</th><th class="n">Video<br>sources</th>
+    <th class="n">Facts</th><th>Covenant tested</th></tr>` +
+    rows.map(r => {
+      let cov = '';
+      if (r.covenant) {
+        const dir = r.covenant_direction === 'min' ? 'must stay above' : 'must stay below';
+        cov = r.threshold_status === 'sourced'
+          ? `${dir} <b>${r.covenant_threshold}</b>`
+            + (r.latest_value != null ? ` · at <b>${r.latest_value}</b>` : '')
+          : `${r.covenant} · threshold not sourced`;
+      }
+      return `<tr>
+      <td><b>${r.name || r.concept}</b><div class="lane">${r.concept}</div></td>
       <td class="lane">${r.unit}</td>
       <td class="lane">${r.lane}</td>
       <td class="n ${r.segments ? 'some' : 'zero'}">${r.segments}</td>
       <td class="n ${r.sources ? 'some' : 'zero'}">${r.sources}</td>
-      <td class="lane">${r.covenant || ''}</td></tr>`).join('');
+      <td class="n ${r.facts ? 'some' : 'zero'}">${r.facts}</td>
+      <td class="lane">${cov}</td></tr>`;
+    }).join('');
 }
 
 async function loadAsserts() {
