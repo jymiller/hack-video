@@ -130,6 +130,50 @@ even when the worklist is empty and no model call is made.
 
 ---
 
+## The deployment — a submission artifact, not the demo
+
+The demo runs on the laptop. This exists so the 16:00 submission has a URL, and the
+dashboard's `GIT.REMOTE` field has something to point at.
+
+**Two manual steps remain, and neither can be scripted:**
+
+1. **Add `hack-video` to Render's GitHub App.**
+   <https://github.com/settings/installations> → Render → Repository access.
+   Render already deploys four of your repos including two private ones, so the App
+   is installed and working — `hack-video` is simply not in the selected list, and
+   the API returns *"repository URL is invalid or unfetchable"* until it is.
+2. **Create a Neo4j Aura free instance** at <https://console.neo4j.io>, then populate
+   it from the laptop:
+   ```
+   NEO4J_URI=neo4j+s://<id>.databases.neo4j.io NEO4J_USER=neo4j \
+   NEO4J_PASSWORD=<pw> make restore
+   ```
+   `load.py` reads the TwelveLabs cloud index, so this needs no local media and no
+   graph importer has to exist. Skip it and the service still deploys — pages, search
+   and video all work, graph endpoints 500.
+
+Then, once:
+
+```
+NEO4J_URI=... NEO4J_PASSWORD=... python render_deploy.py
+```
+
+Idempotent: creates the service or updates env vars and redeploys.
+
+**What differs from local, deliberately.** `PUBLIC_READONLY=1` 403s every route that
+spends money or mutates state, kills Swagger and `/openapi.json`, closes
+`/api/you/status` (it returned the account balance), and drops the `/docs` markdown
+mount — locally Swagger shadows that path, so disabling Swagger would otherwise have
+published the run of show and the Enid boundary note. Twelve probes cover it.
+
+**Media.** The six clips live in the **private** S3 bucket `hack-video-gatwick-media`
+(us-west-2, public access blocked). `MEDIA_URLS` carries presigned URLs so Render
+holds time-limited links, never AWS credentials. **They expire after 7 days** —
+re-running `render_deploy.py` renews them. Sign against the regional endpoint; the
+global host answers with its own 307.
+
+---
+
 ## Enid boundary — read before writing anything
 
 Business context and use case are shared **by agreement**. The **trust-grading ladder is
