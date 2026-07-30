@@ -5,60 +5,83 @@
 <title>Graph — Neo4j</title>
 <link rel="stylesheet" href="/chassis.css">
 <style>
-  .cov { width:100%; border-collapse:collapse; font-size:12px; }
-  .cov th { font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);
-            text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); font-weight:600; }
-  .cov td { padding:6px 8px; border-bottom:1px solid #23262c; }
-  .cov tr:hover td { background:var(--glass-2); }
-  .cov .n { text-align:right; font-weight:700; }
-  .zero { color:var(--err); }
-  .some { color:var(--ok); }
-  .lane { font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); }
-  .asrt { border:1px solid var(--line); border-left:3px solid var(--vfd); border-radius:0 4px 4px 0;
-          background:var(--glass-2); padding:9px 11px; margin-bottom:7px; }
-  .asrt.validated { border-left-color:var(--ok); }
-  .asrt.rejected  { border-left-color:var(--err); opacity:.72; }
-  .asrt .top { display:flex; gap:8px; align-items:center; margin-bottom:4px; }
-  .asrt .ev { font-weight:700; font-size:11.5px; flex:1; }
-  .asrt .why { color:#9aa1ab; font-size:11px; margin:4px 0 7px; line-height:1.45; }
-  .asrt .acts { display:flex; gap:6px; }
-  .who { font-size:10px; color:var(--dim); margin-top:5px; }
+  /* Only structure lives here. chassis.css owns the type and the colour;
+     the class names below are the ones it already corrects for paper. */
+
+  /* concept coverage */
+  .cov { width:100%; border-collapse:collapse; }
+  .cov th { text-align:left; }
+  .cov .n { text-align:right; }
 
   /* attestation path */
-  .att { border:1px solid var(--line); background:var(--glass-2); border-radius:4px;
-         padding:10px 12px; margin-bottom:8px; }
-  .att .flow { display:flex; align-items:stretch; gap:0; flex-wrap:wrap; }
-  .att .step { flex:1; min-width:96px; padding:7px 9px; border:1px solid var(--line);
-               background:var(--glass); position:relative; }
+  .att .flow { display:flex; align-items:stretch; flex-wrap:wrap; }
+  .att .step { flex:1; min-width:92px; border:1px solid var(--al-edge); background:var(--glass); }
   .att .step + .step { border-left:none; }
-  .att .step .k { font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); }
-  .att .step .v { font-size:11px; font-weight:700; margin-top:3px; word-break:break-word; }
-  .att .step.on   { border-color:var(--teal); background:#13302d; }
-  .att .step.on .v{ color:var(--teal); }
-  .att .step.no   { border-color:var(--err); background:#2a1214; }
-  .att .step.no .v{ color:var(--err); }
-  .att .step.wait { border-color:var(--vfd); background:#2a2006; }
-  .att .step.wait .v { color:var(--vfd); }
-  .att .arw { align-self:center; color:var(--dim); padding:0 5px; font-size:12px; }
-  .att .why { color:#9aa1ab; font-size:11px; margin-top:7px; line-height:1.45; }
-  .att .gate { font-size:10px; margin-top:7px; padding:5px 8px; border-radius:3px; }
-  .att .gate.blocked { background:#2a1214; color:var(--err); }
-  .att .gate.open    { background:#10321a; color:var(--ok); }
+  .att .arw { align-self:center; padding:0 5px; }
+  .att .acts { display:flex; gap:6px; margin-top:9px; }
 
-  /* query results */
-  .qt { width:100%; border-collapse:collapse; font-size:11.5px; }
-  .qt th { position:sticky; top:0; background:#23262c; font-size:9px; letter-spacing:.1em;
-           text-transform:uppercase; color:var(--teal); text-align:left; padding:6px 9px;
-           border-bottom:1px solid var(--line); }
-  .qt td { padding:5px 9px; border-bottom:1px solid #23262c; vertical-align:top; }
-  .qt tr:hover td { background:var(--glass-2); }
-  .qt td.num { text-align:right; font-weight:700; }
-  .qt td.num.z { color:var(--err); }
-  .qt td.num.p { color:var(--ok); }
-  .qt .bar { display:inline-block; height:8px; background:var(--teal); vertical-align:middle;
-             margin-left:6px; border-radius:1px; min-width:1px; }
-  .qt td.nul { color:var(--dim); font-style:italic; }
-  .qwrap { max-height:340px; overflow:auto; border:1px solid var(--line); }
+  /* query result table */
+  .qt { width:100%; border-collapse:collapse; }
+  .qt th { position:sticky; top:0; text-align:left; }
+  .qt td { vertical-align:top; }
+  .qt .bar { display:inline-block; vertical-align:middle; margin-left:6px; min-width:1px; }
+  .qwrap { border:1px solid var(--al-edge); }
+
+  /* the canvas and its overlays */
+  .gbody { flex:1; padding:0; overflow:hidden; position:relative; }
+  #cv { position:absolute; inset:0; width:100%; height:100%; display:block;
+        touch-action:none; cursor:grab; }
+  .over { position:absolute; background:var(--al-hi); border:1px solid var(--al-edge);
+          border-radius:var(--r); }
+  #legend { top:8px; left:8px; right:8px; padding:6px 7px; display:flex;
+            flex-wrap:wrap; gap:5px; align-items:center; }
+  .chip { display:inline-flex; align-items:center; gap:5px; padding:2px 7px 2px 5px;
+          border:1px solid var(--line); border-radius:var(--r); background:var(--glass);
+          font:600 11.5px/1.4 var(--sans); color:var(--fg); cursor:pointer; }
+  .chip:hover { background:var(--row-hover); }
+  .chip.off { opacity:.45; text-decoration:line-through; }
+  .chip i { width:9px; height:9px; border-radius:50%; border:1.5px solid var(--c);
+            background:color-mix(in srgb, var(--c) 15%, #fff); display:inline-block; }
+  .chip b { font:400 11px/1.4 var(--mono); color:var(--dim); font-variant-numeric:tabular-nums; }
+  .key { display:flex; gap:10px; align-items:center; margin-left:auto;
+         padding-left:10px; border-left:1px solid var(--line); }
+  .key span { display:inline-flex; align-items:center; gap:5px;
+              font:600 11px/1.4 var(--sans); color:var(--dim); }
+  #hint { bottom:8px; left:8px; padding:4px 8px; font:400 11.5px/1.4 var(--sans);
+          color:var(--dim); }
+  #busy { top:50%; left:50%; transform:translate(-50%,-50%); padding:8px 14px;
+          font:600 12px/1.3 var(--mono); letter-spacing:.08em; color:var(--teal); }
+  #insp { bottom:8px; right:8px; width:296px; max-height:76%; overflow:auto; padding:10px 12px; }
+  #insp h3 { margin:0 0 7px; font:400 14px/1.2 var(--serif); display:flex;
+             justify-content:space-between; align-items:center; gap:8px; }
+  #insp .lbls { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px; }
+  #insp .tag { padding:1px 7px; border-radius:var(--r); font:600 11.5px/1.5 var(--sans);
+               color:#fff; }
+  #insp .p { border-top:1px solid var(--line); padding:5px 0; }
+  #insp .p .k { font:600 10.5px/1.3 var(--sans); letter-spacing:.07em;
+                text-transform:uppercase; color:var(--dim); }
+  #insp .p .v { font:400 12px/1.45 var(--mono); color:#1a1a17; word-break:break-word;
+                white-space:pre-wrap; }
+  #insp .acts { display:flex; gap:6px; flex-wrap:wrap; margin-top:9px; }
+  .state { padding:5px 8px; border-radius:var(--r); font:600 12px/1.4 var(--sans);
+           margin-bottom:8px; }
+  .state.validated { background:var(--tint-ok);   color:var(--ok);
+                     box-shadow:inset 0 0 0 1px var(--rule-ok); }
+  .state.proposed  { background:var(--tint-warn); color:var(--warn);
+                     box-shadow:inset 0 0 0 1px var(--rule-warn); }
+  .state.rejected  { background:var(--tint-err);  color:var(--err);
+                     box-shadow:inset 0 0 0 1px var(--rule-err); }
+
+  .tabs { display:flex; gap:0; }
+  .tabs button { border-radius:0; }
+  .tabs button:first-child { border-radius:var(--r) 0 0 var(--r); }
+  .tabs button:last-child { border-radius:0 var(--r) var(--r) 0; margin-left:-1px; }
+  .tabs button.on { background:var(--teal); color:#fff; border-color:var(--teal); }
+  #tpane { padding:var(--pad); overflow:auto; height:100%; }
+  #trace { font:400 11.5px/1.7 var(--mono); white-space:pre-wrap; max-height:132px;
+           overflow:auto; color:var(--ink-2); }
+  /* a long answer must not squeeze the attestation queue out of the column */
+  #aout { max-height:240px; overflow:auto; }
 </style>
 </head>
 <body>
@@ -74,23 +97,52 @@
   <span id="stat" class="vfd">READY</span>
 </header>
 
-<main style="grid-template-columns:minmax(0,1fr) minmax(430px,0.95fr)">
+<main style="grid-template-columns:300px minmax(0,1fr) 392px">
+  <div class="col">
+    <div class="sect grow">
+      <h2><span class="lbl">Concept coverage</span>
+        <span class="muted">what video can reach</span></h2>
+      <div class="body"><table class="cov" id="cov"></table></div>
+    </div>
+    <div class="sect collapsed" id="logSect">
+      <h2><span><span class="lbl">API log</span> <span id="logCount" class="muted"></span></span>
+        <button class="sm" onclick="toggleLog()" id="logBtn">show</button></h2>
+      <div class="body" id="log" style="padding:0"></div>
+    </div>
+  </div>
+
   <div class="col">
     <div class="sect">
-      <h2><span class="lbl">Concept coverage</span>
-        <span class="muted">what video can and cannot reach</span></h2>
-      <div class="body"><table class="cov" id="cov"></table></div>
+      <h2><span class="lbl">Query</span> <span class="muted">Cypher · read-only</span></h2>
+      <div class="body stack">
+        <select id="preset" onchange="usePreset()"></select>
+        <textarea id="cy" style="min-height:88px"></textarea>
+        <div class="row">
+          <button class="p" onclick="runQ()">RUN</button>
+          <button class="sm" onclick="loadSchema()">SCHEMA</button>
+          <button class="sm" onclick="gv.fit()">FIT</button>
+          <button class="sm" onclick="gv.reheat()">RELAYOUT</button>
+          <span style="flex:1"></span>
+          <span id="qmeta" class="muted"></span>
+        </div>
+      </div>
     </div>
 
     <div class="sect grow">
-      <h2><span class="lbl">Query</span> <span class="muted">read-only</span></h2>
-      <div class="body stack">
-        <select id="preset" onchange="usePreset()">
-          <option value="">— queries in the vocabulary —</option>
-        </select>
-        <textarea id="cy" style="min-height:74px"></textarea>
-        <button class="p" onclick="runQ()" style="width:100%">RUN</button>
-        <div id="qout" class="muted">pick a query</div>
+      <h2><span><span class="lbl">Result</span> <span class="muted" id="vtitle"></span></span>
+        <span class="tabs">
+          <button class="sm on" id="tabG" onclick="tab('g')">Graph</button>
+          <button class="sm" id="tabT" onclick="tab('t')">Table</button>
+        </span></h2>
+      <div class="body gbody">
+        <div id="gpane" style="position:absolute;inset:0">
+          <canvas id="cv"></canvas>
+          <div class="over" id="legend"></div>
+          <div class="over" id="hint">scroll zoom · drag pan · click inspect · double-click expand</div>
+          <div class="over" id="busy" hidden>RUNNING</div>
+          <div class="over" id="insp" hidden></div>
+        </div>
+        <div id="tpane" hidden></div>
       </div>
     </div>
   </div>
@@ -98,15 +150,14 @@
   <div class="col">
     <div class="sect">
       <h2><span class="lbl">Ask the graph</span>
-        <span class="muted">Strands agent · GPT-5.6 · read-only</span></h2>
+        <span class="muted">Strands agent · read-only</span></h2>
       <div class="body stack">
         <select id="apreset" onchange="useAsk()">
           <option value="">— questions worth asking —</option>
         </select>
         <textarea id="aq" style="min-height:52px"></textarea>
         <button class="p" onclick="ask()" id="aBtn" style="width:100%">ASK</button>
-        <div id="atrace" class="muted" style="font-family:var(--mono,monospace);font-size:11px;
-             line-height:1.7;white-space:pre-wrap;max-height:132px;overflow:auto"></div>
+        <div id="trace" class="muted"></div>
         <div id="aout" class="muted">the agent may read the graph — it may never write to it</div>
       </div>
     </div>
@@ -115,53 +166,119 @@
       <h2><span class="lbl">Attestation path</span> <span class="muted">model proposes · human decides</span></h2>
       <div class="body">
         <div class="muted" style="margin-bottom:9px">
-          Proposed edges are inert — no computation reads them. Rejected edges are kept, never deleted.
+          Proposed edges are inert — no computation reads them. Rejected edges are kept,
+          never deleted. Both are still drawn.
         </div>
         <div id="asserts"></div>
       </div>
-    </div>
-    <div class="sect collapsed" id="logSect">
-      <h2><span><span class="lbl">API log</span> <span id="logCount" class="muted"></span></span>
-        <button class="sm" onclick="toggleLog()" id="logBtn">show</button></h2>
-      <div class="body" id="log" style="padding:0"></div>
     </div>
   </div>
 </main>
 
 <script src="/common.js"></script>
+<script src="/nvl.js"></script>
 <script>
-const QUERIES = [
-  ['Can any video evidence reach a covenant?',
-   `MATCH (c:Covenant)-[:MEASURED_BY]->(co:Concept)
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// a caption can carry an apostrophe — a transcript usually does
+const jsq = s => esc(String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
+
+/* Whole nodes and whole relationships, projected so the shape survives the wire:
+   the API serialises records with the driver's .data(), which keeps properties but
+   drops elementId, labels and the endpoints. The projection puts them back. */
+const N = v => `${v}{.*, elementId:elementId(${v}), labels:labels(${v})}`;
+const R = v => `${v}{.*, elementId:elementId(${v}), type:type(${v}), ` +
+               `startNodeElementId:elementId(startNode(${v})), endNodeElementId:elementId(endNode(${v}))}`;
+
+/* The chain is written as a shape, not as a list of labels: whatever sits between
+   an observation and a covenant gets drawn, so a layer added to the graph today
+   appears in this view today. */
+const Q_CHAIN =
+`MATCH (o:Observation)-[sr]->(mid)<-[et]-(cov:Covenant)
+OPTIONAL MATCH (o)-[ci:CITES]->(seg:Segment)
+OPTIONAL MATCH (seg)-[po:PART_OF]->(src:Source)
+OPTIONAL MATCH (ev:Event)-[m:MAY_AFFECT]->(cov)
+RETURN ${N('o')} AS o, ${R('sr')} AS sr, ${N('mid')} AS mid, ${R('et')} AS et,
+       ${N('cov')} AS cov, ${R('ci')} AS ci, ${N('seg')} AS seg, ${R('po')} AS po,
+       ${N('src')} AS src, ${R('m')} AS m, ${N('ev')} AS ev`;
+
+const Q_ATTEST =
+`MATCH (ev:Event)-[m:MAY_AFFECT]->(cov:Covenant)
+OPTIONAL MATCH (cov)-[mb:MEASURED_BY]->(co:Concept)
+OPTIONAL MATCH (fac:Facility)-[gb:GOVERNED_BY]->(cov)
+OPTIONAL MATCH (d:Deal)-[hf:HAS_FACILITY]->(fac)
+RETURN ${N('ev')} AS ev, ${R('m')} AS m, ${N('cov')} AS cov, ${R('mb')} AS mb,
+       ${N('co')} AS co, ${R('gb')} AS gb, ${N('fac')} AS fac, ${R('hf')} AS hf, ${N('d')} AS d`;
+
+const PRESETS = [
+ ['graph', 'The linkage chain — evidence, what it bears on, and the covenant', Q_CHAIN],
+
+ ['graph', 'Attestation — what the model proposed, what a human decided', Q_ATTEST],
+
+ ['graph', 'Everything but the extraction bookkeeping',
+`MATCH (a)-[r]->(b)
+WHERE NOT type(r) IN ['PRODUCED_BY','HAS_TERM']
+RETURN ${N('a')} AS a, ${R('r')} AS r, ${N('b')} AS b
+LIMIT 250`],
+
+ ['graph', 'The reach test — which concepts video can and cannot get to',
+`MATCH (co:Concept)
+OPTIONAL MATCH (seg:Segment)-[cf:CANDIDATE_FOR]->(co)
+OPTIONAL MATCH (seg)-[po:PART_OF]->(src:Source)
+OPTIONAL MATCH (cov:Covenant)-[mb:MEASURED_BY]->(co)
+RETURN ${N('co')} AS co, ${R('cf')} AS cf, ${N('seg')} AS seg, ${R('po')} AS po,
+       ${N('src')} AS src, ${R('mb')} AS mb, ${N('cov')} AS cov
+LIMIT 220`],
+
+ ['graph', 'The deal lane — who wrote the covenants',
+`MATCH (d:Deal)-[hf:HAS_FACILITY]->(f:Facility)-[gb:GOVERNED_BY]->(c:Covenant)
+OPTIONAL MATCH (c)-[mb:MEASURED_BY]->(co:Concept)
+OPTIONAL MATCH (ft:Fact)-[t:TESTS]->(c)
+RETURN ${N('d')} AS d, ${R('hf')} AS hf, ${N('f')} AS f, ${R('gb')} AS gb,
+       ${N('c')} AS c, ${R('mb')} AS mb, ${N('co')} AS co, ${R('t')} AS t, ${N('ft')} AS ft`],
+
+ ['graph', 'Observations — what cites what, and what corroborates it',
+`MATCH (o:Observation)
+OPTIONAL MATCH (o)-[ci:CITES]->(seg:Segment)
+OPTIONAL MATCH (seg)-[po:PART_OF]->(src:Source)
+OPTIONAL MATCH (o)-[oc:OF_CONCEPT]->(co:Concept)
+OPTIONAL MATCH (o)-[cor:CORROBORATES]->(o2:Observation)
+RETURN ${N('o')} AS o, ${R('ci')} AS ci, ${N('seg')} AS seg, ${R('po')} AS po,
+       ${N('src')} AS src, ${R('oc')} AS oc, ${N('co')} AS co, ${R('cor')} AS cor, ${N('o2')} AS o2`],
+
+ ['table', 'Can any video evidence reach a covenant?',
+`MATCH (c:Covenant)-[:MEASURED_BY]->(co:Concept)
 OPTIONAL MATCH (seg:Segment)-[:CANDIDATE_FOR]->(co)
 RETURN c.covenant_code AS covenant, co.code AS concept,
        count(seg) AS video_segments`],
-  ['Which publisher reaches which concept',
-   `MATCH (src:Source)<-[:PART_OF]-(:Segment)-[:CANDIDATE_FOR]->(co:Concept)
+
+ ['table', 'Which publisher reaches which concept',
+`MATCH (src:Source)<-[:PART_OF]-(:Segment)-[:CANDIDATE_FOR]->(co:Concept)
 RETURN src.publisher AS publisher, co.code AS concept, count(*) AS segments
 ORDER BY publisher, segments DESC`],
-  ['Where did a claim come from — with timecode',
-   `MATCH (seg:Segment)-[e:CANDIDATE_FOR]->(co:Concept {code:'scheme_cost'})
+
+ ['table', 'Where did a claim come from — with timecode',
+`MATCH (seg:Segment)-[e:CANDIDATE_FOR]->(co:Concept {code:'scheme_cost'})
 MATCH (seg)-[:PART_OF]->(src:Source)
 RETURN src.publisher AS publisher, seg.start AS start, seg.end AS end,
        e.probe AS found_by, left(seg.transcript,80) AS transcript
 ORDER BY e.rank LIMIT 8`],
-  ['The deal lane — who wrote the covenants',
-   `MATCH (d:Deal)-[:HAS_FACILITY]->(f:Facility)-[:GOVERNED_BY]->(c:Covenant)
+
+ ['table', 'The deal lane, as a table',
+`MATCH (d:Deal)-[:HAS_FACILITY]->(f:Facility)-[:GOVERNED_BY]->(c:Covenant)
 RETURN d.legal_name AS deal, f.governing_doc AS governing_doc,
        c.covenant_code AS covenant, c.direction AS direction,
        c.threshold_status AS threshold`],
-  ['What the model proposed vs what a human decided',
-   `MATCH (e:Event)-[m:MAY_AFFECT]->(c:Covenant)
+
+ ['table', 'What the model proposed vs what a human decided',
+`MATCH (e:Event)-[m:MAY_AFFECT]->(c:Covenant)
 RETURN e.name AS event, c.covenant_code AS covenant, m.asserted_by AS by,
        m.status AS status, m.validated_by AS signed_off_by`],
-  ['The vocabulary, from the graph itself',
-   `MATCH (v:Vocabulary)-[:HAS_TERM]->(t:Term)
+
+ ['table', 'The vocabulary, from the graph itself',
+`MATCH (v:Vocabulary)-[:HAS_TERM]->(t:Term)
 RETURN v.name AS vocabulary, collect(t.value) AS terms`],
 ];
 
-// Questions the graph can answer honestly — including the ones where the honest
-// answer is that it cannot.
 const ASKS = [
   'Which covenant has the least headroom, and can any video evidence tell me whether it will breach?',
   'What does this corpus cover, and what does it not?',
@@ -170,28 +287,351 @@ const ASKS = [
   'What did the model propose that a human rejected, and why?',
 ];
 
+(function fillPresets() {
+  const sel = $('preset');
+  sel.innerHTML = '<option value="">— saved views —</option>';
+  for (const [kind, title] of [['graph', 'Graph views'], ['table', 'Tables']]) {
+    const g = document.createElement('optgroup'); g.label = title;
+    PRESETS.forEach((p, i) => {
+      if (p[0] !== kind) return;
+      const o = document.createElement('option'); o.value = i; o.textContent = p[1];
+      g.appendChild(o);
+    });
+    sel.appendChild(g);
+  }
+  ASKS.forEach((q, i) => {
+    const o = document.createElement('option'); o.value = i; o.textContent = q;
+    $('apreset').appendChild(o);
+  });
+})();
+
+function usePreset() {
+  const i = $('preset').value;
+  if (i === '') return;
+  $('preset').value = '';
+  $('vtitle').textContent = PRESETS[i][1].toLowerCase();
+  run(PRESETS[i][2]);
+}
 function useAsk() {
   const i = $('apreset').value;
   if (i !== '') { $('aq').value = ASKS[i]; $('apreset').value = ''; }
 }
-ASKS.forEach((q,i) => {
-  const o = document.createElement('option'); o.value = i; o.textContent = q;
-  $('apreset').appendChild(o);
+
+/* ---- the view ----------------------------------------------------------- */
+
+let mode = 'data', rows = [], hiddenLabels = new Set();
+
+const gv = new GraphView($('cv'), {
+  onSelect: inspect,
+  onExpand: expand,
+  // the legend is one, two or three rows deep depending on the result, and the
+  // hint sits at the foot: the graph fits into whatever is left of the canvas
+  inset: () => ({ top: $('legend').offsetHeight + 16, bottom: 44, left: 14, right: 14 }),
 });
 
-const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function tab(t) {
+  $('gpane').hidden = t !== 'g'; $('tpane').hidden = t === 'g';
+  $('tabG').classList.toggle('on', t === 'g');
+  $('tabT').classList.toggle('on', t !== 'g');
+  if (t === 'g') gv.draw();
+}
 
-// The trace is the point: each line is a tool the agent actually reached for. It is
-// what the agent did, not a progress animation standing in for it.
+const busy = on => { $('busy').hidden = !on; };
+
+async function run(cypher, keep) {
+  $('cy').value = cypher;
+  busy(true); stat('querying', 'var(--warn)');
+  const j = await api('POST', '/api/graph/query', { cypher });
+  busy(false);
+  if (j.error) {
+    stat('query error', 'var(--err)');
+    $('tpane').innerHTML = `<div style="color:var(--err)">${esc(j.error)}</div>`;
+    $('qmeta').textContent = ''; tab('t');
+    return;
+  }
+  rows = j.rows || [];
+  mode = 'data';
+  const g = extractGraph(rows);
+  renderTable();
+  if (g.nodes.length) {
+    gv.setData(g, keep);
+    if (!keep) inspect(null);
+    renderLegend();
+    tab('g');
+  } else {
+    tab('t');
+    $('vtitle').textContent = 'no nodes in this result — see the table';
+  }
+  $('qmeta').textContent =
+    `${rows.length} rows · ${g.nodes.length} nodes · ${g.rels.length} relationships`;
+  stat(`${rows.length} rows`, 'var(--ok)');
+}
+
+const runQ = () => run($('cy').value);
+
+// The schema as a graph: one node per label, one edge per relationship type in use.
+// Built from /api/graph/model, so a label added to the graph today shows up today.
+async function loadSchema() {
+  busy(true);
+  const m = await api('GET', '/api/graph/model');
+  busy(false);
+  const nodes = (m.labels || []).filter(l => l.label).map(l => ({
+    id: 'label:' + l.label, labels: [l.label],
+    props: { label: l.label, instances: l.n, _weight: l.n },
+  }));
+  const have = new Set(nodes.map(n => n.id));
+  const rels = (m.rels || [])
+    .filter(r => have.has('label:' + r.from) && have.has('label:' + r.to))
+    .map(r => ({ id: `${r.from}|${r.type}|${r.to}`, type: r.type,
+                 from: 'label:' + r.from, to: 'label:' + r.to, props: { instances: r.n } }));
+  mode = 'schema';
+  rows = [];
+  gv.setData({ nodes, rels });
+  inspect(null);
+  renderLegend(); renderTable(); tab('g');
+  $('vtitle').textContent = 'schema — double-click a label to load its instances';
+  $('qmeta').textContent = `${nodes.length} labels · ${rels.length} relationship types`;
+  stat('schema', 'var(--ok)');
+}
+
+async function expand(n) {
+  if (mode === 'schema') {
+    $('vtitle').textContent = `instances of :${n.labels[0]}`;
+    return run(`MATCH (n:\`${n.labels[0]}\`)-[r]-(m)
+RETURN ${N('n')} AS n, ${R('r')} AS r, ${N('m')} AS m
+LIMIT 60`);
+  }
+  if (gv.expanded.has(n.id)) return;
+  busy(true);
+  const j = await api('POST', '/api/graph/query', { cypher:
+`MATCH (n)-[r]-(m) WHERE elementId(n) = '${n.id}'
+RETURN ${R('r')} AS r, ${N('m')} AS m
+LIMIT 40` });
+  busy(false);
+  if (j.error) { stat('expand failed', 'var(--err)'); return; }
+  gv.expanded.add(n.id);
+  const added = gv.merge(extractGraph(j.rows || []), n.id);
+  renderLegend();
+  $('qmeta').textContent = `${gv.nodes.length} nodes · ${gv.rels.length} relationships`;
+  stat(added ? `+${added} nodes` : 'nothing new', added ? 'var(--ok)' : 'var(--dim)');
+}
+
+function renderLegend() {
+  const counts = new Map();
+  gv.nodes.forEach(n => n.labels.forEach(l => counts.set(l, (counts.get(l) || 0) + 1)));
+  const chips = [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([l, n]) =>
+    `<button class="chip ${hiddenLabels.has(l) ? 'off' : ''}" style="--c:${colorForLabel(l)}"
+        onclick="toggleLabel('${esc(l)}')"><i></i>${esc(l)} <b>${n}</b></button>`).join('');
+  const key = ['validated', 'proposed', 'rejected'].map(s => {
+    const st = REL_STYLE[s];
+    return `<span><svg width="24" height="8"><line x1="1" y1="4" x2="23" y2="4"
+      stroke="${st.color}" stroke-width="${st.width}"
+      stroke-dasharray="${st.dash.join(',') || 'none'}" opacity="${st.alpha}"/></svg>${s}</span>`;
+  }).join('');
+  $('legend').innerHTML = chips + `<span class="key">${key}</span>`;
+  gv.refit();
+}
+
+function toggleLabel(l) {
+  hiddenLabels.has(l) ? hiddenLabels.delete(l) : hiddenLabels.add(l);
+  gv.setHidden(hiddenLabels);
+  renderLegend();
+}
+
+/* ---- inspector ---------------------------------------------------------- */
+
+function props(o) {
+  return Object.entries(o)
+    .filter(([k]) => !k.startsWith('_'))
+    .map(([k, v]) => `<div class="p"><div class="k">${esc(k.replace(/_/g, ' '))}</div>
+      <div class="v">${esc(fmtValue(v))}</div></div>`).join('');
+}
+
+function inspect(el) {
+  const box = $('insp');
+  if (!el) { box.hidden = true; return; }
+  box.hidden = false;
+  const d = el.data;
+
+  if (el.kind === 'node') {
+    box.innerHTML = `<h3>Node <button class="sm" onclick="gv.select(null)">close</button></h3>
+      <div class="lbls">${d.labels.map(l =>
+        `<span class="tag" style="background:${colorForLabel(l)}">${esc(l)}</span>`).join('')}</div>
+      <div class="acts" style="margin:0 0 9px">
+        <button class="sm" onclick="expand(gv.byId.get('${d.id}'))">expand</button>
+        <button class="sm" onclick="askAbout('${jsq(d.caption)}')">ask about this</button>
+      </div>
+      ${props(d.props)}`;
+    return;
+  }
+
+  const st = d.props.status;
+  const note = st === 'validated' ? 'a human signed this — a computation may read it'
+             : st === 'rejected'  ? 'kept for the record, read by nothing'
+             : st === 'proposed'  ? 'inert until a human decides'
+             : '';
+  box.innerHTML = `<h3>Relationship <button class="sm" onclick="gv.select(null)">close</button></h3>
+    <div class="lbls"><span class="tag" style="background:#45566b">${esc(d.type)}</span></div>
+    ${st ? `<div class="state ${st}">${st} — ${note}</div>` : ''}
+    ${st === 'proposed' ? `<div class="acts" style="margin:0 0 9px">
+        <button class="p sm" onclick="decide('${d.id}','validated')">✓ validate</button>
+        <button class="sm" onclick="decide('${d.id}','rejected')">✕ reject</button>
+      </div>` : ''}
+    ${props(d.props)}`;
+}
+
+function askAbout(name) {
+  $('aq').value = `What does the graph say about ${name}?`;
+  $('aq').focus();
+}
+
+/* ---- the panels the page already had ------------------------------------ */
+
+async function loadStats() {
+  const j = await api('GET', '/api/graph/stats');
+  if (j.error) { stat('neo4j down', 'var(--err)'); $('size').textContent = j.error; return; }
+  const n = j.nodes.reduce((a, x) => a + x.n, 0), e = j.edges.reduce((a, x) => a + x.n, 0);
+  $('size').textContent = `${n} nodes · ${e} edges`;
+}
+
+async function loadCoverage() {
+  const rs = await api('GET', '/api/graph/coverage');
+  $('cov').innerHTML = `<tr><th>Concept</th><th class="n">Seg</th><th class="n">Src</th></tr>` +
+    rs.map(r => `<tr>
+      <td><b>${esc(r.concept)}</b>
+        <div class="lane">${esc(r.lane || '')} · ${esc(r.unit || '')}${
+          r.covenant ? ' · ' + esc(r.covenant) : ''}</div></td>
+      <td class="n ${r.segments ? 'some' : 'zero'}">${r.segments}</td>
+      <td class="n ${r.sources ? 'some' : 'zero'}">${r.sources}</td></tr>`).join('');
+}
+
+async function loadAsserts() {
+  const rs = await api('GET', '/api/graph/attestation');
+  $('asserts').innerHTML = rs.length ? '' : '<div class="muted">no assertions yet</div>';
+  rs.forEach(r => {
+    const decided = r.status !== 'proposed';
+    const ok = r.status === 'validated';
+    const humanCls = !decided ? 'wait' : (ok ? 'on' : 'no');
+    const humanVal = !decided ? 'awaiting'
+      : `${r.status}<br><span style="font-weight:400;font-size:11px">${esc(r.validated_by || '')}</span>`;
+
+    const d = document.createElement('div');
+    d.className = 'att';
+    d.id = 'att-' + r.id;
+    d.innerHTML = `
+      <div class="flow">
+        <div class="step">
+          <div class="k">Event</div><div class="v">${esc(r.event)}</div>
+          <div class="k" style="margin-top:4px">${esc(r.date)} · ${esc(r.event_kind)}</div>
+        </div>
+        <span class="arw">▸</span>
+        <div class="step">
+          <div class="k">Asserted by</div><div class="v">${esc(r.asserted_by)}</div>
+          <div class="k" style="margin-top:4px">${esc((r.model || '').split('/').pop() || '')}</div>
+        </div>
+        <span class="arw">▸</span>
+        <div class="step ${humanCls}">
+          <div class="k">Human decision</div><div class="v">${humanVal}</div>
+          ${r.validated_at ? `<div class="k" style="margin-top:4px">${esc(r.validated_at.slice(0,16).replace('T',' '))}</div>` : ''}
+        </div>
+        <span class="arw">▸</span>
+        <div class="step ${ok ? 'on' : ''}">
+          <div class="k">Covenant</div><div class="v">${esc(r.covenant)}</div>
+          <div class="k" style="margin-top:4px">must stay ${esc(r.covenant_direction)}</div>
+        </div>
+      </div>
+      <div class="why">${esc(r.rationale || '')}</div>
+      ${r.human_note ? `<div class="why" style="color:var(--err)">Human: ${esc(r.human_note)}</div>` : ''}
+      <div class="gate ${ok ? 'open' : 'blocked'}">
+        ${ok ? '✓ readable by a computation — a human signed it'
+             : (decided ? '✕ rejected — kept for the record, read by nothing'
+                        : '⊘ proposed — inert until a human decides')}
+      </div>
+      <div class="acts">
+        <button class="sm" onclick="locate('${r.id}')">show in graph</button>
+        ${!decided ? `<button class="p sm" onclick="decide('${r.id}','validated')">✓ validate</button>
+           <button class="sm" onclick="decide('${r.id}','rejected')">✕ reject</button>` : ''}
+      </div>`;
+    $('asserts').appendChild(d);
+  });
+}
+
+// The edge in the picture and the row in the queue are the same edge.
+async function locate(id) {
+  if (!gv.rels.some(r => r.id === id)) await run(Q_ATTEST);
+  gv.selectById(id); gv.centerOn(id); tab('g');
+}
+
+async function decide(id, status) {
+  stat(status === 'validated' ? 'validating' : 'rejecting', 'var(--warn)');
+  const j = await api('POST', '/api/graph/validate', { id, status, who: 'john' });
+  if (j.error) { stat(j.error.slice(0, 40), 'var(--err)'); return; }
+  stat(status, status === 'validated' ? 'var(--ok)' : 'var(--err)');
+  loadAsserts();
+  // redraw the same query in place, so the edge changes state where it stands
+  if ($('cy').value.trim()) await run($('cy').value, true);
+  gv.selectById(id);
+}
+
+/* ---- table -------------------------------------------------------------- */
+
+function cell(v, max) {
+  if (v === null || v === undefined) return `<td class="nul">null</td>`;
+  if (Array.isArray(v))
+    return `<td>${v.map(x => `<span class="badge">${esc(fmtValue(x))}</span>`).join(' ')}</td>`;
+  if (typeof v === 'object') {
+    // a whole node or relationship in a cell reads as what it is, not as JSON
+    if (Array.isArray(v.labels) && v.elementId)
+      return `<td><span class="badge">:${esc(v.labels.join(':'))}</span>
+        ${esc(captionFor({ labels: v.labels, props: v, id: v.elementId }))}</td>`;
+    if (v.type && v.startNodeElementId) {
+      const b = v.status === 'validated' ? 'b-ok'
+              : v.status === 'rejected' ? 'b-err' : (v.status ? 'b-run' : '');
+      return `<td><span class="badge">[:${esc(v.type)}]</span>${
+        v.status ? ` <span class="badge ${b}">${esc(v.status)}</span>` : ''}</td>`;
+    }
+    const s = fmtValue(v);
+    return `<td>${esc(s.length > 90 ? s.slice(0, 90) + '…' : s)}</td>`;
+  }
+  if (typeof v === 'number') {
+    const w = max > 0 ? Math.round((v / max) * 46) : 0;
+    return `<td class="num ${v === 0 ? 'z' : 'p'}">${v}${
+      v > 0 ? `<span class="bar" style="width:${w}px"></span>` : ''}</td>`;
+  }
+  const s = String(v);
+  if (/^(validated|proposed|rejected|observed|controlled)$/.test(s)) {
+    const b = s === 'validated' ? 'b-ok' : (s === 'rejected' ? 'b-err' :
+              (s === 'proposed' ? 'b-run' : ''));
+    return `<td><span class="badge ${b}">${s}</span></td>`;
+  }
+  return `<td>${esc(s.length > 90 ? s.slice(0, 90) + '…' : s)}</td>`;
+}
+
+function renderTable() {
+  const out = $('tpane');
+  if (!rows.length) { out.innerHTML = '<div class="muted">(no rows)</div>'; return; }
+  const cols = Object.keys(rows[0]);
+  const maxes = {};
+  cols.forEach(c => {
+    const nums = rows.map(r => r[c]).filter(v => typeof v === 'number');
+    maxes[c] = nums.length ? Math.max(...nums) : 0;
+  });
+  out.innerHTML = `<div class="qwrap"><table class="qt">
+    <thead><tr>${cols.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(r => `<tr>${cols.map(c => cell(r[c], maxes[c])).join('')}</tr>`).join('')}</tbody>
+    </table></div>`;
+}
+
+/* ---- the agent ---------------------------------------------------------- */
+
 async function ask() {
   const q = $('aq').value.trim();
   if (!q) return;
   const t0 = Date.now(), el = () => ((Date.now() - t0) / 1000).toFixed(1);
   $('aBtn').disabled = true;
-  $('atrace').textContent = '';
-  $('aout').textContent = '';
+  $('trace').textContent = ''; $('aout').textContent = '';
   let answer = '', n = 0;
-  const line = s => { $('atrace').textContent += s + '\n'; $('atrace').scrollTop = 1e6; };
+  const line = s => { $('trace').textContent += s + '\n'; $('trace').scrollTop = 1e6; };
   try {
     const res = await fetch('/api/agent', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -225,132 +665,9 @@ async function ask() {
   }
 }
 
-function usePreset() {
-  const i = $('preset').value;
-  if (i !== '') { $('cy').value = QUERIES[i][1]; $('preset').value = ''; }
-}
-QUERIES.forEach((q,i) => {
-  const o = document.createElement('option'); o.value = i; o.textContent = q[0];
-  $('preset').appendChild(o);
-});
-
-async function loadStats() {
-  const j = await api('GET', '/api/graph/stats');
-  if (j.error) { stat('neo4j down', 'var(--err)'); $('size').textContent = j.error; return; }
-  const n = j.nodes.reduce((a,x)=>a+x.n,0), e = j.edges.reduce((a,x)=>a+x.n,0);
-  $('size').textContent = `${n} nodes · ${e} edges`;
-  stat('connected', 'var(--ok)');
-}
-
-async function loadCoverage() {
-  const rows = await api('GET', '/api/graph/coverage');
-  $('cov').innerHTML = `<tr><th>Concept</th><th>Unit</th><th>Reachable by</th>
-    <th class="n">Segments</th><th class="n">Sources</th><th>Covenant</th></tr>` +
-    rows.map(r => `<tr>
-      <td><b>${r.concept}</b></td>
-      <td class="lane">${r.unit}</td>
-      <td class="lane">${r.lane}</td>
-      <td class="n ${r.segments ? 'some' : 'zero'}">${r.segments}</td>
-      <td class="n ${r.sources ? 'some' : 'zero'}">${r.sources}</td>
-      <td class="lane">${r.covenant || ''}</td></tr>`).join('');
-}
-
-async function loadAsserts() {
-  const rows = await api('GET', '/api/graph/attestation');
-  $('asserts').innerHTML = rows.length ? '' : '<div class="muted">no assertions yet</div>';
-  rows.forEach(r => {
-    // the five stations of the attestation path
-    const decided = r.status !== 'proposed';
-    const ok = r.status === 'validated';
-    const humanCls = !decided ? 'wait' : (ok ? 'on' : 'no');
-    const humanVal = !decided ? 'awaiting' : `${r.status}<br><span style="font-weight:400;font-size:9.5px">${r.validated_by || ''}</span>`;
-
-    const d = document.createElement('div');
-    d.className = 'att';
-    d.innerHTML = `
-      <div class="flow">
-        <div class="step">
-          <div class="k">Event</div><div class="v">${r.event}</div>
-          <div class="k" style="margin-top:4px">${r.date} · ${r.event_kind}</div>
-        </div>
-        <span class="arw">▸</span>
-        <div class="step">
-          <div class="k">Asserted by</div><div class="v">${r.asserted_by}</div>
-          <div class="k" style="margin-top:4px">${(r.model || '').split('/').pop() || ''}</div>
-        </div>
-        <span class="arw">▸</span>
-        <div class="step ${humanCls}">
-          <div class="k">Human decision</div><div class="v">${humanVal}</div>
-          ${r.validated_at ? `<div class="k" style="margin-top:4px">${r.validated_at.slice(0,16).replace('T',' ')}</div>` : ''}
-        </div>
-        <span class="arw">▸</span>
-        <div class="step ${ok ? 'on' : ''}">
-          <div class="k">Covenant</div><div class="v">${r.covenant}</div>
-          <div class="k" style="margin-top:4px">must stay ${r.covenant_direction}</div>
-        </div>
-      </div>
-      <div class="why">${r.rationale || ''}</div>
-      ${r.human_note ? `<div class="why" style="color:var(--err)">Human: ${r.human_note}</div>` : ''}
-      <div class="gate ${ok ? 'open' : 'blocked'}">
-        ${ok ? '✓ readable by a computation — a human signed it'
-             : (decided ? '✕ rejected — kept for the record, read by nothing'
-                        : '⊘ proposed — inert until a human decides')}
-      </div>
-      ${!decided ? `<div class="acts" style="margin-top:8px">
-           <button class="p sm" onclick="decide('${r.id}','validated')">✓ validate</button>
-           <button class="sm" onclick="decide('${r.id}','rejected')">✕ reject</button>
-         </div>` : ''}`;
-    $('asserts').appendChild(d);
-  });
-}
-
-async function decide(id, status) {
-  stat(status === 'validated' ? 'validating' : 'rejecting', 'var(--warn)');
-  await api('POST', '/api/graph/validate', { id, status, who: 'john' });
-  stat(status, status === 'validated' ? 'var(--ok)' : 'var(--err)');
-  loadAsserts();
-}
-
-function cell(v, col, max) {
-  if (v === null || v === undefined) return `<td class="nul">null</td>`;
-  if (Array.isArray(v))
-    return `<td>${v.map(x=>`<span class="badge">${x}</span>`).join(' ')}</td>`;
-  if (typeof v === 'number') {
-    const w = max > 0 ? Math.round((v / max) * 46) : 0;
-    const cls = v === 0 ? 'z' : 'p';
-    return `<td class="num ${cls}">${v}${v > 0 ? `<span class="bar" style="width:${w}px"></span>` : ''}</td>`;
-  }
-  const s = String(v);
-  if (/^(validated|proposed|rejected|observed|controlled)$/.test(s)) {
-    const b = s === 'validated' ? 'b-ok' : (s === 'rejected' ? 'b-err' :
-              (s === 'proposed' ? 'b-run' : ''));
-    return `<td><span class="badge ${b}">${s}</span></td>`;
-  }
-  return `<td>${s.length > 90 ? s.slice(0,90) + '…' : s}</td>`;
-}
-
-async function runQ() {
-  const j = await api('POST', '/api/graph/query', { cypher: $('cy').value });
-  const out = $('qout');
-  out.className = '';
-  if (j.error) { out.innerHTML = `<span style="color:var(--err)">${j.error}</span>`; return; }
-  const rows = j.rows || [];
-  if (!rows.length) { out.textContent = '(no rows)'; stat('0 rows', 'var(--dim)'); return; }
-  const cols = Object.keys(rows[0]);
-  // per-column max, so bars are scaled within their own column
-  const maxes = {};
-  cols.forEach(c => {
-    const nums = rows.map(r => r[c]).filter(v => typeof v === 'number');
-    maxes[c] = nums.length ? Math.max(...nums) : 0;
-  });
-  out.innerHTML = `<div class="qwrap"><table class="qt">
-    <thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
-    <tbody>${rows.map(r=>`<tr>${cols.map(c=>cell(r[c], c, maxes[c])).join('')}</tr>`).join('')}</tbody>
-    </table></div>`;
-  stat(`${rows.length} rows`, 'var(--ok)');
-}
-
 loadStats(); loadCoverage(); loadAsserts();
+$('vtitle').textContent = PRESETS[0][1].toLowerCase();
+run(PRESETS[0][2]);
 </script>
 <script src="/credits.js"></script>
 <script>renderCredits(['neo4j'], ['fastapi']);</script>

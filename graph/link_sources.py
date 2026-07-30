@@ -4,9 +4,9 @@ Without this an assertion is about an event *name* — no URL, nothing to hash,
 nothing to attest against. The link is itself asserted, so it records how it was
 determined rather than appearing as fact.
 """
-from neo4j import GraphDatabase
+import graph.db as db
 
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = db.driver()
 
 # Determined by reading the clips: five report the runway approval, one the water
 # supply failure. None covers the court ruling or the prospectus.

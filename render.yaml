@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: hack-video
+    runtime: python
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    # Render injects $PORT and routes to it. 0.0.0.0 is required — a service that
+    # binds 127.0.0.1 passes health checks locally and 502s here.
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    autoDeployTrigger: commit
+    envVars:
+      # sync: false — Blueprint prompts once at creation, value lives in the
+      # dashboard and never in git. A blank one crash-loops the service on
+      # TWELVELABS_API_KEY (server.py reads it with [] at import).
+      - key: TWELVELABS_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: YDC_API_KEY
+        sync: false
+      # Aura: neo4j+s://<id>.databases.neo4j.io — the localhost default in
+      # graph/db.py resolves to nothing here.
+      - key: NEO4J_URI
+        sync: false
+      - key: NEO4J_USER
+        value: neo4j
+      - key: NEO4J_PASSWORD
+        sync: false

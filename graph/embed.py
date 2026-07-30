@@ -3,13 +3,13 @@
 Marengo text embeddings, 512-dim, cosine. The same model must serve both corpus and
 query — mixing models silently returns nonsense rather than an error.
 
-    python graph/embed.py backfill     embed every segment that lacks one
-    python graph/embed.py verify       indexed count vs embedded count
-    python graph/embed.py ask "..."    vector search, joined back to source + observation
+    python -m graph.embed backfill     embed every segment that lacks one
+    python -m graph.embed verify       indexed count vs embedded count
+    python -m graph.embed ask "..."    vector search, joined back to source + observation
 """
 import os, sys, pathlib
 from dotenv import load_dotenv
-from neo4j import GraphDatabase
+import graph.db as db
 from twelvelabs import TwelveLabs
 
 load_dotenv(pathlib.Path(__file__).resolve().parent.parent / ".env")
@@ -19,7 +19,7 @@ DIM = 512
 INDEX = "segment_embedding"
 
 tl = TwelveLabs(api_key=os.environ["TWELVELABS_API_KEY"])
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = db.driver()
 
 
 def embed(text):

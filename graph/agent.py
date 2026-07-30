@@ -4,12 +4,12 @@ The agent is a reader. It has no tool that writes, and no tool that can reach a
 covenant from observed evidence — the invariant is enforced by the schema, not by
 asking the model nicely.
 
-    python graph/agent.py "which broadcasters corroborate the cost figure?"
-    python graph/agent.py --tools           list tools and exit
+    python -m graph.agent "which broadcasters corroborate the cost figure?"
+    python -m graph.agent --tools           list tools and exit
 """
 import os, sys, json, pathlib
 from dotenv import load_dotenv
-from neo4j import GraphDatabase
+import graph.db as db
 from strands import Agent
 from strands.tools import tool
 from strands.models.openai_responses import OpenAIResponsesModel
@@ -18,7 +18,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 load_dotenv(ROOT / ".env")
 
 MODEL_ID = os.environ.get("OPENAI_MODEL", "gpt-5.6-terra")
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = db.driver()
 
 WRITE = ("CREATE", "DELETE", "MERGE", "SET ", "DROP", "REMOVE", "DETACH", "CALL DB.CREATE")
 

@@ -18,7 +18,7 @@ rather than merely respected.
 import os, json, time, pathlib
 import httpx
 from dotenv import load_dotenv
-from neo4j import GraphDatabase
+import graph.db as db
 
 root = pathlib.Path(__file__).resolve().parent.parent
 load_dotenv(root / ".env")
@@ -65,7 +65,7 @@ def parse(text):
                 pass
     return None
 
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = db.driver()
 http = httpx.Client(timeout=180.0)
 
 PROMPT = """You are assessing whether a news event could affect a debt covenant.

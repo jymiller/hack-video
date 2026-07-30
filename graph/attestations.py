@@ -7,13 +7,13 @@ would be the same mistake as letting the model overwrite them.
 Keyed on (event name, covenant code, evidence_sha256), so a restore reattaches to
 the right edge even though Neo4j element ids change on every rebuild.
 
-    python graph/attestations.py export   > attestations.json
-    python graph/attestations.py restore  < attestations.json
+    python -m graph.attestations export   > attestations.json
+    python -m graph.attestations restore  < attestations.json
 """
 import json, sys
-from neo4j import GraphDatabase
+import graph.db as db
 
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = db.driver()
 
 EXPORT = """
 MATCH (e:Event)-[m:MAY_AFFECT]->(c:Covenant)

@@ -6,7 +6,7 @@ so the same vocabulary that structures storage also structures retrieval.
 import os, sys, json, time, pathlib
 import httpx
 from dotenv import load_dotenv
-from neo4j import GraphDatabase
+import graph.db as db
 
 load_dotenv(pathlib.Path(__file__).resolve().parent.parent / ".env")
 
@@ -15,7 +15,7 @@ BASE = "https://api.twelvelabs.io/v1.3"
 HDR = {"x-api-key": TL}
 INDEX = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("TL_INDEX")
 
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = db.driver()
 http = httpx.Client(timeout=120.0)
 
 

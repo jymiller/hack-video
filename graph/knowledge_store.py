@@ -4,9 +4,9 @@ Separate from the GATWICK index, which powers /search and /analyze and carries t
 demo. Nothing here is on the run-of-show path; this exists so the capability is
 available if a judge asks for multi-turn Q&A over the corpus.
 
-    python graph/knowledge_store.py build          create/reuse store, ingest assets
-    python graph/knowledge_store.py status         per-item ingestion state
-    python graph/knowledge_store.py ask "..."      one-shot question, streamed
+    python -m graph.knowledge_store build          create/reuse store, ingest assets
+    python -m graph.knowledge_store status         per-item ingestion state
+    python -m graph.knowledge_store ask "..."      one-shot question, streamed
 """
 import os, sys, json, time, pathlib
 from dotenv import load_dotenv
@@ -70,7 +70,7 @@ def build():
 def status():
     sid = store_id()
     if not sid:
-        sys.exit(f"no store named {NAME!r} — run: python graph/knowledge_store.py build")
+        sys.exit(f"no store named {NAME!r} — run: python -m graph.knowledge_store build")
     print(f"store: {sid}")
     for i in client.knowledge_store_items.list(sid):
         print(f"  {i.status:10} {i.id}  {i.asset_id}")
@@ -79,7 +79,7 @@ def status():
 def ask(question):
     sid = store_id()
     if not sid:
-        sys.exit(f"no store named {NAME!r} — run: python graph/knowledge_store.py build")
+        sys.exit(f"no store named {NAME!r} — run: python -m graph.knowledge_store build")
     # Not streamed on purpose. On some questions the model fans out a per-video analysis
     # and streams those deltas concurrently with the final answer, interleaving them into
     # unreadable text. It is intermittent and not reproducible on demand, so it cannot be

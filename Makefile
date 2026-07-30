@@ -37,9 +37,9 @@ graph: up
 	@test -n "$(IDX)" || { echo "no TwelveLabs index with videos found — is .env sourced?"; exit 1; }
 	@echo "==> schema";  docker cp graph/schema.cypher hackgraph:/tmp/s.cypher && $(NEO) -f /tmp/s.cypher
 	@echo "==> seed";    docker cp graph/seed.cypher   hackgraph:/tmp/d.cypher && $(NEO) -f /tmp/d.cypher
-	@echo "==> load  (index $(IDX))"; $(PY) graph/load.py $(IDX)
-	@echo "==> urls";    $(PY) graph/urls.py
-	@echo "==> link";    $(PY) graph/link_sources.py
+	@echo "==> load  (index $(IDX))"; $(PY) -m graph.load $(IDX)
+	@echo "==> urls";    $(PY) -m graph.urls
+	@echo "==> link";    $(PY) -m graph.link_sources
 	@$(MAKE) --no-print-directory status
 
 clean-graph: up
@@ -50,11 +50,11 @@ clean-graph: up
 # evidence and signed. A rebuild that silently destroyed them would be the same
 # mistake as letting the model overwrite them.
 attest-save: up
-	@$(PY) graph/attestations.py export > attestations.json
+	@$(PY) -m graph.attestations export > attestations.json
 	@echo "saved -> attestations.json"
 
 attest-load: up
-	@test -s attestations.json && $(PY) graph/attestations.py restore < attestations.json \
+	@test -s attestations.json && $(PY) -m graph.attestations restore < attestations.json \
 	  || echo "no attestations.json — nothing to restore"
 
 # Safe rebuild: decisions survive it.
@@ -65,7 +65,7 @@ rebuild: attest-save clean-graph graph attest-load
 rebuild-hard: clean-graph graph
 
 assert: up
-	@$(PY) graph/assert_impact.py
+	@$(PY) -m graph.assert_impact
 
 serve:
 	@pkill -f "uvicorn server:app" 2>/dev/null || true
@@ -104,39 +104,39 @@ reset: down
 # Puts the graph into the exact state the run-of-show assumes, so a rehearsal
 # and the real thing look identical. Safe to run repeatedly.
 demo-reset: up
-	@$(PY) graph/attestations.py export > attestations.json 2>/dev/null || true
+	@$(PY) -m graph.attestations export > attestations.json 2>/dev/null || true
 	@echo "--- graph state ---"
 	@$(MAKE) --no-print-directory status
 	@echo "--- narration ---"
 	@ls audio/*.aiff 2>/dev/null | wc -l | tr -d ' ' | xargs -I{} echo "  {} lines rendered"
 
 voice:
-	@$(PY) graph/voice.py --voice $(VOICE)
+	@$(PY) -m graph.voice --voice $(VOICE)
 VOICE ?= Daniel
 
 # Strands agent on GPT-5.6, read-only over the graph.
 agent:
-	@$(PY) graph/agent.py "$(Q)"
+	@$(PY) -m graph.agent "$(Q)"
 
 # Semantic search over segment transcripts. Marengo 512-dim, cosine.
 embed:
-	@$(PY) graph/embed.py backfill
+	@$(PY) -m graph.embed backfill
 
 embed-verify:
-	@$(PY) graph/embed.py verify
+	@$(PY) -m graph.embed verify
 
 vsearch:
-	@$(PY) graph/embed.py ask "$(Q)"
+	@$(PY) -m graph.embed ask "$(Q)"
 
 # Knowledge store — multi-turn Q&A over the same assets. Off the run-of-show path.
 ks:
-	@$(PY) graph/knowledge_store.py build
+	@$(PY) -m graph.knowledge_store build
 
 ks-status:
-	@$(PY) graph/knowledge_store.py status
+	@$(PY) -m graph.knowledge_store status
 
 ask:
-	@$(PY) graph/knowledge_store.py ask "$(Q)"
+	@$(PY) -m graph.knowledge_store ask "$(Q)"
 
 # Everything a cold laptop needs, in order.
 demo: check serve demo-reset

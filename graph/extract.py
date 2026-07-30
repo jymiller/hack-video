@@ -20,7 +20,7 @@ segment transcript it is `spoken`; otherwise the model may only say `visual` or
 import os, json, re, sys, time, pathlib
 import httpx
 from dotenv import load_dotenv
-from neo4j import GraphDatabase
+import graph.db as db
 
 root = pathlib.Path(__file__).resolve().parent.parent
 load_dotenv(root / ".env")
@@ -30,7 +30,7 @@ KEY = os.environ["NOVITA_API_KEY"]
 MODEL = os.environ.get("HACK_MODEL", "zai-org/glm-5.2")
 URL = "https://api.novita.ai/v3/openai/chat/completions"
 
-drv = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+drv = db.driver()
 http = httpx.Client(timeout=180.0)
 
 SCHEMA = {

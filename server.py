@@ -8,7 +8,9 @@ from fastapi.staticfiles import StaticFiles
 load_dotenv()
 # You.com key lives in the hack-you project; read it there rather than duplicating the secret
 load_dotenv(os.environ.get("YOU_ENV", pathlib.Path.home() / "Downloads/source/hack-you/.env"))
-KEY = os.environ["TWELVELABS_API_KEY"]
+# Not required at import: the graph and agent pages work without a TwelveLabs key, and a
+# missing key should fail the call that needs it rather than refuse to boot the whole app.
+KEY = os.environ.get("TWELVELABS_API_KEY", "")
 BASE = "https://api.twelvelabs.io/v1.3"
 HDR = {"x-api-key": KEY}
 VIDEO_DIR = pathlib.Path("video")
@@ -403,7 +405,13 @@ async def job_del(job_id: str):
 
 from neo4j import GraphDatabase
 
-neo = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "hackvideo2026"))
+# Defaults are the local container, so nothing changes for local dev. Aura overrides
+# these with neo4j+s://<id>.databases.neo4j.io and its own password.
+NEO4J_URI = os.environ.get("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_USER = os.environ.get("NEO4J_USER", "neo4j")
+NEO4J_PASSWORD = os.environ.get("NEO4J_PASSWORD", "hackvideo2026")
+
+neo = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 
 
 def cy(q, **kw):
