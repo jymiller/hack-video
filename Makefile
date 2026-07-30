@@ -4,7 +4,7 @@ IDX ?= $(shell curl -s --max-time 20 -H "x-api-key: $$TWELVELABS_API_KEY" \
         https://api.twelvelabs.io/v1.3/indexes 2>/dev/null | \
         $(PY) -c "import json,sys;d=json.load(sys.stdin)['data'];print(next((i['_id'] for i in d if i['video_count']>0),''))" 2>/dev/null)
 
-.PHONY: help graph rebuild rebuild-hard up down serve check clean-graph reset status assert attest-save attest-load demo demo-reset voice
+.PHONY: help graph rebuild rebuild-hard up down serve check clean-graph reset status assert attest-save attest-load demo demo-reset voice ks ks-status ask embed embed-verify vsearch agent
 
 help:
 	@echo "make up         start neo4j (idempotent, waits for bolt)"
@@ -113,6 +113,30 @@ demo-reset: up
 voice:
 	@$(PY) graph/voice.py --voice $(VOICE)
 VOICE ?= Daniel
+
+# Strands agent on GPT-5.6, read-only over the graph.
+agent:
+	@$(PY) graph/agent.py "$(Q)"
+
+# Semantic search over segment transcripts. Marengo 512-dim, cosine.
+embed:
+	@$(PY) graph/embed.py backfill
+
+embed-verify:
+	@$(PY) graph/embed.py verify
+
+vsearch:
+	@$(PY) graph/embed.py ask "$(Q)"
+
+# Knowledge store — multi-turn Q&A over the same assets. Off the run-of-show path.
+ks:
+	@$(PY) graph/knowledge_store.py build
+
+ks-status:
+	@$(PY) graph/knowledge_store.py status
+
+ask:
+	@$(PY) graph/knowledge_store.py ask "$(Q)"
 
 # Everything a cold laptop needs, in order.
 demo: check serve demo-reset

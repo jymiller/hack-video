@@ -507,8 +507,17 @@ async function hydrate() {
         n.inst = '(none in graph)';
       }
     }
-    // observed Source count sits on ObsSource; controlled sources aren't loaded yet
-    NODES.DealSource.inst = '(no controlled source loaded)';
+    // Source is one label serving both lanes, so split it by provenance_class rather
+    // than letting the observed count stand for the whole label.
+    const srcs = m.samples.Source || [];
+    const byLane = c => srcs.filter(s => s.provenance_class === c);
+    for (const [node, lane] of [['ObsSource', 'observed'], ['DealSource', 'controlled']]) {
+      const rows = byLane(lane);
+      NODES[node].count = rows.length;
+      NODES[node].inst = rows.length
+        ? rows.map(s => (s.publisher || s.kind || '').slice(0, 34)).join('\n')
+        : '(none in graph)';
+    }
 
     // vocabularies, live
     m.vocabularies.forEach(v => {

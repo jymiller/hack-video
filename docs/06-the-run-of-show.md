@@ -115,7 +115,7 @@ Then, and only then, open in this order and **leave all four tabs open**:
 | Neo4j is down | `make up` takes ~20s. Talk over it: this is why the rebuild is one command |
 | The whole graph is wrong | `make rebuild` — 23 seconds, and attestations survive it |
 | Wifi is gone entirely | Video plays, audio plays, graph is local. **Only live search dies.** Say so plainly and carry on |
-| A judge asks for the covenant threshold | *"Not sourced. The graph says so rather than inventing one."* That is a better answer than a number |
+| A judge asks for the covenant threshold | *"Senior RAR is capped at 0.70 and stands at 0.61 — 12.9% of headroom. Senior ICR has 139%. Both come from GAL's own accounts, not from the footage."* Then the point: **the video still cannot touch either number** |
 
 ---
 

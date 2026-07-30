@@ -1,0 +1,36 @@
+{
+  "knowledge_store_id": "ks_019fb38e-c2fb-7922-921d-712cd764210f",
+  "name": "gatwick",
+  "items": [
+    {
+      "item_id": "ksi_019fb38e-d643-7e53-b95b-e1a5fef279be",
+      "asset_id": "6a694da1d3bc5a69c96d0ff8",
+      "status": "ready"
+    },
+    {
+      "item_id": "ksi_019fb38e-d352-7050-9ab1-7dc875796e4b",
+      "asset_id": "6a69558df2ac38e18edafb96",
+      "status": "ready"
+    },
+    {
+      "item_id": "ksi_019fb38e-d06b-75b1-a295-8a64f83ae5c5",
+      "asset_id": "6a695732f2ac38e18edb08bf",
+      "status": "ready"
+    },
+    {
+      "item_id": "ksi_019fb38e-cd9f-7903-9328-c1fbf0f8b0c9",
+      "asset_id": "6a6957337724e937923764be",
+      "status": "ready"
+    },
+    {
+      "item_id": "ksi_019fb38e-ca50-7a10-b3b1-1d13b11e6ece",
+      "asset_id": "6a695738d3bc5a69c96d5cb9",
+      "status": "ready"
+    },
+    {
+      "item_id": "ksi_019fb38e-c678-7393-bc9e-605c631c8de2",
+      "asset_id": "6a69b9a6bb33be5074e4c07b",
+      "status": "ready"
+    }
+  ]
+}

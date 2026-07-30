@@ -96,6 +96,21 @@
   </div>
 
   <div class="col">
+    <div class="sect">
+      <h2><span class="lbl">Ask the graph</span>
+        <span class="muted">Strands agent · GPT-5.6 · read-only</span></h2>
+      <div class="body stack">
+        <select id="apreset" onchange="useAsk()">
+          <option value="">— questions worth asking —</option>
+        </select>
+        <textarea id="aq" style="min-height:52px"></textarea>
+        <button class="p" onclick="ask()" id="aBtn" style="width:100%">ASK</button>
+        <div id="atrace" class="muted" style="font-family:var(--mono,monospace);font-size:11px;
+             line-height:1.7;white-space:pre-wrap;max-height:132px;overflow:auto"></div>
+        <div id="aout" class="muted">the agent may read the graph — it may never write to it</div>
+      </div>
+    </div>
+
     <div class="sect grow">
       <h2><span class="lbl">Attestation path</span> <span class="muted">model proposes · human decides</span></h2>
       <div class="body">
@@ -144,6 +159,71 @@ RETURN e.name AS event, c.covenant_code AS covenant, m.asserted_by AS by,
    `MATCH (v:Vocabulary)-[:HAS_TERM]->(t:Term)
 RETURN v.name AS vocabulary, collect(t.value) AS terms`],
 ];
+
+// Questions the graph can answer honestly — including the ones where the honest
+// answer is that it cannot.
+const ASKS = [
+  'Which covenant has the least headroom, and can any video evidence tell me whether it will breach?',
+  'What does this corpus cover, and what does it not?',
+  'Which broadcasters corroborate the cost figure, and at what timecode?',
+  'Did the water outage affect the airport’s ability to operate?',
+  'What did the model propose that a human rejected, and why?',
+];
+
+function useAsk() {
+  const i = $('apreset').value;
+  if (i !== '') { $('aq').value = ASKS[i]; $('apreset').value = ''; }
+}
+ASKS.forEach((q,i) => {
+  const o = document.createElement('option'); o.value = i; o.textContent = q;
+  $('apreset').appendChild(o);
+});
+
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+// The trace is the point: each line is a tool the agent actually reached for. It is
+// what the agent did, not a progress animation standing in for it.
+async function ask() {
+  const q = $('aq').value.trim();
+  if (!q) return;
+  const t0 = Date.now(), el = () => ((Date.now() - t0) / 1000).toFixed(1);
+  $('aBtn').disabled = true;
+  $('atrace').textContent = '';
+  $('aout').textContent = '';
+  let answer = '', n = 0;
+  const line = s => { $('atrace').textContent += s + '\n'; $('atrace').scrollTop = 1e6; };
+  try {
+    const res = await fetch('/api/agent', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: q }),
+    });
+    const rd = res.body.getReader(), dec = new TextDecoder();
+    let buf = '';
+    for (;;) {
+      const { value, done } = await rd.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const parts = buf.split('\n');
+      buf = parts.pop();
+      for (const p of parts) {
+        if (!p.trim()) continue;
+        const ev = JSON.parse(p);
+        if (ev.model) line(`model  ${ev.model}`);
+        if (ev.tool) line(`${String(++n).padStart(2, '0')} ·  ${ev.tool}   ${el()}s`);
+        if (ev.error) line(`ERROR  ${ev.error}`);
+        if (ev.text) {
+          answer += ev.text;
+          $('aout').innerHTML = esc(answer).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+        }
+      }
+    }
+    line(`done   ${el()}s · ${n} tool call${n === 1 ? '' : 's'}`);
+  } catch (e) {
+    line(`ERROR  ${String(e)}`);
+  } finally {
+    $('aBtn').disabled = false;
+  }
+}
 
 function usePreset() {
   const i = $('preset').value;

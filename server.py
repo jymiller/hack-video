@@ -145,6 +145,74 @@ async def analyze(req: Request):
     return StreamingResponse(gen(), media_type="text/plain")
 
 
+# The Strands agent, on GPT-5.6. The tool calls are the interesting part — an answer that
+# takes 40s with a spinner looks broken, whereas the same 40s narrating which tool it
+# reached for looks like thinking. So this streams events rather than returning a blob.
+# A fresh agent per request: Strands agents accumulate message history, and a shared one
+# would leak each question into the next.
+@app.post("/api/agent")
+async def agent_ask(req: Request):
+    import asyncio, queue, threading
+    body = await req.json()
+    q = queue.Queue()
+
+    def on_event(**kw):
+        tu = kw.get("event", {}).get("contentBlockStart", {}).get("start", {}).get("toolUse")
+        if tu:
+            q.put({"tool": tu["name"]})
+        if kw.get("data"):
+            q.put({"text": kw["data"]})
+
+    def run():
+        try:
+            from graph.agent import build, MODEL_ID
+            q.put({"model": MODEL_ID})
+            build(callback_handler=on_event)(body["question"])
+        except Exception as e:
+            q.put({"error": str(e)[:400]})
+        finally:
+            q.put(None)
+
+    async def gen():
+        threading.Thread(target=run, daemon=True).start()
+        while True:
+            ev = await asyncio.to_thread(q.get)
+            if ev is None:
+                break
+            yield json.dumps(ev) + "\n"
+
+    return StreamingResponse(gen(), media_type="application/x-ndjson")
+
+
+# Knowledge store — the `responses` surface, multi-turn Q&A over the same assets the
+# GATWICK index holds. Not on the run-of-show; here so the capability exists if asked.
+# Deliberately not streamed: intermediate per-video analyses interleave with the final
+# answer on the stream, and the one-shot response returns clean text with citations.
+KS_STATE = pathlib.Path("graph/dump/knowledge-store.json")
+
+
+@app.get("/api/ks")
+async def ks():
+    if not KS_STATE.exists():
+        return JSONResponse({"error": "no store — run: make ks"}, status_code=404)
+    state = json.loads(KS_STATE.read_text())
+    return await tl("GET", f"/knowledge-stores/{state['knowledge_store_id']}/items")
+
+
+@app.post("/api/ks/ask")
+async def ks_ask(req: Request):
+    if not KS_STATE.exists():
+        return JSONResponse({"error": "no store — run: make ks"}, status_code=404)
+    body = await req.json()
+    payload = {
+        "knowledge_store_id": json.loads(KS_STATE.read_text())["knowledge_store_id"],
+        "input": [{"type": "message", "role": "user", "content": body["question"]}],
+    }
+    if body.get("session_id"):
+        payload["session_id"] = body["session_id"]
+    return await tl("POST", "/responses", json=payload)
+
+
 IA_UA = {"User-Agent": "hack-video-playground/0.1 (Claude Code; claude-opus-5)"}
 IA_SEARCH = "https://archive.org/advancedsearch.php"
 IA_FTS = "https://be-api.us.archive.org/ia-pub-fts-api"

@@ -81,6 +81,18 @@ Full model: [`docs/05-the-data-model.md`](docs/05-the-data-model.md).
 - **Cypher variables do not survive a statement boundary.** `MERGE (d)-[:X]->(f)` as its own
   statement silently creates two anonymous nodes. Bit us once.
 - **`NODE KEY` constraints are Enterprise-only** and abort the whole schema file on Community.
+- **Following the TwelveLabs quickstart can gut `.venv`.** Found 30 July 08:15: site-packages
+  held only `twelvelabs` + `httpx`; `fastapi`, `uvicorn`, `python-dotenv`, `neo4j`,
+  `python-multipart`, `strands-agents` and `openai` were all gone. The app on `:8000` kept
+  serving 200 the whole time because it had loaded its imports at 01:14 and was running on
+  deleted files — **`make check` cannot see this**. Any restart would have been fatal.
+  Fixed with `.venv/bin/python -m pip install -r requirements.txt`, which is why that file is
+  pinned. If a vendor doc says `uv venv`, do not run it in this directory.
+- **`video/` and `audio/` can go missing from the main tree** while surviving in
+  `.claude/worktrees/hackathon-prep-vendors-698297/`. Also found 30 July. Beat 1 plays from
+  `/media/<file>` (`static/index.html:256` → `VIDEO_DIR`), so a missing `video/` breaks the
+  watchable moment and every narration line at once. `make check`'s `corpus` row is the tell —
+  **it read `0 clips`**. It reads `6 clips` when this is right.
 
 ---
 
@@ -108,6 +120,7 @@ graph/assert_impact.py the model's covenant assertions (skips settled pairs)
 graph/attestations.py  export/restore human decisions
 graph/voice.py         narration, offline      graph/bakeoff.py   the model comparison
 graph/strands_hello.py verified Strands agent  graph/dump/        full graph export (JSON)
+graph/knowledge_store.py  multi-turn Q&A over the corpus — off the run-of-show path
 docs/05-the-data-model.md   the model     docs/06-the-run-of-show.md   the three minutes
 docs/explainers/*.html      six explainers, house style
 video/                 6 clips, 171MB, gitignored
@@ -170,6 +183,46 @@ reproduced; it has been corrected to say what is actually true.
   data. Loading the prospectus would populate the other side.
 - **Extraction reads transcripts only**, so every modality came back `spoken`. The on-screen
   figures Pegasus reported are not captured; that needs a per-segment OCR pass.
+
+---
+
+## The knowledge store — a spare wheel, not a beat
+
+Wired 30 July, ~08:30, on the explicit basis that it might come up and should not be built
+under time pressure if it does. **It is not on the run-of-show and beat 1 does not touch it.**
+
+`ks_019fb38e-c2fb-7922-921d-712cd764210f`, 6 items, all `ready`. Same six assets the
+`GATWICK` index holds, ingested into TwelveLabs' newer `responses` surface — a *different*
+surface from `/search` and `/analyze`, so the index id is not a store id and the two share
+nothing but the underlying assets. Ingest took 261s and is already paid for.
+
+```bash
+make ks-status              # per-item state
+make ask Q="your question"  # ~30-40s, cites sources with timestamps
+```
+
+Also `GET /api/ks` and `POST /api/ks/ask` (`{"question": ..., "session_id": ...}` — the
+response carries a `session_id` back, so multi-turn works). Both additive; no existing route
+changed.
+
+**What it is good for.** It corroborates across clips in one answer and cites each source with
+a timecode. Asked whether any clip states a covenant threshold, it answered *"absent from the
+material I could verify here"* on three runs out of three — the thesis, reached independently
+by a vendor surface that was not built to argue it. That is the answer worth having in reserve.
+
+**Two things to know before showing it to anyone.**
+
+- **It cannot reliably name the broadcasters.** It reads on-screen branding, not the filenames
+  the graph keys on, so it confidently identifies two to four of the six and calls the rest
+  unknown — and the count moves between runs. **Do not ask it "which broadcasters are in this
+  corpus" in front of a judge**: the graph's answer is six and its answer is not, and the
+  weaker number is the one that would stick. Ask it about content, not provenance.
+- **It is not streamed, on purpose.** On some questions the model fans out a per-video analysis
+  and streams those deltas concurrently with the final answer, interleaving them into
+  unreadable text. It is intermittent and did not reproduce on demand, so it could not be
+  filtered with confidence. The one-shot call returns the final message cleanly every time.
+  Cost is ~30-40s with nothing on screen. **If it gets shown, say what it is doing while it
+  runs.**
 
 ---
 

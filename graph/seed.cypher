@@ -86,14 +86,21 @@ MATCH (d:Deal {legal_name:'Gatwick Funding Limited'}),
       (f:Facility {facility_code:'GFL-SSN'})
 MERGE (d)-[:HAS_FACILITY]->(f);
 
+// Thresholds and latest values both come from the controlled lane — GAL's own audited
+// accounts, cited on the node. threshold_default is the programme default the covenant
+// falls back to; threshold_value is what this filing actually states.
 UNWIND [
-  {code:'senior_icr', name:'Senior interest cover ratio', dir:'min', concept:'cta_senior_icr'},
-  {code:'senior_rar', name:'Senior debt ratio',           dir:'max', concept:'cta_senior_rar'}
+  {code:'senior_icr', name:'Senior interest cover ratio', dir:'min', concept:'cta_senior_icr',
+   thr:1.5, def:1.1, latest:3.59},
+  {code:'senior_rar', name:'Senior debt ratio',           dir:'max', concept:'cta_senior_rar',
+   thr:0.7, def:0.85, latest:0.61}
 ] AS cv
 MERGE (c:Covenant {covenant_code:cv.code})
 SET c.name = cv.name, c.direction = cv.dir,
-    c.threshold_value = null,        // deliberately null — not yet sourced from a filing
-    c.threshold_status = 'not_sourced'
+    c.threshold_value = cv.thr, c.threshold_default = cv.def,
+    c.threshold_status = 'sourced', c.threshold_source = 'gal-arfs-2018',
+    c.threshold_citation = 'Annual Report and Financial Statements for the year ended 31 March 2018 (company 1991018), financial covenants table',
+    c.latest_value = cv.latest, c.latest_as_of = '2018-03-31'
 WITH c, cv
 MATCH (f:Facility {facility_code:'GFL-SSN'})
 MERGE (f)-[:GOVERNED_BY]->(c)
@@ -109,3 +116,40 @@ UNWIND [
   {n:'Airport water supply failure',                 d:date('2026-07-26'), k:'operational_incident'}
 ] AS e
 MERGE (ev:Event {name:e.n, date:e.d}) SET ev.kind = e.k;
+
+// ------------------------------------------------- the controlled lane (loaded 30 Jul)
+// The first controlled-lane source: GAL's audited accounts, fetched from
+// gatwickairport.com. Facts may only ever come from a controlled source; these
+// two are the covenant ratios as the issuer itself states them.
+MERGE (s:Source {id:'gal-arfs-2018'})
+SET s.provenance_class = 'controlled', s.kind = 'accounts',
+    s.publisher = 'Gatwick Airport Limited', s.company_number = '1991018',
+    s.title = 'Annual Report and Financial Statements for the year ended 31 March 2018',
+    s.filename = 'Gatwick Airport Limited ARFS March 2018.pdf',
+    s.as_of = date('2018-03-31'),
+    s.url = 'https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dw639ca5a8/images/Corporate-PDFs/Reports%20financial%20/Other_Financial_Documents/Previous_annual_reports/Gatwick%20Airport%20Limited%20ARFS%20March%202018.pdf',
+    s.url_sha256 = '416d34bba3957ef0b7d79ca76e9dcc67812553695448df9bef0c61795350cd5b';
+
+MATCH (s:Source {id:'gal-arfs-2018'}), (d:Deal {legal_name:'Gatwick Funding Limited'})
+MERGE (s)-[:EVIDENCES]->(d);
+
+// The RAR value is stated as a ratio against a percent-scaled concept; the
+// mismatch is recorded honestly rather than silently converted.
+UNWIND [
+  {concept:'cta_senior_icr', covenant:'senior_icr', value:3.59, prior:3.96, mismatch:false,
+   stated:'3.59 (2017: 3.96)',
+   quote:'The Senior ICR for the year ended 31 March 2018 was 3.59 (2017: 3.96).'},
+  {concept:'cta_senior_rar', covenant:'senior_rar', value:0.61, prior:0.51, mismatch:true,
+   stated:'0.61 (2017: 0.51)',
+   quote:"As at 31 March 2018, the Group's Senior RAR ratio was 0.61 (2017: 0.51)."}
+] AS x
+MERGE (f:Fact {concept_code:x.concept, as_of:date('2018-03-31')})
+SET f.value = x.value, f.prior_value = x.prior, f.unit_kind = 'ratio_x',
+    f.as_stated = x.stated, f.quote = x.quote,
+    f.provenance_class = 'controlled', f.concept_unit_mismatch = x.mismatch
+WITH f, x
+MATCH (s:Source {id:'gal-arfs-2018'})
+MERGE (f)-[:FROM]->(s)
+WITH f, x
+MATCH (c:Covenant {covenant_code:x.covenant})
+MERGE (f)-[:TESTS]->(c);
