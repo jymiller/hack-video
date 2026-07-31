@@ -1,5 +1,13 @@
 # Handoff — Material Witness, end of 30 July
 
+> ## PARKED — 30 July, end of day
+>
+> No submission video was recorded, and none is planned. The project is being put away.
+>
+> The parking sequence is at the bottom of this file under **Parking it — freeze mode**.
+> The one thing that matters: **the keys are the control.** Freeze mode is a courtesy flag,
+> and an unpushed fix protects nothing that is already deployed.
+
 **Everything is committed and pushed. `main` is at `fd3ac16`. The working tree is clean.**
 Read [`HANDOFF.md`](HANDOFF.md) for the original traps, then this for what changed today.
 
