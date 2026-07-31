@@ -2,15 +2,22 @@
  "temporal": {
   "nodes": {
    "Source.as_of": "date",
+   "Source.dated": "date",
+   "Source.asserted_at": "datetime",
+   "Source.first_seen": "datetime",
    "Event.date": "date",
    "Segment.entities_at": "datetime",
    "ExtractionRun.started_at": "datetime",
-   "Fact.as_of": "date"
+   "Fact.as_of": "date",
+   "RatioTest.as_of": "date",
+   "Waiver.dated": "date"
   },
   "relationships": {
    "MAY_AFFECT.validated_at": "datetime",
    "MAY_AFFECT.asserted_at": "datetime",
-   "SUGGESTS_RISK.asserted_at": "datetime"
+   "REPORTS.asserted_at": "datetime",
+   "SUGGESTS_RISK.asserted_at": "datetime",
+   "MAY_SOURCE_THRESHOLD.asserted_at": "datetime"
   }
  },
  "nodes": [
@@ -623,6 +630,123 @@
    }
   },
   {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:231",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "id": "research-gpt-5.6-terra-1785456094",
+    "model": "gpt-5.6-terra",
+    "purpose": "research ingest — source classification",
+    "query": "Gatwick Funding Limited bond prospectus and Common Terms Agreement: what are the Senior ICR and Senior RAR covenant thresholds, and which filed document states them?",
+    "started_at": "2026-07-31T00:01:34.226000000+00:00"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:233",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "id": "research-gpt-5.6-terra-1785456111",
+    "model": "gpt-5.6-terra",
+    "purpose": "research ingest — source classification",
+    "query": "How is Gatwick funding the 2.2bn northern runway, what has Gatwick Funding Limited announced to the London Stock Exchange, what did news coverage and rating agencies say about its leverage and covenant headroom, and where are the Senior ICR and Senior RAR covenant levels stated?",
+    "started_at": "2026-07-31T00:01:51.760000000+00:00"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:238",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "id": "research-gpt-5.6-terra-1785456520",
+    "model": "gpt-5.6-terra",
+    "purpose": "research ingest — source classification",
+    "query": "Quote the exact Gatwick Funding Limited covenant levels: Senior ICR not less than 1.50:1 and Senior RAR not more than 0.70:1. Find annual reports, prospectuses, RNS announcements, and also any news articles, wikipedia pages or blogs that repeat those figures.",
+    "started_at": "2026-07-31T00:08:40.780000000+00:00"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:239",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "id": "research-gpt-5.6-terra-1785456643",
+    "model": "gpt-5.6-terra",
+    "purpose": "research ingest — source classification",
+    "query": "Quote the exact Gatwick Funding Limited covenant levels: Senior ICR not less than 1.50:1 and Senior RAR not more than 0.70:1. Find annual reports, prospectuses, RNS announcements, and also any news articles, wikipedia pages or blogs that repeat those figures.",
+    "started_at": "2026-07-31T00:10:43.072000000+00:00"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:242",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "id": "research-gpt-5.6-terra-1785456766",
+    "model": "gpt-5.6-terra",
+    "purpose": "research ingest — source classification",
+    "query": "Find news articles, Wikipedia, Reuters, Bloomberg, IJGlobal or trade press pages that quote Gatwick Airport Senior ICR 1.40x or 1.50x and Senior RAR 0.70x covenant levels. Prefer journalism and encyclopedia pages over the filings themselves.",
+    "started_at": "2026-07-31T00:12:46.585000000+00:00"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:244",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "id": "research-gpt-5.6-terra-1785456868",
+    "model": "gpt-5.6-terra",
+    "purpose": "research ingest — source classification",
+    "query": "Find news articles, Wikipedia, Reuters, Bloomberg, IJGlobal or trade press pages that quote Gatwick Airport Senior ICR 1.40x or 1.50x and Senior RAR 0.70x covenant levels. Prefer journalism and encyclopedia pages over the filings themselves.",
+    "started_at": "2026-07-31T00:14:28.700000000+00:00"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:245",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "id": "research-gpt-5.6-terra-1785456897",
+    "model": "gpt-5.6-terra",
+    "purpose": "research ingest — source classification",
+    "query": "Find news articles, Wikipedia, Reuters, Bloomberg, IJGlobal or trade press pages that quote Gatwick Airport Senior ICR 1.40x or 1.50x and Senior RAR 0.70x covenant levels. Prefer journalism and encyclopedia pages over the filings themselves.",
+    "started_at": "2026-07-31T00:14:57.324000000+00:00"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:246",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "id": "research-gpt-5.6-terra-1785456986",
+    "model": "gpt-5.6-terra",
+    "purpose": "research ingest — source classification",
+    "query": "Find news articles, Wikipedia, Reuters, Bloomberg, IJGlobal or trade press pages that quote Gatwick Airport Senior ICR 1.40x or 1.50x and Senior RAR 0.70x covenant levels. Prefer journalism and encyclopedia pages over the filings themselves.",
+    "started_at": "2026-07-31T00:16:26.622000000+00:00"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:248",
+   "labels": [
+    "ExtractionRun"
+   ],
+   "props": {
+    "id": "research-gpt-5.6-terra-1785457049",
+    "model": "gpt-5.6-terra",
+    "purpose": "research ingest — source classification",
+    "query": "Gatwick Funding Limited bond prospectus and Common Terms Agreement: what are the Senior ICR and Senior RAR covenant thresholds, and which filed document states them?",
+    "started_at": "2026-07-31T00:17:29.095000000+00:00"
+   }
+  },
+  {
    "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:53",
    "labels": [
     "ExtractionRun"
@@ -787,6 +911,118 @@
     "unit_kind": "currency",
     "value": 2200.0,
     "video_id": "6a69558df2ac38e18edafb96"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:235",
+   "labels": [
+    "RatioTest"
+   ],
+   "props": {
+    "as_of": "2019-03-31",
+    "covenant_code": "senior_icr",
+    "note": "the drone year",
+    "provenance_class": "controlled",
+    "tier": "clear",
+    "value": 2.93
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:247",
+   "labels": [
+    "RatioTest"
+   ],
+   "props": {
+    "as_of": "2019-03-31",
+    "covenant_code": "senior_rar",
+    "note": "the drone year",
+    "provenance_class": "controlled",
+    "tier": "clear",
+    "value": 0.59
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:250",
+   "labels": [
+    "RatioTest"
+   ],
+   "props": {
+    "as_of": "2019-12-31",
+    "covenant_code": "senior_icr",
+    "note": "",
+    "provenance_class": "controlled",
+    "tier": "clear",
+    "value": 3.15
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:251",
+   "labels": [
+    "RatioTest"
+   ],
+   "props": {
+    "as_of": "2019-12-31",
+    "covenant_code": "senior_rar",
+    "note": "",
+    "provenance_class": "controlled",
+    "tier": "clear",
+    "value": 0.6
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:252",
+   "labels": [
+    "RatioTest"
+   ],
+   "props": {
+    "as_of": "2020-12-31",
+    "covenant_code": "senior_icr",
+    "note": "cash from operations went negative",
+    "provenance_class": "controlled",
+    "tier": "default",
+    "value": -1.29
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:253",
+   "labels": [
+    "RatioTest"
+   ],
+   "props": {
+    "as_of": "2020-12-31",
+    "covenant_code": "senior_rar",
+    "note": "before the agreed adjustments",
+    "provenance_class": "controlled",
+    "tier": "default",
+    "value": 0.94
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:254",
+   "labels": [
+    "RatioTest"
+   ],
+   "props": {
+    "as_of": "2021-12-31",
+    "covenant_code": "senior_icr",
+    "note": "absent the waiver this was an event of default",
+    "provenance_class": "controlled",
+    "tier": "default",
+    "value": -1.49
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:255",
+   "labels": [
+    "RatioTest"
+   ],
+   "props": {
+    "as_of": "2021-12-31",
+    "covenant_code": "senior_rar",
+    "note": "through the trigger, inside the default ceiling",
+    "provenance_class": "controlled",
+    "tier": "trigger",
+    "value": 0.81
    }
   },
   {
@@ -31514,6 +31750,220 @@
    }
   },
   {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "addressed_to": "Deutsche Trustee Company Limited, Borrower Security Trustee",
+    "as_of": "2021-12-31",
+    "dated": "2022-03-07",
+    "id": "gal-compliance-2021-12",
+    "kind": "compliance_certificate",
+    "provenance_class": "controlled",
+    "publisher": "Gatwick Airport Limited / Ivy Bidco Limited",
+    "signed_by": "Stewart Wingate (CEO), Jim Butler (CFO)",
+    "title": "Compliance Certificate, Calculation Date 31 December 2021",
+    "url": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dw6bbd5197/images/Corporate-PDFs/Reports%20financial%20/2022/Compliance%20certificate%20December%202021.pdf"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:234",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "asserted_at": "2026-07-31T00:01:51.777000000+00:00",
+    "asserted_by": "model",
+    "confidence": 0.99,
+    "evidence_sha256": "9347f85268b78780bbf013a2af188405e77da9f30cc31983e5bb9ce0add60af2",
+    "evidence_url": "https://uk.advfn.com/stock-market/london/gatwick-fd-43-79IU/share-news/Gatwick-Funding-Limited-Half-year-Results-Publicat/96631907",
+    "first_seen": "2026-07-31T00:01:51.777000000+00:00",
+    "id": "you:9347f85268b78780",
+    "is_primary_document": false,
+    "kind": "aggregator",
+    "lane_evidence": "The page is hosted on uk.advfn.com, a third-party market-news platform.",
+    "model": "gpt-5.6-terra",
+    "origin": "you.com research",
+    "provenance_class": "observed",
+    "publisher": "ADVFN",
+    "rationale": "ADVFN's write-up may reproduce or summarize issuer information but is not an accountable deal-chain document.",
+    "research_job": "b62774a5a14a",
+    "status": "proposed",
+    "title": "Gatwick Funding Limited Half-year Results Publication - ADVFN",
+    "url": "https://uk.advfn.com/stock-market/london/gatwick-fd-43-79IU/share-news/Gatwick-Funding-Limited-Half-year-Results-Publicat/96631907",
+    "url_sha256": "9347f85268b78780bbf013a2af188405e77da9f30cc31983e5bb9ce0add60af2"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:236",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "asserted_at": "2026-07-31T00:01:51.857000000+00:00",
+    "asserted_by": "model",
+    "confidence": 0.98,
+    "evidence_sha256": "5d2080dcdf8b7fb5454ccf72450b9e74158b2484c58340b7ebf248b27557ad31",
+    "evidence_url": "https://www.rns-pdf.londonstockexchange.com/rns/4729S_1-2026-2-10.pdf",
+    "first_seen": "2026-07-31T00:01:51.857000000+00:00",
+    "id": "you:5d2080dcdf8b7fb5",
+    "is_primary_document": true,
+    "kind": "rns_announcement",
+    "lane_evidence": "The PDF is hosted at rns-pdf.londonstockexchange.com and its filename contains an RNS reference dated 2026-02-10.",
+    "model": "gpt-5.6-terra",
+    "origin": "you.com research",
+    "provenance_class": "controlled",
+    "publisher": "London Stock Exchange RNS",
+    "rationale": "An RNS PDF published through the London Stock Exchange is a controlled regulatory announcement for the issuer.",
+    "research_job": "b62774a5a14a",
+    "status": "proposed",
+    "title": "gatwick funding limited - RNS Submit",
+    "url": "https://www.rns-pdf.londonstockexchange.com/rns/4729S_1-2026-2-10.pdf",
+    "url_sha256": "5d2080dcdf8b7fb5454ccf72450b9e74158b2484c58340b7ebf248b27557ad31"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:237",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "asserted_at": "2026-07-31T00:01:51.961000000+00:00",
+    "asserted_by": "model",
+    "confidence": 0.98,
+    "evidence_sha256": "757a75b8e36b9047b2fdae6f5a58d04d7b2eafce02e26b586adb57c4d37ee934",
+    "evidence_url": "https://www.fitchratings.com/research/infrastructure-project-finance/gatwick-funding-limited-gatwick-airport-finance-plc-29-07-2024",
+    "first_seen": "2026-07-31T00:01:51.961000000+00:00",
+    "id": "you:757a75b8e36b9047",
+    "is_primary_document": true,
+    "kind": "rating_action",
+    "lane_evidence": "The page is hosted on fitchratings.com and identifies Gatwick Funding Limited and Gatwick Airport Finance plc.",
+    "model": "gpt-5.6-terra",
+    "origin": "you.com research",
+    "provenance_class": "controlled",
+    "publisher": "Fitch Ratings",
+    "rationale": "Fitch's own published credit research or rating action is controlled for Fitch's rating opinion and is relevant to Gatwick's financing.",
+    "research_job": "b62774a5a14a",
+    "status": "proposed",
+    "title": "Gatwick Funding Limited; Gatwick Airport Finance plc",
+    "url": "https://www.fitchratings.com/research/infrastructure-project-finance/gatwick-funding-limited-gatwick-airport-finance-plc-29-07-2024",
+    "url_sha256": "757a75b8e36b9047b2fdae6f5a58d04d7b2eafce02e26b586adb57c4d37ee934"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:240",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "asserted_at": "2026-07-31T00:08:40.878000000+00:00",
+    "asserted_by": "model",
+    "confidence": 0.91,
+    "evidence_sha256": "c9387e7363e3291ac542d58ccea4cd59d250862df61e4d04980224499827316a",
+    "evidence_url": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dw5c1bfbf0/images/Corporate-PDFs/Reports%20financial%20/Prospectus/Gatwick_Funding_Limited_Base_Prospectus_March_2024.pdf",
+    "first_seen": "2026-07-31T00:08:40.878000000+00:00",
+    "id": "you:c9387e7363e3291a",
+    "is_primary_document": false,
+    "kind": "unknown",
+    "lane_evidence": "The official-domain URL returns the extract “The requested URL is invalid,” rather than an identifiable prospectus document.",
+    "model": "gpt-5.6-terra",
+    "origin": "you.com research",
+    "provenance_class": "observed",
+    "publisher": "Gatwick Airport website",
+    "rationale": "Although the URL path names a Gatwick Funding Limited base prospectus, the supplied result does not resolve to the document itself and cannot support controlled-document classification.",
+    "research_job": "e6a47d7d7837",
+    "status": "proposed",
+    "title": "www.gatwickairport.com",
+    "url": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dw5c1bfbf0/images/Corporate-PDFs/Reports%20financial%20/Prospectus/Gatwick_Funding_Limited_Base_Prospectus_March_2024.pdf",
+    "url_sha256": "c9387e7363e3291ac542d58ccea4cd59d250862df61e4d04980224499827316a"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:241",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "asserted_at": "2026-07-31T00:10:43.101000000+00:00",
+    "asserted_by": "model",
+    "confidence": 0.97,
+    "evidence_sha256": "11df26a6a2b83311ab5e204fde02e38910a13586eed8904cae332252aa72528c",
+    "evidence_url": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dwa057a3d5/images/Corporate-PDFs/Reports%20financial/Gatwick%20Airport%20Finance%20plc%20Interim%20Financial%20Statements%2030%20June%202024.pdf",
+    "first_seen": "2026-07-31T00:10:43.101000000+00:00",
+    "id": "you:11df26a6a2b83311",
+    "is_primary_document": true,
+    "kind": "investor_report",
+    "lane_evidence": "PDF is hosted on gatwickairport.com and titled Gatwick Airport Finance plc Interim Financial Statements.",
+    "model": "gpt-5.6-terra",
+    "origin": "you.com research",
+    "provenance_class": "controlled",
+    "publisher": "Gatwick Airport Finance plc",
+    "rationale": "This appears to be Gatwick Airport Finance plc's own interim financial statements and directly reports covenant compliance metrics.",
+    "research_job": "e6a47d7d7837",
+    "status": "proposed",
+    "title": "1 GATWICK AIRPORT FINANCE PLC",
+    "url": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dwa057a3d5/images/Corporate-PDFs/Reports%20financial/Gatwick%20Airport%20Finance%20plc%20Interim%20Financial%20Statements%2030%20June%202024.pdf",
+    "url_sha256": "11df26a6a2b83311ab5e204fde02e38910a13586eed8904cae332252aa72528c"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:243",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "asserted_at": "2026-07-31T00:12:46.608000000+00:00",
+    "asserted_by": "model",
+    "confidence": 0.91,
+    "evidence_sha256": "2122ca7d4f3f8ee8863dee1160ec5e15c9fe2c9857f4b797523341568b0707f9",
+    "evidence_url": "https://www.vinci.com/en/newsroom/press-releases/london-gatwick-airport-waiver-agreement-financial-covenants",
+    "first_seen": "2026-07-31T00:12:46.608000000+00:00",
+    "id": "you:2122ca7d4f3f8ee8",
+    "is_primary_document": true,
+    "kind": "unknown",
+    "lane_evidence": "vinci.com press-release page published by VINCI, Gatwick's majority owner rather than the Gatwick Funding issuer or borrower",
+    "model": "gpt-5.6-terra",
+    "origin": "you.com research",
+    "provenance_class": "observed",
+    "publisher": "VINCI",
+    "rationale": "This is a VINCI corporate press release reporting a Gatwick covenant waiver, not a deal document published by the obligor or a regulator.",
+    "research_job": "13d2ce5843fb",
+    "status": "proposed",
+    "title": "London Gatwick Airport: waiver agreement on financial covenants ...",
+    "url": "https://www.vinci.com/en/newsroom/press-releases/london-gatwick-airport-waiver-agreement-financial-covenants",
+    "url_sha256": "2122ca7d4f3f8ee8863dee1160ec5e15c9fe2c9857f4b797523341568b0707f9"
+   }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:249",
+   "labels": [
+    "Source"
+   ],
+   "props": {
+    "asserted_at": "2026-07-31T00:17:29.105000000+00:00",
+    "asserted_by": "model",
+    "confidence": 0.98,
+    "evidence_sha256": "dd3c9288a00c3ffa7932dfae4a9860c61d0f96796746f77dbc35de16266a779f",
+    "evidence_url": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dw7566d1a7/images/Corporate-PDFs/Reports%20financial%20/Prospectus/Gatwick_Funding_Limited_Base_Prospectus_March_2019.pdf",
+    "first_seen": "2026-07-31T00:17:29.105000000+00:00",
+    "id": "you:dd3c9288a00c3ffa",
+    "is_primary_document": true,
+    "kind": "prospectus",
+    "lane_evidence": "gatwickairport.com hosts a PDF titled “Gatwick_Funding_Limited_Base_Prospectus_March_2019.pdf”.",
+    "model": "gpt-5.6-terra",
+    "origin": "you.com research",
+    "provenance_class": "controlled",
+    "publisher": "Gatwick Airport / Gatwick Funding Limited",
+    "rationale": "This is the base prospectus itself, hosted on the Gatwick Airport domain, and states the Common Terms Agreement financial maintenance covenant thresholds.",
+    "research_job": "662a3013d768",
+    "status": "proposed",
+    "title": "GATWICK FUNDING LIMITED",
+    "url": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dw7566d1a7/images/Corporate-PDFs/Reports%20financial%20/Prospectus/Gatwick_Funding_Limited_Base_Prospectus_March_2019.pdf",
+    "url_sha256": "dd3c9288a00c3ffa7932dfae4a9860c61d0f96796746f77dbc35de16266a779f"
+   }
+  },
+  {
    "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
    "labels": [
     "Source"
@@ -32623,6 +33073,21 @@
     "description": "The covenants this deal discloses",
     "name": "covenant_code"
    }
+  },
+  {
+   "id": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:256",
+   "labels": [
+    "Waiver"
+   ],
+   "props": {
+    "also": "Temporary amendment to the Senior RAR calculation until June 2024",
+    "approved_by": "Qualifying Borrower Secured Creditors",
+    "covers": "Any Default relating to Senior ICR and Senior RAR at the calculation dates falling December 2021 and June 2022",
+    "dated": "2021-09-08",
+    "name": "Amendment and Waiver Agreement",
+    "provenance_class": "controlled",
+    "waiver_id": "awa-2021-09-08"
+   }
   }
  ],
  "relationships": [
@@ -33471,6 +33936,42 @@
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:201",
    "type": "ABOUT",
    "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:252",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "BREACHED",
+   "props": {
+    "consequence": "Loan Event of Default — lenders may accelerate, 30-day cure available",
+    "tier": "default"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:253",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "BREACHED",
+   "props": {
+    "consequence": "Loan Event of Default — lenders may accelerate, 30-day cure available",
+    "tier": "default"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:254",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "BREACHED",
+   "props": {
+    "consequence": "Loan Event of Default — lenders may accelerate, 30-day cure available",
+    "tier": "default"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:255",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "BREACHED",
+   "props": {
+    "consequence": "Trigger Event — cash lock-up, distributions to shareholders prohibited",
+    "tier": "trigger"
+   }
   },
   {
    "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:100",
@@ -34525,6 +35026,12 @@
    "props": {}
   },
   {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:45",
+   "type": "EVIDENCES",
+   "props": {}
+  },
+  {
    "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:167",
    "type": "EXPOSED_TO",
@@ -34610,6 +35117,60 @@
   {
    "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:157",
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:155",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:235",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:247",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:250",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:251",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:252",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:253",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:254",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:255",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
+   "type": "FROM",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:256",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:232",
    "type": "FROM",
    "props": {}
   },
@@ -35145,6 +35706,42 @@
    }
   },
   {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:249",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MAY_SOURCE_THRESHOLD",
+   "props": {
+    "asserted_at": "2026-07-31T00:17:29.113000000+00:00",
+    "asserted_by": "model",
+    "direction": "min",
+    "evidence_sha256": "dd3c9288a00c3ffa7932dfae4a9860c61d0f96796746f77dbc35de16266a779f",
+    "evidence_url": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dw7566d1a7/images/Corporate-PDFs/Reports%20financial%20/Prospectus/Gatwick_Funding_Limited_Base_Prospectus_March_2019.pdf",
+    "model": "gpt-5.6-terra",
+    "quote": "Senior ICR is at all times equal to or greater than 1.40x",
+    "rationale": "Under the Common Terms Agreement",
+    "stated_value": 1.4,
+    "status": "proposed",
+    "value_kind": "threshold"
+   }
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:249",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MAY_SOURCE_THRESHOLD",
+   "props": {
+    "asserted_at": "2026-07-31T00:17:29.162000000+00:00",
+    "asserted_by": "model",
+    "direction": "max",
+    "evidence_sha256": "dd3c9288a00c3ffa7932dfae4a9860c61d0f96796746f77dbc35de16266a779f",
+    "evidence_url": "https://www.gatwickairport.com/on/demandware.static/-/Sites-Gatwick-Library/default/dw7566d1a7/images/Corporate-PDFs/Reports%20financial%20/Prospectus/Gatwick_Funding_Limited_Base_Prospectus_March_2019.pdf",
+    "model": "gpt-5.6-terra",
+    "quote": "Senior RAR is at all times equal to or less than 0.70x",
+    "rationale": "Under the Common Terms Agreement",
+    "stated_value": 0.7,
+    "status": "proposed",
+    "value_kind": "threshold"
+   }
+  },
+  {
    "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:42",
    "type": "MEASURED_BY",
@@ -35154,6 +35751,54 @@
    "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:43",
    "type": "MEASURED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:235",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MEASURES",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:247",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MEASURES",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:250",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MEASURES",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:251",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MEASURES",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:252",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MEASURES",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:253",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MEASURES",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:254",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:47",
+   "type": "MEASURES",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:255",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
+   "type": "MEASURES",
    "props": {}
   },
   {
@@ -36603,6 +37248,48 @@
    "props": {}
   },
   {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:234",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:233",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:236",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:233",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:237",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:233",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:240",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:238",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:241",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:239",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:243",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:242",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:249",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:248",
+   "type": "PRODUCED_BY",
+   "props": {}
+  },
+  {
    "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:59",
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:121",
    "type": "PRODUCED_BY",
@@ -37104,6 +37791,20 @@
    }
   },
   {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:236",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:51",
+   "type": "REPORTS",
+   "props": {
+    "asserted_at": "2026-07-31T00:01:51.912000000+00:00",
+    "asserted_by": "model",
+    "basis": "research result classified as reporting this event",
+    "evidence_sha256": "5d2080dcdf8b7fb5454ccf72450b9e74158b2484c58340b7ebf248b27557ad31",
+    "evidence_url": "https://www.rns-pdf.londonstockexchange.com/rns/4729S_1-2026-2-10.pdf",
+    "model": "gpt-5.6-terra",
+    "status": "proposed"
+   }
+  },
+  {
    "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:54",
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:49",
    "type": "REPORTS",
@@ -37203,6 +37904,18 @@
    "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:157",
    "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:48",
    "type": "TESTS",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:256",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:254",
+   "type": "WAIVES",
+   "props": {}
+  },
+  {
+   "src": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:256",
+   "dst": "4:8377cce2-1af9-4bc0-8d8f-de735ad32c9a:255",
+   "type": "WAIVES",
    "props": {}
   }
  ]
