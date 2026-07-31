@@ -25,6 +25,20 @@
             background:var(--glass);
             transition:background-color .12s ease, border-color .12s ease, color .12s ease; }
   .jump a:hover { background:var(--al-hi); border-color:var(--teal); color:var(--teal); }
+  .jump a.on { background:var(--tint-ac); border-color:var(--teal); color:var(--teal);
+               box-shadow:inset 0 -2px 0 var(--teal); }
+
+  /* Flip mode: one section at a time, for a projector. The sections all load on
+     page load regardless — flipping only changes what is displayed, so moving
+     between them never waits on the network. */
+  .flipbar { display:flex; align-items:center; gap:10px; padding:2px; }
+  .flipbar .pos { font:600 12px/1 var(--mono); color:var(--dim);
+                  font-variant-numeric:tabular-nums; letter-spacing:.08em; }
+  .flipbar .hintk { font:400 11.5px/1 var(--sans); color:var(--dim); margin-left:auto; }
+  body.flip .sect { display:none; }
+  body.flip .sect.live { display:block; }
+  /* one section should fill the room, not float in the middle of a tall page */
+  body.flip .sect.live { min-height:calc(100vh - 210px); }
 
   .findings { border-top:1px solid var(--line); margin-top:12px; padding-top:11px;
               font:400 13px/1.62 var(--ink-2); color:var(--ink-2); }
@@ -181,9 +195,17 @@
        The news reaches plenty of financial ground, but it never reaches a loan promise.
        It can still tell you <i>which</i> promise to go and worry about. A model guesses at
        that link, and a person decides whether the guess was any good.</p>
-    <div class="jump">
-      <a href="#coverage">1 · What it reaches</a><a href="#chain">2 · What it's worth</a><a href="#queue">3 · Who decides</a><a href="#agent">4 · Ask it</a>
+    <div class="jump" id="jump">
+      <a href="#coverage" data-i="0">1 · What it reaches</a><a href="#chain" data-i="1">2 · What it's worth</a><a href="#queue" data-i="2">3 · Who decides</a><a href="#agent" data-i="3">4 · Ask it</a>
+      <button class="sm" id="modeBtn" onclick="setFlip(!FLIP)">show all</button>
     </div>
+  </div>
+
+  <div class="flipbar" id="flipbar" hidden>
+    <button class="sm" onclick="go(cur-1)" id="pv">← back</button>
+    <span class="pos" id="pos"></span>
+    <button class="p sm" onclick="go(cur+1)" id="nx">next →</button>
+    <span class="hintk">← → or 1–4</span>
   </div>
 
   <!-- 1 ------------------------------------------------------------------ -->
@@ -615,6 +637,51 @@ async function loadStats() {
   const e = j.edges.reduce((a, x) => a + x.n, 0);
   $('size').textContent = `${n} nodes · ${e} edges`;
 }
+
+/* ---- flip mode ------------------------------------------------------------
+   The four sections are the four steps of the argument, so on a projector they
+   read better one at a time. Everything still loads on boot; flipping only
+   changes what is shown. Preference is remembered so a rehearsal and the real
+   thing open the same way. */
+const SECTS = ['coverage', 'chain', 'queue', 'agent'];
+let cur = 0, FLIP = localStorage.getItem('mw-flip') !== '0';
+
+function go(i) {
+  cur = Math.max(0, Math.min(SECTS.length - 1, i));
+  SECTS.forEach((id, n) => $(id).classList.toggle('live', n === cur));
+  document.querySelectorAll('#jump a').forEach((a, n) => a.classList.toggle('on', n === cur));
+  if (FLIP) {
+    $('pos').textContent = `${cur + 1} / ${SECTS.length}`;
+    $('pv').disabled = cur === 0;
+    $('nx').disabled = cur === SECTS.length - 1;
+    document.querySelector('main').scrollTop = 0;
+  }
+}
+
+function setFlip(on) {
+  FLIP = on;
+  localStorage.setItem('mw-flip', on ? '1' : '0');
+  document.body.classList.toggle('flip', on);
+  $('flipbar').hidden = !on;
+  $('modeBtn').textContent = on ? 'show all' : 'one at a time';
+  go(cur);
+}
+
+document.querySelectorAll('#jump a').forEach(a => a.addEventListener('click', e => {
+  if (!FLIP) return;                       // in scroll mode the anchor still works
+  e.preventDefault(); go(+a.dataset.i);
+}));
+
+document.addEventListener('keydown', e => {
+  if (!FLIP) return;
+  const t = e.target.tagName;
+  if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
+  if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+  else if (e.key >= '1' && e.key <= String(SECTS.length)) { e.preventDefault(); go(+e.key - 1); }
+});
+
+setFlip(FLIP);
 
 loadStats();
 loadCoverage();

@@ -25,7 +25,7 @@
   .prop.ctl  { border-left-color:var(--teal); background:var(--tint-ac); }
   .prop.ref  { border-left-color:var(--err); background:var(--tint-err); }
   .prop.seen { border-left-color:var(--edge-strong); background:var(--al); }
-  .prop .hd { display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; }
+  .prop .hd, .cand .hd { display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; }
   .prop .pub { font:650 13px/1.35 var(--sans); color:var(--fg); }
   .prop .u { font:400 11px/1.45 var(--mono); color:var(--dim); margin-top:4px; }
   .prop .why { font:400 12.5px/1.55 var(--sans); color:var(--ink-2); margin-top:5px; }
@@ -40,6 +40,22 @@
   .prop.ref .edge .et { color:var(--err); }
   .quote { font:400 12px/1.55 var(--sans); color:var(--ink-2);
            border-left:2px solid var(--al-edge); padding-left:8px; margin-top:5px; }
+
+  /* The two lanes are the point of this column, so each panel says which it is. */
+  .lanehdr { font:600 10.5px/1.5 var(--mono); letter-spacing:.05em; text-transform:uppercase;
+             padding:6px 9px; border-radius:var(--r); margin-bottom:9px; }
+  .lanehdr.ctl { background:var(--tint-ac); color:var(--teal); border:1px solid var(--teal); }
+  .lanehdr.obs { background:var(--al); color:var(--ink-2); border:1px solid var(--edge-2); }
+  .lanehdr span { display:block; font:400 11.5px/1.5 var(--sans); letter-spacing:0;
+                  text-transform:none; margin-top:3px; }
+
+  .cand { border:1px solid var(--al-edge); border-left:3px solid var(--edge-strong);
+          border-radius:var(--r); background:var(--glass-2); padding:9px 11px; margin-bottom:8px; }
+  .cand.have { background:var(--al); border-left-color:var(--edge-2); }
+  .cand .ct { font:650 12.5px/1.4 var(--sans); color:var(--fg); margin-top:3px; }
+  .cand .cu { font:400 10.5px/1.45 var(--mono); color:var(--dim); margin-top:3px; }
+  .prog { font:400 11.5px/1.6 var(--mono); color:var(--ink-2); margin-top:7px;
+          padding-top:6px; border-top:1px solid var(--line); }
 
   .tally { display:flex; gap:14px; flex-wrap:wrap; padding:9px 11px;
            border:1px solid var(--al-edge); border-radius:var(--r);
@@ -62,14 +78,14 @@
     <a href="/explainers/architecture.html">Architecture</a>
   </nav>
   <span style="flex:1"></span>
-  <span id="bal" class="muted"></span>
+  <span id="size" class="muted"></span>
   <span id="stat" class="vfd">READY</span>
 </header>
 
 <main>
   <div class="col">
     <div class="sect">
-      <h2><span class="lbl">Ask</span> <span class="muted">you.com · deep research</span></h2>
+      <h2><span class="lbl">Ask</span> <span class="muted">you.com · deep research <span id="bal"></span></span></h2>
       <div class="body stack">
         <textarea id="q" style="min-height:110px"></textarea>
         <select id="preset" onchange="usePreset()">
@@ -119,6 +135,9 @@
       <h2><span class="lbl">To the graph</span>
           <span class="muted" id="ingMeta">nothing sent yet</span></h2>
       <div class="body">
+        <div class="lanehdr ctl">Controlled lane · documents
+          <span>Grows from the citations of a deep research job. A prospectus or an RNS
+            may source a covenant threshold.</span></div>
         <div class="stack">
           <div class="inert">Video is <b>observed</b> and may never produce a Fact or a
             covenant number. A prospectus, an RNS or an annual report found by research
@@ -133,6 +152,23 @@
           <div class="muted" id="ingHint">finish a deep research job first</div>
         </div>
         <div id="ing" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <div class="sect grow">
+      <h2><span class="lbl">To the corpus</span>
+          <span class="muted" id="vidMeta">no video search yet</span></h2>
+      <div class="body">
+        <div class="lanehdr obs">Observed lane · broadcast
+          <span>Grows from video the same question finds. A clip indexed here can be
+            searched and cited, and can never become a Fact or reach a covenant.</span></div>
+        <div class="stack">
+          <button id="vidBtn" onclick="findVideo()">FIND VIDEO FOR THIS QUESTION</button>
+          <div class="muted">You.com search, filtered to video hosts. Candidates only —
+            a search result is not evidence about the deal, so nothing is fetched until
+            you pick one.</div>
+        </div>
+        <div id="vid" style="margin-top:12px"></div>
       </div>
     </div>
   </div>
@@ -447,12 +483,144 @@ async function ingest(dry) {
   btns.forEach(b => b.disabled = false);
 }
 
+// ---------------------------------------------------------------------------
+// search -> corpus. The observed lane, and the mirror of the panel above: same
+// NDJSON stream, opposite provenance. Two calls on purpose — a query lists
+// candidates and stops, a url is a human's choice and runs fetch then index.
+// ---------------------------------------------------------------------------
+
+async function ndjson(body, onEvent) {
+  const r = await fetch('/api/ingest/video', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) {
+    const j = await r.json().catch(() => ({}));
+    throw new Error(j.error || `HTTP ${r.status}`);
+  }
+  const rd = r.body.getReader(), dec = new TextDecoder();
+  let buf = '';
+  while (true) {
+    const { value, done } = await rd.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      let e; try { e = JSON.parse(line); } catch { continue; }
+      onEvent(e);
+    }
+  }
+}
+
+const mmss = s => s == null ? '—' : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
+function candCard(c, i) {
+  const blocked = c.have || c.unavailable;
+  return `<div class="cand ${c.have ? 'have' : ''}" id="cand${i}">
+    <div class="hd">
+      <span class="badge ${c.have ? '' : 'b-ok'}">${c.have ? 'in corpus' : 'new'}</span>
+      <span class="muted">${esc(c.publisher || '')}</span>
+      <span style="flex:1"></span>
+      <span class="muted">${esc(mmss(c.duration))}</span>
+    </div>
+    <div class="ct">${esc(c.title || '')}</div>
+    <div class="cu">${esc(c.url)}</div>
+    <div class="muted" style="margin-top:4px">${esc(c.why || '')}</div>
+    ${blocked ? '' : `<div class="row" style="margin-top:8px">
+      <button class="sm" onclick="fetchIndex('${esc(c.url)}',${i})">FETCH AND INDEX</button></div>`}
+    <div class="prog" id="prog${i}" style="display:none"></div></div>`;
+}
+
+async function findVideo() {
+  const q = $('q').value.trim();
+  if (!q) return stat('write a question', 'var(--err)');
+  $('vidBtn').disabled = true;
+  $('vid').innerHTML = '';
+  $('vidMeta').textContent = 'searching';
+  stat('finding video', 'var(--warn)');
+  try {
+    await ndjson({ query: q }, e => {
+      if (e.note) {
+        $('vid').innerHTML += `<div class="muted" style="margin-bottom:8px">${esc(e.note)}</div>`;
+      } else if (e.candidates) {
+        const n = e.candidates.filter(c => !c.have && !c.unavailable).length;
+        $('vidMeta').textContent = `${n} new · ${e.rejected.length} rejected`;
+        $('vid').innerHTML += e.candidates.length
+          ? e.candidates.map(candCard).join('')
+          : '<div class="muted">no video candidates</div>';
+        if (e.rejected.length)
+          $('vid').innerHTML += `<div class="muted" style="margin-top:8px">
+            rejected ${e.rejected.length} non-video result(s): ` +
+            esc([...new Set(e.rejected.map(r => r.why))].join('; ')) + '</div>';
+        stat(`${n} new candidate(s)`, 'var(--ok)');
+      } else if (e.error) {
+        $('vid').innerHTML += `<div class="prop ref"><div class="why">${esc(e.error)}</div></div>`;
+        stat('search failed', 'var(--err)');
+      }
+    });
+  } catch (err) {
+    $('vid').innerHTML += `<div class="prop ref"><div class="why">${esc(err.message)}</div></div>`;
+    stat('search failed', 'var(--err)');
+  }
+  $('vidBtn').disabled = false;
+}
+
+async function fetchIndex(url, i) {
+  const btn = $(`cand${i}`).querySelector('button');
+  if (btn) btn.disabled = true;
+  const p = $(`prog${i}`);
+  p.style.display = '';
+  p.textContent = '';
+  const say = t => { p.innerHTML += esc(t) + '<br>'; };
+  $('vidMeta').textContent = 'fetching';
+  stat('fetching clip', 'var(--warn)');
+  try {
+    await ndjson({ url }, e => {
+      if (e.stage === 'fetch') say('· downloading, capped at 480p');
+      else if (e.progress) {
+        say(e.progress.pct == null ? `· ${e.progress.note}`
+                                   : `· ${e.progress.note} ${e.progress.pct}%`);
+        if (e.progress.pct == null) stat(e.progress.note, 'var(--warn)');
+      } else if (e.fetched) say(`· saved ${e.fetched.file} — ${e.fetched.size_mb} MB`);
+      else if (e.stage === 'index') say(`· uploading to TwelveLabs ${e.index_id}`);
+      else if (e.video_id) say(`· ready in ${e.seconds}s — video_id ${e.video_id}`);
+      else if (e.done) {
+        say(`· indexed as provenance_class=${e.done.provenance_class}. Searchable now;`);
+        say('  it can never become a Fact or reach a covenant.');
+        say('next, to fold it into the graph:');
+        e.done.next.split('\n').forEach(l => say('  ' + l.trim()));
+        $('vidMeta').textContent = 'indexed · observed';
+        stat('indexed — observed', 'var(--ok)');
+      } else if (e.error) {
+        say('! ' + e.error);
+        stat('ingest failed', 'var(--err)');
+      }
+    });
+  } catch (err) {
+    say('! ' + err.message);
+    stat('ingest failed', 'var(--err)');
+  }
+}
+
 async function loadBal() {
   const j = await api('GET', '/api/you/status');
-  $('bal').textContent = j.ok ? `balance ${j.balance}` : (j.error || 'key missing');
-  $('bal').style.color = j.ok ? 'var(--dim)' : 'var(--err)';
+  // Credit balance is operator detail, not a headline — it sits with the vendor it
+  // belongs to rather than in the masthead where every other page shows the graph.
+  $('bal').textContent = j.ok ? `· ${j.balance} credits` : `· ${j.error || 'key missing'}`;
+  $('bal').style.color = j.ok ? '' : 'var(--err)';
+}
+
+// the masthead reads the graph, the same as every other page
+async function loadSize() {
+  const j = await api('GET', '/api/graph/stats');
+  if (j.error) return;
+  const n = j.nodes.reduce((a, x) => a + x.n, 0), e = j.edges.reduce((a, x) => a + x.n, 0);
+  $('size').textContent = `${n} nodes · ${e} edges`;
 }
 loadBal();
+loadSize();
 loadJobs();
 
 // reattach on load: a running job resumes, otherwise restore the last result
