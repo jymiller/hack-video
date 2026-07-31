@@ -21,13 +21,13 @@ Credit systems run on a controlled document supply chain: things a lender is sen
 somebody accountable. News footage is none of that. So what is video actually worth to
 a credit desk?
 
-Material Witness indexes six UK broadcasters covering Gatwick's second runway with
-TwelveLabs, extracts entities, topics and timed segments with GPT-5.6, and builds a
-Neo4j graph whose schema encodes the answer rather than decorating it.
+Material Witness indexes nine broadcasters covering Gatwick with TwelveLabs, extracts
+entities, topics and timed segments with GPT-5.6, and builds a Neo4j graph whose schema
+encodes the answer rather than decorating it.
 
 Sources are controlled or observed. Observed sources produce Observations and may never
-produce a Fact or supply a covenant number. Measured, not asserted: 106 links between
-video and concept across six broadcasters, and zero reach either covenant.
+produce a Fact or supply a covenant number. Measured, not asserted: 160 links between
+video and concept across nine broadcasters, and zero reach either covenant.
 
 The useful half is the bridge. Observations attach to Risk nodes — channels of exposure
 like capital programme delivery — and covenants are exposed to the same risks. Risk is a
@@ -101,15 +101,15 @@ Live app: https://hack-video-v6kg.onrender.com
 Record this today against what already works. Screen share plus camera. Re-record freely;
 judges only see the latest.
 
-**Before you hit record:** hard-refresh every tab (`Cmd+Shift+R`), set macOS Appearance to
-Light, and hit the Render URL once to wake it — free tier sleeps after 15 minutes and the
-cold start is ~50 seconds.
+**Before you hit record:** hard-refresh every tab (`Cmd+Shift+R`) and hit the Render URL once
+to wake it — free tier sleeps after 15 minutes and the cold start is ~50 seconds. Every page
+is forced dark now, so the OS appearance setting no longer matters.
 
 | Time | On screen | Say |
 |---|---|---|
 | **0:00–0:12** | Your face | "Credit runs on documents somebody is accountable for. News footage is not that. So I spent two days asking what video is actually worth to a credit desk — and building the answer as a graph." |
-| **0:12–0:30** | Video page. Search already reads *jobs created by the expansion*. Click rank 1. | "Six UK broadcasters on Gatwick's second runway, indexed with TwelveLabs. I ask in English, and it takes me to the second Channel 4 says the number." *(let the clip say "two point two billion pounds")* |
-| **0:30–0:48** | Graph page, coverage table | "Every claim is linked to the concept it bears on. A hundred and six links, six broadcasters. And on the two covenant rows — zero. Not a gap. News does not carry covenant data, and a system that pretended otherwise would be lying." |
+| **0:12–0:30** | Video page. Search already reads *jobs created by the expansion*. Click rank 1. | "Nine broadcasters on Gatwick, indexed with TwelveLabs. I ask in English, and it takes me to the second Channel 4 says the number." *(let the clip say "two point two billion pounds")* |
+| **0:30–0:48** | Graph page, coverage table | "Every claim is linked to the concept it bears on. A hundred and sixty links, nine broadcasters. And on the two covenant rows — zero. Not a gap. News does not carry covenant data, and a system that pretended otherwise would be lying." |
 | **0:48–1:05** | Graph page, the risk chain | "So here is the useful half. Observations attach to risks — channels of exposure. Covenants are exposed to the same risks. But risk is a sink: both arrows point in. To get from footage to a covenant you traverse that edge backwards, and you can see it in the query. Video moves where I look. It never moves what I read." |
 | **1:05–1:24** | **So what page, the counter-example table** | "And then the other half. Feed it a compliance certificate and it reaches the covenant instantly. The drone shut Britain's second airport and led every bulletin on earth — the year it happened these read two point nine three and nought point five nine, both clear, and the word 'drone' is not in that annual report once. Two years later, a pandemic nobody filmed here: minus one point four nine, and two officers signing to say a default had occurred. It's not incapable. It's discriminating." |
 | **1:24–1:40** | Attestation panel — the rejected edge | "The model proposed that an eleven-hour water outage could hit interest cover. It could not: no flight was cancelled, the airport never closed. I rejected it, signed and timestamped — and the rejection is still there. Kept, and read by nothing." |

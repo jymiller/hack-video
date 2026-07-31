@@ -18,6 +18,44 @@ VIDEO_DIR = pathlib.Path("video")
 app = FastAPI()
 client = httpx.AsyncClient(timeout=600.0)
 
+# ---- freeze mode -----------------------------------------------------------
+# FROZEN=1 parks the app after the event. There is no auth on this service and it
+# is deployed on a public URL, so every route that spends TwelveLabs, OpenAI or
+# You.com credit is one anonymous click away from a bill. Frozen, those routes
+# answer 503 with an explanation instead.
+#
+# This is a courtesy, not the control — revoke the keys at the vendor for that.
+# What it buys is a demo that reads as deliberately parked rather than broken.
+#
+# Graph reads stay open on purpose: Neo4j costs nothing per call, and the pages
+# that carry the argument — story, architecture, the reasoning walkthrough — are
+# all served from it.
+FROZEN = os.environ.get("FROZEN", "").strip().lower() in ("1", "true", "yes", "on")
+
+SPENDS = (
+    "/api/indexes", "/api/tasks", "/api/index-local", "/api/upload",
+    "/api/search", "/api/analyze", "/api/agent", "/api/nl2cypher",
+    "/api/ks", "/api/ia/fetch", "/api/ingest/video", "/api/research/ingest",
+    "/api/you/search", "/api/you/research",
+)
+
+
+@app.middleware("http")
+async def freeze(request: Request, call_next):
+    if FROZEN and request.url.path.startswith(SPENDS):
+        return JSONResponse({
+            "error": "frozen",
+            "detail": "This demo is parked after the hackathon. The call would spend "
+                      "TwelveLabs, OpenAI or You.com credit, so it is switched off. "
+                      "Every page still reads live from the graph.",
+        }, status_code=503)
+    return await call_next(request)
+
+
+@app.get("/api/frozen")
+async def frozen_state():
+    return {"frozen": FROZEN}
+
 
 async def tl(method, path, **kw):
     r = await client.request(method, f"{BASE}{path}", headers=HDR, **kw)
@@ -44,15 +82,10 @@ async def create_index(req: Request):
     })
 
 
-@app.put("/api/indexes/{index_id}")
-async def rename_index(index_id: str, req: Request):
-    body = await req.json()
-    return await tl("PUT", f"/indexes/{index_id}", json={"index_name": body["index_name"]})
-
-
-@app.delete("/api/indexes/{index_id}")
-async def delete_index(index_id: str):
-    return await tl("DELETE", f"/indexes/{index_id}")
+# No route here mutates or destroys a TwelveLabs index. There is no auth anywhere in this
+# app, and it is deployed on a public URL, so an unauthenticated DELETE was one curl away
+# from destroying the corpus the whole demo reads from. Rename went with it: same exposure,
+# no page called it. Both are still available from the TwelveLabs console.
 
 
 @app.get("/api/indexes/{index_id}/videos")
@@ -429,12 +462,6 @@ async def job_get(job_id: str):
     if not j:
         return JSONResponse({"error": "unknown job"}, status_code=404)
     return j
-
-
-@app.delete("/api/jobs/{job_id}")
-async def job_del(job_id: str):
-    JOBS.pop(job_id, None)
-    return {"ok": True}
 
 
 # Research findings → graph proposals. The controlled lane's only route to growth:

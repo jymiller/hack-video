@@ -96,8 +96,10 @@ to primary filings.
 
 ## Open, in the order I would do them
 
-1. **`DELETE /api/indexes/{id}` is live, unauthenticated, on a public URL.** One curl destroys
-   the TwelveLabs index. Guard it or remove it. This is the only thing here I would call urgent.
+1. ~~**`DELETE /api/indexes/{id}` is live, unauthenticated, on a public URL.**~~ **Closed.**
+   Removed, along with `PUT /api/indexes/{id}` (rename — same exposure, no page called it) and
+   `DELETE /api/jobs/{id}`. No page in `static/` referenced any of the three. `DELETE` now 405s.
+   There is still **no auth anywhere in this app**, so treat every new mutating route as public.
 2. **`ingest_video index` has no duplicate guard.** `fetch` refuses to re-download but `index`
    will happily upload the same clip twice — it did, tonight. Whoever clicks twice pays twice.
 3. **Aura is behind again.** It has the 247/661 state; local is 289/902. Re-sync with
@@ -112,6 +114,25 @@ to primary filings.
    implemented.
 
 ---
+
+## Parking it — freeze mode
+
+`FROZEN=1` on Render (or in `.env`) makes every route that spends TwelveLabs, OpenAI or
+You.com credit answer **503** with an explanation. Graph reads stay open, so `/story.html`,
+the architecture page and the reasoning walkthrough all still work — they read Aura, which
+costs nothing per call. `GET /api/frozen` reports the state.
+
+**Freeze is a courtesy, not the control.** The app has no auth on a public URL, so the actual
+spend ceiling comes from **revoking the three keys at the vendor**. The flag exists so a parked
+demo reads as deliberate rather than broken.
+
+The expensive routes, in the order they would hurt: `/api/agent` and `/api/nl2cypher` (OpenAI,
+unbounded per call — an agent loop is multi-turn), `/api/you/research` (deep research tier),
+`/api/upload` and `/api/index-local` (burn the 600 free TwelveLabs minutes), then
+`/api/analyze` and `/api/ks/ask` per call.
+
+**Aura Free pauses after 3 days idle**, so even frozen, the graph pages go dark on their own
+within a week unless somebody wakes it.
 
 ## Traps added today
 

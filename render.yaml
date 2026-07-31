@@ -12,9 +12,15 @@ services:
     healthCheckPath: /
     autoDeployTrigger: commit
     envVars:
+      # Park the demo without taking it down. Set FROZEN=1 in the dashboard and every
+      # route that spends TwelveLabs, OpenAI or You.com credit answers 503 with an
+      # explanation; the graph pages carry on reading from Aura, which costs nothing.
+      # This is a courtesy, not the control — revoke the keys at the vendor for that.
+      - key: FROZEN
+        value: ""
       # sync: false — Blueprint prompts once at creation, value lives in the
-      # dashboard and never in git. A blank one crash-loops the service on
-      # TWELVELABS_API_KEY (server.py reads it with [] at import).
+      # dashboard and never in git. A blank key is safe now: server.py reads it
+      # with .get(), so the call that needs it fails instead of the whole app.
       - key: TWELVELABS_API_KEY
         sync: false
       - key: OPENAI_API_KEY

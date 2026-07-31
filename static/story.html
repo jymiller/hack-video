@@ -153,8 +153,8 @@
 
   <div class="kick">Gatwick Funding Limited · senior secured notes</div>
   <h1 class="big">The loudest story of the summer was the one that mattered least.</h1>
-  <p class="sub">Six broadcasters. One runway decision. What was any of it worth to somebody
-     holding the debt?</p>
+  <p class="sub">Nine broadcasters. One airport carrying listed debt. What was any of it worth
+     to somebody holding that debt?</p>
 
   <div class="nums" id="nums"></div>
 
@@ -220,13 +220,17 @@ async function load() {
     const withRoom = cov.map(c => ({ ...c, r: room(c) })).sort((a, b) => a.r - b.r);
     const tight = withRoom[0] || {}, easy = withRoom[withRoom.length - 1] || {};
 
-    const links = (await cy(`MATCH ()-[c:CANDIDATE_FOR]->() RETURN count(c) AS n`))[0]?.n ?? 106;
+    const links = (await cy(`MATCH ()-[c:CANDIDATE_FOR]->() RETURN count(c) AS n`))[0]?.n ?? 160;
+    // Broadcasters are the publishers that actually carry video. The other Sources are the
+    // controlled lane — filings, RNS, Fitch — and must never be counted as footage.
+    const casters = (await cy(`MATCH (:Segment)--(s:Source)
+      RETURN count(DISTINCT s.publisher) AS n`))[0]?.n ?? 9;
 
     $('nums').innerHTML = `
       <div class="num nil">
         <div class="n">0</div>
         <div class="lab">links from video reach a covenant</div>
-        <div class="say">${links} links across six broadcasters. Not one lands on a promise.</div>
+        <div class="say">${links} links across ${casters} broadcasters. Not one lands on a promise.</div>
       </div>
       <div class="num hot">
         <div class="n">${tight.r}%</div>

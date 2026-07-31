@@ -13,7 +13,7 @@ certificates. **News footage is none of that.** Nobody sent it, nobody is on the
 and it was not produced for the lender. A system that quietly treats a broadcast like a filing
 is lying about where its numbers came from.
 
-So this indexes six UK broadcasters covering Gatwick's second runway with **TwelveLabs**, turns
+So this indexes nine broadcasters covering Gatwick with **TwelveLabs**, turns
 their timecoded segments into typed claims and canonical entities with **GPT-5.6**, and writes
 the lot into a **Neo4j** graph whose schema *encodes* that argument rather than decorating it.
 
