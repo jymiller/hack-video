@@ -77,13 +77,18 @@ Three figures are spoken on air across the corpus. Here is where each of them la
 
 And the two promises are not equally tight:
 
-| Covenant | Test | Latest | Headroom |
-|:--|:--|--:|--:|
-| Senior ICR | min **1.50×** | 3.59× | **139%** |
-| **Senior RAR** | max **0.70** | 0.61 | **12.9%** |
+| Covenant | Trigger Event | Event of Default | **31 March 2018** | Headroom to trigger |
+|:--|:--|:--|--:|--:|
+| Senior ICR | min **1.50×** | 1.10× | 3.59× | **139%** |
+| **Senior RAR** | max **0.70** | 0.85 | 0.61 | **12.9%** |
 
-Both figures come from Gatwick Airport Limited's **own audited accounts**, cited on the node,
-never from footage.
+Both ratios come from Gatwick Airport Limited's **own audited accounts**, cited on the node,
+never from footage. Both thresholds come from the **Common Terms Agreement dated 15 February
+2011**. The two tiers do different things: a Trigger Event locks up distributions, an Event of
+Default risks acceleration.
+
+**The 0.61 is the 31 March 2018 vintage** — the most recent filing loaded, and it is labelled
+as such everywhere it is quoted. It is not a current ratio and must never be read as one.
 
 Put the two tables together and the finding falls out. The £2.2bn is debt-funded capital
 spending, and it is the **only** figure in the corpus landing on a channel that the *tight*
@@ -92,6 +97,33 @@ the cover test** — months before the filing that settles it exists.
 
 The footage supplied no ratio and moved no number. It could not have. It told a reader *which
 of two tests to go and open*, early. **That gap is the whole product.**
+
+## The counter-example — what admissible evidence looks like
+
+A negative is only worth anything if the same graph can be shown reaching a covenant when the
+evidence is admissible. The So what page carries that too, read live: the same two covenants,
+tested twice a year, entirely from Gatwick's own compliance certificates.
+
+| Tested | Senior ICR · trigger 1.50, default 1.10 | Senior RAR · trigger 0.70, default 0.85 | |
+|:--|--:|--:|:--|
+| **31 March 2019** | **2.93** | **0.59** | **clear — and this is the drone year** |
+| 31 December 2020 | (1.29) | 0.94 | both through Event of Default |
+| **31 December 2021** | **(1.49)** | **0.81** | ICR through Default; RAR through Trigger only |
+
+The drone shut Britain's second airport and led every bulletin on earth, and the financial
+year containing it tested clear on both — *"all financial covenants have been tested and
+complied with as at 31 March 2019"*. **The word "drone" appears zero times in that 103-page
+report.** Two years later, a pandemic nobody filmed at Gatwick put interest cover at −1.49,
+and two officers signed a certificate saying a Default had occurred and was continuing. It was
+waived: the **Amendment and Waiver Agreement dated 8 September 2021**, and before it the **22
+September 2020 Amendments**.
+
+Loud is not material, and material is not loud. The system reads the video and honestly
+reports zero; it reads the certificate and carries it all the way to the threshold. **It is
+not incapable — it is discriminating**, and that is the difference the counter-example exists
+to prove. Working and sources: [`docs/07-the-counter-example.md`](docs/07-the-counter-example.md).
+
+---
 
 And the discipline is the other half of it. The water outage led every bulletin and was worth
 nothing. A model said otherwise. A person overruled it.
@@ -210,6 +242,7 @@ graph/risk.py             the risk layer               graph/assert_impact.py  t
 graph/agent.py            the Strands agent            graph/attestations.py   export/restore
 graph/export.py           lossless dump; discovers temporal types at dump time
 docs/05-the-data-model.md   the model    docs/06-the-run-of-show.md   the three minutes
+docs/07-the-counter-example.md  every covenant figure, sourced to the filing it came from
 ```
 
 ---
@@ -230,9 +263,16 @@ broadcasters through surface forms as bad as *"get work"* — and then left `Gat
 `Gatwick Airport Limited` as **two separate nodes**. `graph/entities.py status` reports that
 rather than hiding it.
 
-**The controlled lane is thin.** One controlled source is loaded — the audited accounts — and it
-carries two `Fact`s, both covenant figures, both cited (year ended 31 March 2018, the most
-recent filing loaded). The prospectus is a lead, not a load. Covenant structures, thresholds and
-breach directions are real and cited; the deal lane exists in full in the schema.
+**The controlled lane is thin.** Two primary documents are loaded: Gatwick Airport Limited's
+audited accounts for the year ended 31 March 2018, which carry both covenant `Fact`s, and the
+Compliance Certificate for the Calculation Date 31 December 2021, signed by the CEO and CFO,
+which carries the ratio history and the waiver. Everything else in that lane — the prospectuses,
+the RNS entry — is a **model-proposed lead, not a load**. Covenant structures, thresholds and
+breach directions are real and cited to the Common Terms Agreement dated 15 February 2011.
+
+**We do not hold the waiver agreement itself.** What is held are filing-grade documents that
+name and describe it — a compliance certificate stating a Default "has occurred and is
+continuing" is strong, but it is not the Amendment and Waiver Agreement. Nor is the earlier
+**22 September 2020** waiver in the graph, though it covers the worse breach. Say so if asked.
 
 Understating any of the above would be against the entire point of the project.

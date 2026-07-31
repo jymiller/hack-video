@@ -2,6 +2,9 @@
 
 *Proposed, not settled. See [`../STATUS.md`](../STATUS.md).*
 
+*Corrected 30 July against primary filings. [`07-the-counter-example.md`](07-the-counter-example.md)
+is the authority for every figure on this page; where the two disagree, 07 wins.*
+
 ## Why Gatwick
 
 The DataHub work produced a demonstration corpus built around **Meridian Cold Storage
@@ -21,8 +24,17 @@ waive the covenants.**
 |---|---|
 | Listed secured bonds via Gatwick Funding Ltd | ~£2.5bn, maturities 2024–2050 |
 | Senior interest cover ratio, year ended 31 Mar 2018 | 3.59× — down from 3.96× |
-| Covenants | Senior ICR and Senior RAR (debt ratio) |
-| **August 2021** | **Lenders waived both, on £2.8bn of reference net debt, at the Dec 2021 and Jun 2022 test points** |
+| Covenants | Senior ICR and Senior RAR (debt ratio), both in the **Common Terms Agreement dated 15 February 2011**, tested at 30 June and 31 December |
+| Senior ICR tiers | **Trigger Event** below 1.50 · **Loan Event of Default** at or below 1.10 |
+| Senior RAR tiers | **Trigger Event** above 0.70 · **Loan Event of Default** above 0.85 |
+| **22 September 2020 Amendments** | **Waived both at the Dec 2020 and Jun 2021 test points — the worse breach of the two** |
+| **Amendment and Waiver Agreement, 8 September 2021** | **Waived both again, on £2.8bn of reference net debt, at the Dec 2021 and Jun 2022 test points** |
+
+**Two waivers, not one, and the dates matter.** August 2021 is when discussions with lenders
+began; the agreement is dated **8 September 2021**. The earlier **22 September 2020**
+amendments cover the worse breach and had a price — quarterly information packages, a £225m /
+£150m liquidity test with an Event of Default at the lower level, and no Restricted Payments
+before 31 December 2021.
 
 Gatwick is financed the way infrastructure credit is financed, its covenants are disclosed,
 and there is a documented, public, real covenant event to point at. That is exactly what
@@ -33,19 +45,29 @@ Enid exists to see coming, and it gives the demo an ending that can be checked.
 | | The drone | The pandemic |
 |---|---|---|
 | When | 19–21 December 2018 | From March 2020 |
-| Flights cancelled | ~1,000 | — |
-| Passengers affected | ~140,000 | Traffic collapsed |
-| Closure | ~33–36 hours | — |
-| Cost to airlines | ~£50m | — |
-| **Cost to Gatwick itself** | **~£1.4m** | **~£2bn pre-tax loss for 2020** |
-| **Covenant outcome** | **None** | **Senior ICR and Senior RAR waived** |
+| Flights cancelled | ~1,000 — news only, absent from the filings | — |
+| Passengers affected | ~140,000 on television; **164,000 fewer** in Gatwick's own March 2019 prospectus | Traffic collapsed |
+| Closure | ~33–36 hours on television; **31 hours** in the prospectus | — |
+| Cost to airlines | ~£50m — extrapolated by journalists, not primary | — |
+| **Cost to Gatwick itself** | **~£1.4m — the Guardian's figure, and it does not appear in the annual report** | **Loss before tax £525.9m (2020) and £368.7m (2021)** |
+| **Covenant outcome** | **None — FY March 2019 tested Senior ICR 2.93 and Senior RAR 0.59, both clear** | **Senior ICR −1.29 then −1.49; both covenants waived, twice** |
 | Television coverage | Wall-to-wall, worldwide | Diffuse, months of it |
 
 **Obvious reading:** the airport was shut down by drones and it was on every news channel on
 earth, so that is the credit event.
 
-**Right reading:** the drone cost Gatwick about £1.4m and moved nothing. The pandemic cost
-about £2bn and its lenders had to waive the covenants.
+**Right reading:** the drone moved nothing the covenant reads. The financial year containing
+it tested at 2.93 and 0.59 against a 1.50 floor and a 0.70 ceiling, and Ivy Holdco's accounts
+record all covenants "tested and complied with". The pandemic put interest cover *negative* —
+−1.29 at December 2020, −1.49 at December 2021, against a 1.10 Event of Default floor — and
+the lenders had to waive twice.
+
+**Do not say the cost figures on stage.** The £1.4m exists only in journalism and journalists
+disagree about it by an order of magnitude (the Guardian's £1.4m against airport-technology's
+unattributed £15m). And the losses are the Security Group's — Ivy Holdco Limited consolidated,
+which is the group the covenants are tested on — but **a loss is not a covenant test**. Senior
+ICR and Senior RAR are. Lead with the ratios; they come from the filing, and they are what the
+lenders actually read.
 
 A system that reacts to the loudest footage gets this backwards. One that follows the
 footage through to passenger volumes, then earnings, then the ratio the bonds are tested
@@ -89,10 +111,15 @@ in a bond covenant, and answers the question no single clip can:
 
 Drone footage playing, chaos in the terminal. A flat voice cuts in:
 
-> *"One thousand flights cancelled. One hundred and forty thousand passengers. Cost to the
-> airport: one point four million. Interest cover unaffected. This is not the one."*
+> *"Thirty-one hours shut. A hundred and sixty-four thousand fewer passengers. Interest cover
+> that year: two point nine three, against a floor of one point five. This is not the one."*
 
 Then the graph jumps to March 2020.
+
+**Every number in that line is from a filing.** The earlier draft led on cost — *"one point
+four million"* — which is a newspaper's figure that Gatwick's own annual report does not
+carry. Leading with the ratios is both truer and, given the argument, better theatre: the
+televised numbers and the covenant numbers are not the same numbers.
 
 Carried on sound over footage the judge is already watching, saying something
 counter-intuitive inside the first fifteen seconds. It is not a graph drawing itself, which

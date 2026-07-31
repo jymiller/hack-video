@@ -6,6 +6,11 @@ AWS Builder Loft, 525 Market St, San Francisco.**
 Read this first, then [`STATUS.md`](STATUS.md), then
 [`docs/06-the-run-of-show.md`](docs/06-the-run-of-show.md).
 
+**Before you say any Gatwick number out loud**, read
+[`docs/07-the-counter-example.md`](docs/07-the-counter-example.md). Several figures this repo
+carried from its first commit were checked against primary filings on 30 July and one of them
+was a competitor's. See *Numbers this repo had wrong* below.
+
 ---
 
 ## Get running in three commands
@@ -29,6 +34,7 @@ A four-page local app against the hackathon's vendor stack, plus a Neo4j graph w
 
 | Page | URL | What it does |
 |---|---|---|
+| So what | `/story.html` | The argument end to end, read live from the graph — including the **counter-example table**: the same two covenants tested twice a year from Gatwick's compliance certificates. Beat 3a of the run of show points at it |
 | Video | `/` | TwelveLabs — index, drag-drop, cross-video search, **click a hit and the video seeks to that second**, streaming Pegasus analysis |
 | Archive | `/archive.html` | Internet Archive metadata + full-text search, fetch straight into the corpus |
 | Research | `/research.html` | You.com quick search and deep research; jobs run server-side and survive navigation |
@@ -47,6 +53,24 @@ six broadcasters, and **zero reach either covenant concept**. The graph declines
 gap that does not exist, and saying so is the product.
 
 Full model: [`docs/05-the-data-model.md`](docs/05-the-data-model.md).
+
+---
+
+## Numbers this repo had wrong until 30 July — do not reintroduce them
+
+A research pass checked every Gatwick figure against primary filings. Working, sources and the
+full ratio history: [`docs/07-the-counter-example.md`](docs/07-the-counter-example.md). **That
+document is the authority. If any other file here disagrees with it, that file is wrong.**
+
+| Carried since the first commit | The filing |
+|---|---|
+| "~£2bn pre-tax loss for 2020" | **That is Heathrow's £2.01bn.** Gatwick's Security Group (Ivy Holdco consolidated) lost **£525.9m** before tax in 2020 and **£368.7m** in 2021 — under £900m combined. Out by ~4x, and borrowed from a competitor |
+| "Lenders waived in August 2021" | **Two waivers.** The agreement is dated **8 September 2021**; August is when talks began. The earlier **22 September 2020 Amendments** cover the worse breach (Dec 2020: ICR −1.29, RAR 0.94, both through Event of Default) |
+| "The covenant is 1.50" | 1.50 is the **Trigger Event**; the **Loan Event of Default** is 1.10. RAR: 0.70 trigger, 0.85 default. Common Terms Agreement dated 15 February 2011 |
+| "0.61 against 0.70, 12.9% headroom" | Arithmetic is right, **the date is 31 March 2018**. Label it every single time — bare, it reads as current, and it is seven years old |
+| "~£1.4m drone cost", stated flat | The Guardian's figure, **absent from Gatwick's annual report**, and another outlet says £15m. Attribute it or drop it. Lead with the ratios instead |
+| "The drone had no covenant consequence" (inferred) | **Now proven.** FY March 2019 tested ICR **2.93** and RAR **0.59** — both clear, "all financial covenants have been tested and complied with". And **"drone" appears zero times in that 103-page report** |
+| "~140,000 passengers, ~33–36 hours" | Those are the television numbers. Gatwick's own March 2019 prospectus says **31 hours** and **164,000 fewer passengers**. Both are quotable; say which document each came from |
 
 ---
 
@@ -122,6 +146,7 @@ graph/voice.py         narration, offline      graph/bakeoff.py   the model comp
 graph/strands_hello.py verified Strands agent  graph/dump/        full graph export (JSON)
 graph/knowledge_store.py  multi-turn Q&A over the corpus — off the run-of-show path
 docs/05-the-data-model.md   the model     docs/06-the-run-of-show.md   the three minutes
+docs/07-the-counter-example.md  every covenant figure, sourced — the authority on all of them
 docs/explainers/*.html      six explainers, house style
 video/                 6 clips, 171MB, gitignored
 audio/                 rendered narration, gitignored
@@ -177,10 +202,21 @@ reproduced; it has been corrected to say what is actually true.
   Do not spend time re-searching. Five other candidates exist and all are small channels —
   `bLprsy_tLs0` (LONDONER) is the best second source if corroboration is wanted, but it is a
   10-subscriber channel and that is a credibility trade John should make deliberately.
-- **Covenant thresholds are `not_sourced`** and deliberately null. A You.com search surfaced
-  the actual Gatwick Funding prospectus PDF on gatwickairport.com — that is the lead.
-- **No controlled-lane source is loaded.** Both lanes exist in the schema; only `observed` has
-  data. Loading the prospectus would populate the other side.
+- ~~Covenant thresholds are `not_sourced`.~~ **Closed 30 July.** Both read
+  `threshold_status: 'sourced'` with a citation and now carry **two tiers**:
+  `threshold_value` is the **Trigger Event** (ICR 1.50, RAR 0.70) and `threshold_default` is
+  the **Loan Event of Default** (ICR 1.10, RAR 0.85). Both sit in the **Common Terms Agreement
+  dated 15 February 2011**. Anywhere prose says "the covenant is 1.50" without saying *trigger*,
+  it is wrong.
+- ~~No controlled-lane source is loaded.~~ **Closed 30 July.** Two are: GAL's audited accounts
+  for the year ended 31 March 2018, and the **Compliance Certificate for the Calculation Date
+  31 December 2021**, dated 7 March 2022 and signed by Stewart Wingate (CEO) and Jim Butler
+  (CFO). The certificate is the stronger artifact — paragraph 6(a) states a Default "has
+  occurred and is continuing" and names the waiver. Everything else in the controlled lane is
+  a model-proposed lead, not a load.
+- **We do not hold the Amendment and Waiver Agreement itself**, nor the 2020 STID proposal, nor
+  an RNS of either waiver, nor a rating action. What is held are filing-grade documents that
+  name and describe it. Say that if asked; do not imply otherwise.
 - **Extraction reads transcripts only**, so every modality came back `spoken`. The on-screen
   figures Pegasus reported are not captured; that needs a per-segment OCR pass.
 
