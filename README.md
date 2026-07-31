@@ -33,6 +33,8 @@ declines to bridge that gap is the product.
 
 ---
 
+![The So what page — the claim, the three numbers, and the doors into the proof](docs/img/01-so-what.png)
+
 ## The bridge — where video earns its place
 
 A negative finding on its own dead-ends. The useful half is this shape:
@@ -56,6 +58,8 @@ the provenance rule is a query anyone can run, not a promise anyone has to take:
 // integrity check — must return zero rows
 MATCH (f:Fact)-[:FROM]->(s:Source {provenance_class:'observed'}) RETURN f;
 ```
+
+![The architecture — two lanes through the same five stages. The controlled lane reaches the covenant. The observed lane stops, by construction](docs/img/04-architecture.png)
 
 > ### Video can move where a credit analyst looks. It can never move what they read.
 
@@ -93,6 +97,8 @@ And the discipline is the other half of it. The water outage led every bulletin 
 nothing. A model said otherwise. A person overruled it.
 
 ---
+
+![Concept coverage — five green rows totalling 106, then the two covenant rows at zero](docs/img/03-reasoning.png)
 
 ## A model may only ever propose
 
@@ -138,6 +144,8 @@ demonstrably spoken content as on-screen text and then asserted nothing was spok
 is derived by transcript-matching instead.
 
 ---
+
+![The corpus as a manifest — each source showing the figures it yielded, what it covers, who corroborates it, and which risk it bears on](docs/img/02-news.png)
 
 ## Stack
 
