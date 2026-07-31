@@ -23,9 +23,17 @@ is wrong anyway:
   · A covenant number is only written from a source the classifier called controlled.
     If it called it observed and extracted a number anyway, the number is REFUSED and
     the refusal is printed. Structure, not prompt discipline.
+  · A number is only a covenant number if the model says it is a LIMIT. A compliance
+    table prints the ratio achieved beside the level that must not be crossed, and
+    the first live run duly handed back 3.74 as a covenant threshold. It is not: it
+    is a result. Results are Fact-shaped, this pipeline does not write Facts, and so
+    a `tested_level` is refused rather than mislabelled.
   · Identity is sha256 of the canonical URL, exactly as graph/urls.py has it. A hash
     already in the graph is seen, and seen is settled — it is never re-derived and
     never sent to the model.
+  · An off-topic result is not proposed at all. Searching "Senior RAR" returns
+    Rarotonga flights, and a Source node for a fare comparison is noise even at
+    status='proposed'.
 
     python -m graph.research_ingest dry     <job_id|file.json>
     python -m graph.research_ingest propose <job_id|file.json>
@@ -59,6 +67,10 @@ if MODEL_ID == "gpt-5.6":
 APP = os.environ.get("HACK_APP", "http://127.0.0.1:8000")
 BATCH = 8          # citations per completion — bounded so one bad batch is not the run
 SNIPPET = 1400     # chars of citation text sent per result
+
+# The only value_kinds that are a covenant LIMIT. Anything else is a result and does
+# not belong on an edge into a Covenant.
+LIMIT_KINDS = {"threshold", "trigger", "default"}
 
 _drv = None
 
@@ -101,6 +113,13 @@ def sha(url: str) -> str:
 class CovenantClaim(BaseModel):
     covenant_code: str        # senior_icr | senior_rar — validated against the graph
     stated_value: float | None
+    # THE FIELD THAT STOPS A REAL MISTAKE. A compliance table prints the ratio the
+    # borrower ACHIEVED beside the levels it must not cross — "Senior ICR | 3.74 |
+    # <1.50 | <1.10". First live run, the model handed back 3.74 as the covenant
+    # number. It is not: it is a tested level, which is Fact-shaped, and this
+    # pipeline does not write Facts. Making the model name what the number IS turns
+    # a silent wrong answer into a refusable one.
+    value_kind: str           # threshold | trigger | default | tested_level | unknown
     direction: str            # min | max | unknown
     quote: str                # the words in the result that carry the number
     basis: str                # why this document would be the one that states it
@@ -177,12 +196,32 @@ FIELDS
   or expansion at all.
 - reports_event: if the page reports one of the listed events, its EXACT name from
   the list. Otherwise null.
-- covenant_claims: one entry for EACH listed covenant whose threshold or tested level
-  the text actually states — a prospectus usually states both in one sentence, so do
-  not stop at the first. Quote the words that carry each number. If the page merely
-  mentions covenants in general, return an empty list. Do not infer a number, do not
-  convert one, do not recall one from memory. An empty list is a normal and correct
-  answer.
+- covenant_claims: one entry for EACH listed covenant whose level the text actually
+  states — a prospectus usually states both in one sentence, so do not stop at the
+  first. Quote the words that carry each number. If the page merely mentions
+  covenants in general, return an empty list. Do not infer a number, do not convert
+  one, do not recall one from memory. An empty list is a normal and correct answer.
+- value_kind: what the number IS, and read the sentence carefully, because a
+  compliance table prints several numbers on one row:
+    threshold    — the level agreed in the finance documents that must not be
+                   crossed ("the Senior ICR shall not be less than 1.40:1").
+    trigger      — a tighter early-warning level in a reporting table.
+    default      — the level at which an event of default occurs.
+    tested_level — the ratio the borrower ACTUALLY ACHIEVED in a period
+                   ("the Senior ICR for the year ended 31 March 2018 was 3.59").
+                   This is a result, NOT a covenant level.
+    unknown      — you cannot tell which of the above it is.
+  In a row like "Minimum interest cover ratio | 3.74 | <1.50 | <1.10", the 3.74 is a
+  tested_level and the <1.50 is a trigger. Getting this backwards puts a performance
+  figure where a covenant limit belongs, which is the worst error available here
+  after the lane itself. If in doubt, say unknown.
+
+REPORT WHAT YOU SAW; THE PIPELINE DECIDES WHAT MAY BE WRITTEN. Fill in
+covenant_claims whenever the text states a level, INCLUDING when you have called the
+page observed. Do not suppress a claim because you think it will be rejected — the
+code refuses a covenant number from an observed source itself, and it can only do
+that visibly if you tell it what the page said. A refusal that a reader can see is
+the point; a claim you quietly withheld is invisible and proves nothing.
 
 You are reading a title, a URL and an extract. You are not reading the document. Say
 what those three support and nothing more."""
@@ -353,6 +392,15 @@ def run(job: dict, dry: bool = False):
                                    "why": "the model returned no verdict for this result"}}
                 continue
 
+            # Off-topic results are not proposed at all. A search for "Senior RAR"
+            # returns Rarotonga flights and flight-simulator scenery, and a Source
+            # node for a fare-comparison page is noise in the graph even at
+            # status='proposed'. Say what was dropped and why; write nothing.
+            if not v.relevant:
+                yield {"irrelevant": {"n": c["n"], "url": c["url"],
+                                      "publisher": v.publisher, "why": v.rationale}}
+                continue
+
             # A model may answer about something it was not asked. Drop it rather
             # than trust it — the same guard assert_impact.py applies to covenants.
             lane = v.lane if v.lane in ("controlled", "observed") else "observed"
@@ -367,6 +415,14 @@ def run(job: dict, dry: bool = False):
                 refusal = None
                 if claim.covenant_code not in cov_codes:
                     refusal = f"no covenant '{claim.covenant_code}' in the graph"
+                elif claim.value_kind not in LIMIT_KINDS:
+                    # A ratio the borrower achieved is a result, not a limit. It is
+                    # Fact-shaped, and this pipeline does not write Facts — a Fact
+                    # needs an as_of date, a unit and a human. So the number is
+                    # refused rather than filed under the wrong meaning.
+                    refusal = (f"'{claim.value_kind}' is not a covenant limit — a "
+                               "reported ratio is a result, and a result would be a "
+                               "Fact, which this pipeline does not write")
                 elif lane == "observed":
                     # THE MOMENT. An observed source may never supply a covenant
                     # number, whatever the model extracted. Structure refuses it; the
@@ -379,6 +435,7 @@ def run(job: dict, dry: bool = False):
                                        "publisher": v.publisher, "lane": lane,
                                        "covenant_code": claim.covenant_code,
                                        "stated_value": claim.stated_value,
+                                       "value_kind": claim.value_kind,
                                        "quote": claim.quote[:300], "why": refusal}}
                     continue
                 claims.append(claim)
@@ -458,14 +515,16 @@ def run(job: dict, dry: bool = False):
                                        x.validated_at=null
                        WITH x WHERE x.status = 'proposed'
                        SET x.asserted_by='model', x.model=$model, x.asserted_at=datetime(),
-                           x.stated_value=$val, x.direction=$dir, x.quote=$quote,
-                           x.rationale=$basis, x.evidence_sha256=$h, x.evidence_url=$url""",
+                           x.stated_value=$val, x.value_kind=$vk, x.direction=$dir,
+                           x.quote=$quote, x.rationale=$basis,
+                           x.evidence_sha256=$h, x.evidence_url=$url""",
                     h=c["sha"], cc=claim.covenant_code, model=MODEL_ID,
-                    val=claim.stated_value, dir=claim.direction, quote=claim.quote[:600],
-                    basis=claim.basis[:600], url=c["url"])
+                    val=claim.stated_value, vk=claim.value_kind, dir=claim.direction,
+                    quote=claim.quote[:600], basis=claim.basis[:600], url=c["url"])
                 n_edge += 1
                 written.append({"type": "MAY_SOURCE_THRESHOLD", "to": claim.covenant_code,
-                                "stated_value": claim.stated_value})
+                                "stated_value": claim.stated_value,
+                                "value_kind": claim.value_kind})
             yield {"written": {"n": c["n"], "source": "proposed", "edges": written}}
 
         yield {"done": {"proposed_sources": n_src, "proposed_edges": n_edge,
@@ -509,12 +568,17 @@ def _cli_stream(job, dry):
                 print(f"      REPORTS → {p['reports_event']}")
             for cc in p["covenant_claims"]:
                 print(f"      MAY_SOURCE_THRESHOLD → {cc['covenant_code']} "
-                      f"= {cc['stated_value']}  «{cc['quote'][:60]}»")
+                      f"= {cc['stated_value']} ({cc['value_kind']})  "
+                      f"«{cc['quote'][:52]}»")
         elif "refused" in ev:
             r = ev["refused"]
             print(f"  ✗ REFUSED   {(r['publisher'] or '?')[:24]:26} "
-                  f"{r['covenant_code']} = {r['stated_value']}")
+                  f"{r['covenant_code']} = {r['stated_value']} ({r['value_kind']})")
             print(f"      {r['why']}")
+        elif "irrelevant" in ev:
+            i = ev["irrelevant"]
+            print(f"  · not about this deal — not proposed: "
+                  f"{(i['publisher'] or '?')[:24]:26} {i['url'][:52]}")
         elif "dropped" in ev:
             print(f"  ! dropped [{ev['dropped']['n']}] {ev['dropped']['why']}")
         elif "error" in ev:
@@ -562,10 +626,10 @@ def cmd_status(argv):
             """MATCH (n:Source)-[x:MAY_SOURCE_THRESHOLD]->(c:Covenant)
                RETURN n.publisher AS pub, n.provenance_class AS lane,
                       c.covenant_code AS cov, x.stated_value AS val, x.status AS st,
-                      x.validated_by AS by, x.quote AS quote
+                      x.value_kind AS vk, x.validated_by AS by, x.quote AS quote
                ORDER BY st, cov""").data():
             print(f"  [{r['st']:9}] {r['lane']:11} {(r['pub'] or '?')[:22]:24} "
-                  f"→ {r['cov']} = {r['val']}")
+                  f"→ {r['cov']} = {r['val']} ({r['vk']})")
             print(f"      «{(r['quote'] or '')[:88]}»")
 
         print("\n=== invariants ===")
@@ -579,6 +643,13 @@ def cmd_status(argv):
             ("MAY_SOURCE_THRESHOLD asserted by the model, not 'proposed'",
              "MATCH ()-[x:MAY_SOURCE_THRESHOLD]->() "
              "WHERE x.asserted_by='model' AND x.status<>'proposed' RETURN count(*) AS n", 0),
+            # `NOT null` is null in Cypher, so a missing value_kind slips past a bare
+            # NOT-IN and the check silently passes. Test for absence explicitly.
+            ("MAY_SOURCE_THRESHOLD carrying a result rather than a limit",
+             "MATCH ()-[x:MAY_SOURCE_THRESHOLD]->() "
+             "WHERE x.value_kind IS NULL OR "
+             "NOT x.value_kind IN ['threshold','trigger','default'] "
+             "RETURN count(*) AS n", 0),
             ("Fact from an observed source",
              "MATCH (f:Fact)-[:FROM]->(s:Source) WHERE s.provenance_class='observed' "
              "RETURN count(*) AS n", 0),
