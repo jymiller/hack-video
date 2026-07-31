@@ -480,6 +480,44 @@ async def research_ingest(req: Request):
     return StreamingResponse(gen(), media_type="application/x-ndjson")
 
 
+# Search finds a clip, the clip becomes corpus — the observed lane's way to grow, and
+# the mirror of /api/research/ingest above. Same queue + thread + asyncio.to_thread
+# shape as /api/agent: a blocking generator on a worker thread, stages as NDJSON, so
+# a 4-minute upload-and-index reports itself instead of sitting behind a spinner.
+#
+# Two calls, deliberately. A body with {query} lists candidates and STOPS — a search
+# result is not evidence about the deal, and nothing is fetched that a human did not
+# look at. A body with {url} is that human's choice and runs fetch -> index.
+# Everything this path produces is provenance_class='observed'; see graph/ingest_video.
+@app.post("/api/ingest/video")
+async def ingest_video(req: Request):
+    import asyncio, queue, threading
+    b = await req.json()
+    if not b.get("query") and not b.get("url"):
+        return JSONResponse({"error": "need a query or a url"}, status_code=400)
+    q = queue.Queue()
+
+    def run():
+        try:
+            from graph.ingest_video import run as iv_run
+            for ev in iv_run(query=b.get("query"), url=b.get("url")):
+                q.put(ev)
+        except Exception as e:
+            q.put({"error": f"{type(e).__name__}: {str(e)[:400]}"})
+        finally:
+            q.put(None)
+
+    async def gen():
+        threading.Thread(target=run, daemon=True).start()
+        while True:
+            ev = await asyncio.to_thread(q.get)
+            if ev is None:
+                break
+            yield json.dumps(ev, default=str) + "\n"
+
+    return StreamingResponse(gen(), media_type="application/x-ndjson")
+
+
 from neo4j import GraphDatabase
 
 # Defaults are the local container, so nothing changes for local dev. Aura overrides
