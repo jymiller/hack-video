@@ -577,3 +577,84 @@ body .qwrap {
   border: 1px solid var(--al-edge); border-radius: var(--r);
   background: var(--glass);
 }
+
+/* ==========================================================================
+   PROJECTOR SKIN — green on black, and big enough for the back of the room.
+   Dark is the DEFAULT. Escape hatch: <html data-skin="light">.
+   Projector scale: <html data-zoom="proj"> (1.35x) or "proj2" (1.7x).
+   Every colour above is a variable, so the skin is an override block rather
+   than a rewrite. The type is px inside font: shorthands, so scale is done
+   with zoom (which reflows) rather than transform (which does not).
+   ========================================================================== */
+
+:root:not([data-skin="light"]) {
+  color-scheme: dark;
+
+  --al-hi:   #0d1210;   /* masthead */
+  --al:      #0a0e0d;   /* recessed */
+  --al-lo:   #050807;   /* the desk */
+  --al-edge: #1f3a30;   /* structural rule */
+  --line:    #16291f;   /* hairline */
+
+  --glass:   #0a0f0d;
+  --glass-2: #070b0a;
+
+  --fg:      #d8f5e3;   /* primary — 13.9:1 on #0a0f0d */
+  --ink-2:   #8fc9a8;   /* prose    —  7.4:1 */
+  --dim:     #5d8f74;   /* labels   —  4.6:1 */
+
+  --teal:    #3fe08f;   /* the accent, now phosphor */
+  --teal-2:  #6bf0a9;
+  --teal-3:  #2bc077;
+  --tint-ac: #0e2b1e;
+  --teal-a40: rgba(63, 224, 143, .40);
+  --teal-a16: rgba(63, 224, 143, .16);
+  --tint-mark: #12331f;
+
+  --ok:      #3fe08f;
+  --warn:    #e8b23c;
+  --vfd:     #e8b23c;
+  --err:     #ff6b5e;
+
+  --tint-ok:   #0e2b1e;  --rule-ok:   #1f5c3c;
+  --tint-warn: #2b2210;  --rule-warn: #5c4a1f;
+  --tint-err:  #2e1512;  --rule-err:  #6b2f28;
+
+  --row-hover: #0f1614;
+  --row-nil:   #0c110f;
+  --row-hover-2: #121b18;
+
+  --ink-rule:  #2bc077;
+  --ink-mono:  #c8ecd8;
+  --ink-deep:  #d8f5e3;
+  --ink-btn:   #d8f5e3;
+  --ph:        #4a7560;
+
+  --btn:        #0f1614;
+  --btn-hover:  #16211d;
+  --btn-active: #1d2b26;
+  --edge-hover: #2f5a49;
+  --edge-2:     #1f3a30;
+  --edge-3:     #1f3a30;
+  --edge-strong:#3d7a62;
+
+  --recess:  #070b0a;
+  --drop-bg: #0a0f0d;
+  --sb:      #234034;
+}
+
+/* The masthead rule is the one heavy stroke on the page; on black it reads as
+   a phosphor line rather than a printer's rule. */
+:root:not([data-skin="light"]) body header { border-bottom-color: var(--teal); }
+
+/* A dim row on paper is a quiet absence; on black it would vanish entirely,
+   so the reported-absence band keeps a visible edge instead. */
+:root:not([data-skin="light"]) body .row-nil,
+:root:not([data-skin="light"]) body tr.nil td { box-shadow: inset 2px 0 0 var(--edge-strong); }
+
+/* ---- projector scale ------------------------------------------------------
+   zoom reflows, so panels re-wrap instead of overflowing the way transform
+   would. Chrome and Safari both honour it; this is a demo surface, not a
+   public site, so that trade is fine. */
+:root[data-zoom="proj"]  body { zoom: 1.35; }
+:root[data-zoom="proj2"] body { zoom: 1.7; }

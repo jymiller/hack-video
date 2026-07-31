@@ -2,25 +2,74 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Research — You.com</title>
+<title>Research — Material Witness</title>
 <link rel="stylesheet" href="/chassis.css">
+<style>
+  /* Three columns: ask, findings, and what the findings would do to the graph.
+     chassis.css owns type and colour; only structure lives here. */
+  main { grid-template-columns:320px minmax(0,1fr) 400px; }
+  @media (max-width:1180px) { main { grid-template-columns:300px minmax(0,1fr); }
+                              .col.third { display:none; } }
+  .col { min-width:0; }
+  .body { overflow-wrap:anywhere; }
+
+  /* the standing note: everything in the right-hand column is inert */
+  .inert { background:var(--tint-warn); border:1px solid var(--rule-warn);
+           border-left:3px solid var(--vfd); border-radius:var(--r);
+           padding:9px 11px; font:400 12.5px/1.55 var(--sans); color:var(--ink-2); }
+  .inert b { color:var(--warn); font-weight:650; }
+
+  .prop { border:1px solid var(--al-edge); border-left:3px solid var(--vfd);
+          border-radius:var(--r); background:var(--glass-2);
+          padding:10px 12px; margin-bottom:8px; }
+  .prop.ctl  { border-left-color:var(--teal); background:var(--tint-ac); }
+  .prop.ref  { border-left-color:var(--err); background:var(--tint-err); }
+  .prop.seen { border-left-color:var(--edge-strong); background:var(--al); }
+  .prop .hd { display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; }
+  .prop .pub { font:650 13px/1.35 var(--sans); color:var(--fg); }
+  .prop .u { font:400 11px/1.45 var(--mono); color:var(--dim); margin-top:4px; }
+  .prop .why { font:400 12.5px/1.55 var(--sans); color:var(--ink-2); margin-top:5px; }
+  .prop .why em { color:var(--dim); font-style:normal; }
+  .b-ctl { background:var(--tint-ac); color:var(--teal); border-color:var(--teal); }
+  .b-obs { background:var(--al); color:var(--dim); border-color:var(--edge-2); }
+
+  .edge { display:flex; gap:7px; align-items:baseline; margin-top:6px;
+          padding-top:6px; border-top:1px solid var(--line);
+          font:400 12px/1.5 var(--sans); color:var(--ink-2); }
+  .edge .et { font:600 11px/1.5 var(--mono); letter-spacing:.03em; color:var(--teal); }
+  .prop.ref .edge .et { color:var(--err); }
+  .quote { font:400 12px/1.55 var(--sans); color:var(--ink-2);
+           border-left:2px solid var(--al-edge); padding-left:8px; margin-top:5px; }
+
+  .tally { display:flex; gap:14px; flex-wrap:wrap; padding:9px 11px;
+           border:1px solid var(--al-edge); border-radius:var(--r);
+           background:var(--glass-2); margin-bottom:10px; }
+  .tally div { font:400 11px/1.3 var(--sans); letter-spacing:.07em;
+               text-transform:uppercase; color:var(--dim); }
+  .tally b { display:block; font:500 19px/1.2 var(--mono); color:var(--fg);
+             letter-spacing:0; text-transform:none; font-variant-numeric:tabular-nums; }
+</style>
 </head>
 <body>
 
 <header>
-  <span class="brand">RESEARCH</span>
+  <a class="brand" href="/">
+    <span class="bn">Material Witness</span>
+    <span class="bk">evidence review</span>
+  </a>
   <nav>
-    <a href="/">Video</a>
-    <a href="/archive.html">Archive</a>
+    <a href="/story.html">So what</a>
+    <a href="/">News analysis</a>
+    <a href="/graph.html">Reasoning</a>
     <a href="/research.html" class="on">Research</a>
-    <a href="/graph.html">Graph</a>
+    <a href="/explainers/architecture.html">Architecture</a>
   </nav>
   <span style="flex:1"></span>
   <span id="bal" class="muted"></span>
   <span id="stat" class="vfd">READY</span>
 </header>
 
-<main style="grid-template-columns:330px 1fr">
+<main>
   <div class="col">
     <div class="sect">
       <h2><span class="lbl">Ask</span> <span class="muted">you.com · deep research</span></h2>
@@ -28,9 +77,9 @@
         <textarea id="q" style="min-height:110px"></textarea>
         <select id="preset" onchange="usePreset()">
           <option value="">— saved lines of enquiry —</option>
+          <option>Gatwick Funding Limited bond prospectus and Common Terms Agreement: what are the Senior ICR and Senior RAR covenant thresholds, and which filed document states them?</option>
           <option>What are the strongest contrarian and skeptical arguments against the Gatwick second runway expansion, on financial, debt and economic grounds rather than environmental?</option>
           <option>How is Gatwick's £2.2bn northern runway being financed, and what does it do to Gatwick Funding Ltd's leverage and covenant headroom?</option>
-          <option>What are Gatwick's Senior ICR and Senior RAR covenant levels by year, and what headroom exists against them?</option>
           <option>What have Moody's, S&amp;P and Fitch said about Gatwick's credit since the runway approval?</option>
           <option>Who opposed the Gatwick northern runway, on what grounds, and what happened to each challenge?</option>
           <option>What did the June 2026 High Court ruling on the Gatwick northern runway actually decide?</option>
@@ -40,7 +89,8 @@
           <button onclick="quick()" style="flex:1">QUICK SEARCH</button>
         </div>
         <div class="muted">Quick search returns ranked links in ~2s. Deep research
-          synthesises with citations and takes 30–120s.</div>
+          synthesises with citations and takes 30–120s. Only a deep research job can
+          be sent to the graph — it is the one that comes back with sources.</div>
       </div>
     </div>
 
@@ -66,6 +116,29 @@
       </div>
     </div>
   </div>
+
+  <div class="col third">
+    <div class="sect grow">
+      <h2><span class="lbl">To the graph</span>
+          <span class="muted" id="ingMeta">nothing sent yet</span></h2>
+      <div class="body">
+        <div class="stack">
+          <div class="inert">Video is <b>observed</b> and may never produce a Fact or a
+            covenant number. A prospectus, an RNS or an annual report found by research
+            is <b>controlled</b> — so this is the only way the controlled lane grows,
+            and the only way a covenant threshold gets sourced live instead of
+            pre-loaded.</div>
+          <div class="row">
+            <button class="p" id="ingBtn" onclick="ingest(false)" style="flex:1"
+                    disabled>SEND TO THE GRAPH</button>
+            <button id="dryBtn" onclick="ingest(true)" disabled>DRY RUN</button>
+          </div>
+          <div class="muted" id="ingHint">finish a deep research job first</div>
+        </div>
+        <div id="ing" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <script src="/common.js"></script>
@@ -88,6 +161,23 @@ function md(s) {
     .replace(/\n{2,}/g, '<br>');
 }
 
+const esc = s => String(s == null ? '' : s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// which completed job the graph buttons act on
+let ingestable = null;
+
+function setIngestable(job) {
+  ingestable = job;
+  const on = !!job;
+  $('ingBtn').disabled = !on;
+  $('dryBtn').disabled = !on;
+  $('ingHint').innerHTML = on
+    ? `job <code>${esc(job.id)}</code> · ${(job.result.citations || []).length} citation(s).
+       Dry run classifies and writes nothing.`
+    : 'finish a deep research job first';
+}
+
 function renderResult(res, secs) {
   $('meta').textContent = secs != null ? `${secs}s` : '';
   $('out').className = '';
@@ -99,8 +189,8 @@ function renderResult(res, secs) {
       res.citations.map((x, i) => {
         const url = x.url || x, title = x.title || '';
         return `<div class="muted" style="margin:5px 0"><span class="badge">${i+1}</span>
-                <a href="${url}" target="_blank" style="color:var(--fg)">${title || url}</a>
-                ${title ? `<div style="font-size:10px;margin-left:26px">${url.slice(0,88)}</div>` : ''}
+                <a href="${esc(url)}" target="_blank" style="color:var(--fg)">${esc(title || url)}</a>
+                ${title ? `<div style="font-size:10px;margin-left:26px">${esc(String(url).slice(0,88))}</div>` : ''}
                 </div>`;
       }).join('');
     $('out').appendChild(c);
@@ -124,11 +214,12 @@ async function watch(jobId) {
     }
     localStorage.removeItem('activeJob');
     if (j.status === 'failed') {
-      $('out').innerHTML = `<div class="muted">${j.error}</div>`;
+      $('out').innerHTML = `<div class="muted">${esc(j.error)}</div>`;
       stat('failed', 'var(--err)');
     } else {
       renderResult(j.result, el);
-      localStorage.setItem('lastResult', JSON.stringify({ res: j.result, secs: el, q: j.query }));
+      setIngestable(j);
+      localStorage.setItem('lastResult', JSON.stringify({ res: j.result, secs: el, q: j.query, id: j.id }));
       stat(`done in ${el}s`, 'var(--ok)');
       loadBal();
     }
@@ -140,6 +231,9 @@ async function watch(jobId) {
 async function run() {
   const q = $('q').value.trim();
   if (!q) return stat('write a question', 'var(--err)');
+  setIngestable(null);
+  $('ing').innerHTML = '';
+  $('ingMeta').textContent = 'nothing sent yet';
   const j = await api('POST', '/api/you/research', { query: q });
   if (!j.job_id) return stat('could not start', 'var(--err)');
   loadJobs();
@@ -153,8 +247,8 @@ async function loadJobs() {
   box.innerHTML = jobs.map(j => {
     const el = ((j.finished_at || Date.now()/1000) - j.started_at).toFixed(0);
     const b = j.status === 'running' ? 'b-run' : (j.status === 'done' ? 'b-ok' : 'b-err');
-    return `<div class="item" onclick="reopen('${j.id}')" title="${j.query}">
-      <span class="n">${j.query.slice(0, 44)}</span>
+    return `<div class="item" onclick="reopen('${j.id}')" title="${esc(j.query)}">
+      <span class="n">${esc(j.query.slice(0, 44))}</span>
       <span class="m"><span class="badge ${b}">${j.status} ${el}s</span></span></div>`;
   }).join('');
 }
@@ -162,8 +256,11 @@ async function loadJobs() {
 async function reopen(id) {
   const j = await fetch(`/api/jobs/${id}`).then(r => r.json());
   $('q').value = j.query;
+  $('ing').innerHTML = '';
+  $('ingMeta').textContent = 'nothing sent yet';
+  setIngestable(null);
   if (j.status === 'running') return watch(id);
-  if (j.result) renderResult(j.result, ((j.finished_at - j.started_at)).toFixed(0));
+  if (j.result) { renderResult(j.result, ((j.finished_at - j.started_at)).toFixed(0)); setIngestable(j); }
   stat('reopened', 'var(--ok)');
 }
 
@@ -181,15 +278,161 @@ async function quick() {
   rows.forEach(r => {
     const d = document.createElement('div');
     d.className = 'hit';
-    d.innerHTML = `<div class="t">${(r.age || '').slice(0,10) || '—'}
-        <span class="src">${r.kind}</span></div>
-      <div style="margin:2px 0"><a href="${r.url}" target="_blank"
-        style="color:var(--fg);text-decoration:none">${r.title || r.url}</a></div>
-      <div class="x">${r.description || ''}</div>
-      <div class="muted" style="font-size:10px">${(r.url||'').slice(0,90)}</div>`;
+    d.innerHTML = `<div class="t">${esc((r.age || '').slice(0,10) || '—')}
+        <span class="src">${esc(r.kind)}</span></div>
+      <div style="margin:2px 0"><a href="${esc(r.url)}" target="_blank"
+        style="color:var(--fg);text-decoration:none">${esc(r.title || r.url)}</a></div>
+      <div class="x">${esc(r.description || '')}</div>
+      <div class="muted" style="font-size:10px">${esc((r.url||'').slice(0,90))}</div>`;
     $('out').appendChild(d);
   });
   stat(`${rows.length} results`, 'var(--ok)');
+}
+
+// ---------------------------------------------------------------------------
+// research → graph. Streams NDJSON, exactly like /api/agent and /api/nl2cypher,
+// so each classification lands on screen as the model returns it rather than the
+// whole run appearing at the end.
+// ---------------------------------------------------------------------------
+
+function add(html) {
+  const d = document.createElement('div');
+  d.innerHTML = html;
+  $('ing').appendChild(d);
+  $('ing').parentElement.scrollTop = $('ing').parentElement.scrollHeight;
+  return d;
+}
+
+function propCard(p) {
+  const ctl = p.lane === 'controlled';
+  const edges = [];
+  if (p.reports_event)
+    edges.push(`<div class="edge"><span class="et">REPORTS</span>
+      <span>${esc(p.reports_event)}</span></div>`);
+  (p.covenant_claims || []).forEach(c => edges.push(
+    `<div class="edge"><span class="et">MAY_SOURCE_THRESHOLD</span>
+       <span>${esc(c.covenant_code)} = <b>${esc(c.stated_value)}</b>
+       (${esc(c.direction)})</span></div>
+     <div class="quote">“${esc(c.quote)}”</div>`));
+  return `<div class="prop ${ctl ? 'ctl' : ''}">
+    <div class="hd">
+      <span class="badge ${ctl ? 'b-ctl' : 'b-obs'}">${ctl ? 'CONTROLLED' : 'observed'}</span>
+      <span class="pub">${esc(p.publisher || '?')}</span>
+      <span class="muted">${esc(p.kind)}</span>
+      <span style="flex:1"></span>
+      <span class="badge b-run">proposed</span>
+    </div>
+    <div class="u">${esc(p.url)}</div>
+    <div class="why"><em>lane evidence —</em> ${esc(p.lane_evidence)}
+      <span class="badge">${Number(p.confidence).toFixed(2)}</span>
+      ${p.lane_forced ? '<span class="badge b-err">forced to observed</span>' : ''}</div>
+    <div class="why">${esc(p.rationale)}</div>
+    ${edges.join('')}</div>`;
+}
+
+function refCard(r) {
+  return `<div class="prop ref">
+    <div class="hd">
+      <span class="badge b-err">REFUSED</span>
+      <span class="pub">${esc(r.publisher || '?')}</span>
+      <span class="muted">${esc(r.lane)}</span>
+    </div>
+    <div class="edge"><span class="et">${esc(r.covenant_code)}</span>
+      <span>= ${esc(r.stated_value)} — not written</span></div>
+    <div class="quote">“${esc(r.quote)}”</div>
+    <div class="why">${esc(r.why)}</div></div>`;
+}
+
+async function ingest(dry) {
+  if (!ingestable) return;
+  const btns = [$('ingBtn'), $('dryBtn')];
+  btns.forEach(b => b.disabled = true);
+  $('ing').innerHTML = '';
+  $('ingMeta').textContent = dry ? 'dry run' : 'proposing';
+  stat(dry ? 'dry run' : 'sending to the graph', 'var(--warn)');
+
+  let nProp = 0, nCtl = 0, nEdge = 0, nRef = 0;
+  const tally = add(`<div class="tally">
+      <div>sources<b id="tSrc">0</b></div>
+      <div>controlled<b id="tCtl">0</b></div>
+      <div>edges<b id="tEdge">0</b></div>
+      <div>refused<b id="tRef">0</b></div></div>`);
+  const bump = () => {
+    $('tSrc').textContent = nProp; $('tCtl').textContent = nCtl;
+    $('tEdge').textContent = nEdge; $('tRef').textContent = nRef;
+  };
+
+  try {
+    const r = await fetch('/api/research/ingest', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ job_id: ingestable.id, dry: !!dry }),
+    });
+    if (!r.ok) {
+      const j = await r.json().catch(() => ({}));
+      throw new Error(j.error || `HTTP ${r.status}`);
+    }
+    const rd = r.body.getReader(), dec = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { value, done } = await rd.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        let e; try { e = JSON.parse(line); } catch { continue; }
+
+        if (e.model) {
+          add(`<div class="muted" style="margin-bottom:8px">
+            ${esc(e.model)} · ${e.citations} citation(s)
+            ${e.dry ? '· <b style="color:var(--warn)">dry — nothing will be written</b>' : ''}</div>`);
+        } else if (e.context) {
+          add(`<div class="muted" style="margin-bottom:8px">graph now holds
+            ${e.context.sources_in_graph} source(s), covenants
+            ${e.context.covenants.map(esc).join(', ')}</div>`);
+        } else if (e.seen) {
+          add(`<div class="muted" style="margin:10px 0 6px">SEEN — already a Source,
+              not re-derived (${e.seen.length}). Identity is the sha256 of the URL.</div>` +
+            e.seen.map(x => `<div class="prop seen"><div class="hd">
+              <span class="badge">${esc(x.status)}</span>
+              <span class="pub">${esc(x.publisher || '?')}</span>
+              <span class="muted">${esc(x.lane || '')}</span></div>
+              <div class="u">${esc(x.url)}</div></div>`).join(''));
+        } else if (e.stage === 'classify') {
+          add(`<div class="muted" style="margin:10px 0 6px">UNSEEN — ${e.unseen}
+            result(s) to the model in ${e.batches} batch(es)</div>`);
+        } else if (e.proposal) {
+          nProp++; if (e.proposal.lane === 'controlled') nCtl++;
+          nEdge += (e.proposal.reports_event ? 1 : 0) + (e.proposal.covenant_claims || []).length;
+          bump();
+          add(propCard(e.proposal));
+        } else if (e.refused) {
+          nRef++; bump();
+          add(refCard(e.refused));
+        } else if (e.dropped) {
+          add(`<div class="muted">dropped [${e.dropped.n}] ${esc(e.dropped.why)}</div>`);
+        } else if (e.error) {
+          add(`<div class="prop ref"><div class="why">${esc(e.error)}</div></div>`);
+          stat('ingest failed', 'var(--err)');
+        } else if (e.done) {
+          const d = e.done;
+          add(`<div class="inert" style="margin-top:10px">
+            <b>${d.proposed_sources} source(s), ${d.proposed_edges} edge(s) proposed</b>
+            ${d.refused ? `, ${d.refused} refused` : ''}
+            ${d.dry ? ' — dry run, nothing was written' : ''}.<br>${esc(d.note)}</div>`);
+          $('ingMeta').textContent = d.dry
+            ? `dry · ${d.proposed_sources} would be proposed`
+            : `${d.proposed_sources} proposed · awaiting a human`;
+          stat(d.dry ? 'dry run complete' : 'proposed — awaiting a human', 'var(--ok)');
+        }
+      }
+    }
+  } catch (err) {
+    add(`<div class="prop ref"><div class="why">${esc(err.message)}</div></div>`);
+    stat('ingest failed', 'var(--err)');
+  }
+  btns.forEach(b => b.disabled = false);
 }
 
 async function loadBal() {
@@ -207,15 +450,20 @@ loadJobs();
   const last = localStorage.getItem('lastResult');
   if (last) {
     try {
-      const { res, secs, q } = JSON.parse(last);
+      const { res, secs, q, id } = JSON.parse(last);
       $('q').value = q || '';
       renderResult(res, secs);
+      // the buttons act on a job the SERVER still holds — confirm it is there
+      // rather than offering to ingest a job that died with the last restart
+      if (id) fetch(`/api/jobs/${id}`).then(r => r.json())
+        .then(j => { if (j && j.status === 'done' && j.result) setIngestable(j); })
+        .catch(() => {});
       stat('restored last result', 'var(--dim)');
     } catch {}
   }
 })();
 </script>
 <script src="/credits.js"></script>
-<script>renderCredits(['you'], ['fastapi']);</script>
+<script>renderCredits(['you'], ['neo4j', 'fastapi']);</script>
 </body>
 </html>

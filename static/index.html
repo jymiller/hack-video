@@ -4,18 +4,127 @@
 <meta charset="utf-8">
 <title>Material Witness — News analysis</title>
 <link rel="stylesheet" href="/chassis.css">
+<style>
+/* ==========================================================================
+   CORPUS — a manifest that says what each source produced, not just that it
+   exists. Built from tokens in chassis.css only; no new colours.
+   ========================================================================== */
+
+/* The grouping switch. Set as the nav switch is set — one ruled group, the
+   live position on paper with the accent under it — so a reader who has
+   already learned the masthead knows what this is without being told. */
+#grouper { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+#grouper .gl {
+  font: 600 10px/1.3 var(--sans); letter-spacing: .1em;
+  text-transform: uppercase; color: var(--dim); flex-shrink: 0;
+}
+#grouper .seg {
+  display: flex; flex: 1; border: 1px solid var(--al-edge);
+  border-radius: var(--r); background: var(--al); overflow: hidden;
+}
+#grouper .seg button {
+  flex: 1; border: 0; border-radius: 0; background: transparent;
+  padding: 5px 4px; color: var(--dim);
+  font: 600 10.5px/1.2 var(--sans); letter-spacing: .07em; text-transform: uppercase;
+}
+#grouper .seg button + button { border-left: 1px solid var(--al-edge); }
+#grouper .seg button:hover { background: var(--row-hover); color: var(--fg); }
+#grouper .seg button.on {
+  background: var(--al-hi); color: var(--fg); font-weight: 700;
+  box-shadow: inset 0 -2px 0 var(--teal);
+}
+
+/* A group is a ruled band across the panel, like a section head on a form. */
+.grp + .grp { margin-top: 16px; }
+.gh {
+  margin: 0 calc(var(--pad) * -1); padding: 6px var(--pad) 6px;
+  background: var(--al);
+  border-top: 1px solid var(--al-edge);
+  border-bottom: 1px solid var(--al-edge);
+}
+.gh .gt {
+  display: flex; justify-content: space-between; gap: 8px; align-items: baseline;
+}
+.gh .gn {
+  font: 650 11px/1.35 var(--sans); letter-spacing: .07em;
+  text-transform: uppercase; color: var(--fg);
+  overflow-wrap: anywhere;
+}
+.gh .gc {
+  font: 400 11px/1.35 var(--mono); color: var(--dim);
+  font-variant-numeric: tabular-nums; flex-shrink: 0;
+}
+.gh .gs { font: 400 11.5px/1.4 var(--sans); color: var(--dim); overflow-wrap: anywhere; }
+
+/* One source = one entry in the manifest. */
+.src {
+  margin: 0 calc(var(--pad) * -1); padding: 9px var(--pad) 11px;
+  border-bottom: 1px solid var(--line); cursor: pointer;
+  box-shadow: inset 3px 0 0 transparent;
+  transition: background-color .12s ease;
+}
+.src:hover { background: var(--row-hover); }
+.src.sel { background: var(--tint-ac); box-shadow: inset 3px 0 0 var(--teal); }
+.src .hd { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.src .pn {
+  font: 500 13px/1.35 var(--sans); color: var(--fg);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.src.sel .pn { font-weight: 650; }
+.src .du {
+  font: 400 12px/1.3 var(--mono); color: var(--dim);
+  font-variant-numeric: tabular-nums; flex-shrink: 0;
+}
+.src .sb { font: 400 11.5px/1.4 var(--sans); color: var(--dim); overflow-wrap: anywhere; }
+
+/* The figures. Each one is a click target that lands the player on the frame
+   the number was read off, so a claim in this list is never more than one
+   click from the evidence for it. */
+.figs { margin-top: 7px; border-left: 2px solid var(--teal); padding-left: 8px; }
+.fig {
+  display: flex; justify-content: space-between; gap: 8px;
+  align-items: baseline; padding: 2px 0; cursor: pointer;
+}
+.fig + .fig { border-top: 1px solid var(--line); }
+.fig .fl { min-width: 0; }
+.fig .fv {
+  font: 700 12.5px/1.35 var(--mono); color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.fig .fk { font: 400 11.5px/1.35 var(--sans); color: var(--ink-2); overflow-wrap: anywhere; }
+.fig .ft {
+  font: 600 11px/1.35 var(--mono); color: var(--teal);
+  font-variant-numeric: tabular-nums; flex-shrink: 0;
+}
+.fig:hover .ft { text-decoration: underline; }
+
+/* Reported absence gets the band this stylesheet reserves for it — stated,
+   not left blank, and never coloured as an error. */
+.nil {
+  margin-top: 7px; padding: 4px 8px;
+  background: var(--row-nil); box-shadow: inset 3px 0 0 var(--edge-strong);
+  font: 400 11.5px/1.4 var(--sans); color: var(--dim);
+}
+
+.meta { margin-top: 6px; display: grid; grid-template-columns: 46px 1fr; gap: 3px 8px; }
+.meta .k {
+  font: 600 9.5px/1.5 var(--sans); letter-spacing: .08em;
+  text-transform: uppercase; color: var(--dim);
+}
+.meta .v { font: 400 11.5px/1.4 var(--sans); color: var(--ink-2); overflow-wrap: anywhere; }
+.meta .v.ac { color: var(--teal); }
+</style>
 </head>
 <body>
 
 <header>
-  <a class="brand" href="/">
-    <span class="bn">Material Witness</span>
-    <span class="bk">evidence review</span>
-  </a>
+  <span class="brand">MATERIAL WITNESS</span>
   <nav>
     <a href="/story.html">So what</a>
     <a href="/" class="on">News analysis</a>
     <a href="/graph.html">Reasoning</a>
+    <a href="/research.html">Research</a>
+    <a href="/explainers/architecture.html">Architecture</a>
   </nav>
   <span style="flex:1"></span>
   <span id="stat" class="vfd">READY</span>
@@ -25,12 +134,20 @@
 </header>
 
 <main>
-  <!-- LEFT: what is in the corpus -->
+  <!-- LEFT: what is in the corpus, and what came out of it -->
   <div class="col">
     <div class="sect grow">
       <h2><span class="lbl">Corpus</span>
-          <span class="muted"><span id="libCount"></span></span></h2>
+          <span class="muted" id="libCount"></span></h2>
       <div class="body">
+        <div id="grouper">
+          <span class="gl">Group</span>
+          <span class="seg">
+            <button data-g="event"     onclick="setGroup('event')">Event</button>
+            <button data-g="publisher" onclick="setGroup('publisher')">Source</button>
+            <button data-g="yield"     onclick="setGroup('yield')">Yield</button>
+          </span>
+        </div>
         <div id="localList"></div>
       </div>
     </div>
@@ -111,10 +228,13 @@ const $ = id => document.getElementById(id);
 const player = $('player');
 let curIndex = null, curVideo = null, vidMap = {};
 let localFiles = [], indexedByName = {}, vidDur = {}, logN = 0;
+let deduced = {}, groupBy = 'event';
 
 const short = n => n.split('__').slice(1).join(' · ').replace('.mp4', '') || n;
 const chan  = n => n.split('__')[1] || n;
+const titl  = n => (n.split('__')[2] || n).replace(/\.mp4$/, '');
 const mmss  = s => s == null ? '' : `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
+const esc   = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 player.addEventListener('timeupdate', () => $('tcode').textContent = player.currentTime.toFixed(1) + 's');
 
@@ -171,35 +291,211 @@ async function loadLocal() {
   localFiles = await api('GET', '/api/local-videos');
 }
 
+/* ---------------------------------------------------------------------------
+   WHAT THE GRAPH KNOWS ABOUT EACH SOURCE.
+   One round trip. Every branch is OPTIONAL, so a source that produced nothing
+   still comes back — the reader is meant to see the ones that produced
+   nothing. Segment.embedding is never selected; it is 512 floats a row.
+   --------------------------------------------------------------------------- */
+const CORPUS_CYPHER = `
+MATCH (s:Source) WHERE s.duration IS NOT NULL
+OPTIONAL MATCH (s)-[:REPORTS]->(e:Event)
+CALL { WITH s MATCH (g:Segment)-[:PART_OF]->(s) RETURN count(g) AS segs }
+CALL { WITH s
+  OPTIONAL MATCH (o:Observation)-[:CITES]->(:Segment)-[:PART_OF]->(s)
+  WITH o ORDER BY o.start
+  RETURN collect(DISTINCT {text:o.text, value:o.value, unit:o.unit_kind, cur:o.currency,
+                           scale:o.scale, cc:o.concept_code, start:o.start}) AS obsRaw }
+CALL { WITH s
+  OPTIONAL MATCH (g:Segment)-[:PART_OF]->(s)
+  OPTIONAL MATCH (g)-[:ABOUT]->(t:Topic)
+  WITH t.name AS tn, count(t) AS n ORDER BY n DESC, tn
+  WITH collect({name:tn, n:n}) AS a
+  RETURN [x IN a WHERE x.name IS NOT NULL][0..4] AS topics }
+CALL { WITH s
+  OPTIONAL MATCH (g:Segment)-[:PART_OF]->(s)
+  OPTIONAL MATCH (g)-[:MENTIONS]->(en:Entity)
+  WITH en.name AS enn, count(en) AS n ORDER BY n DESC, enn
+  WITH collect({name:enn, n:n}) AS a
+  RETURN [x IN a WHERE x.name IS NOT NULL][0..3] AS ents }
+CALL { WITH s
+  OPTIONAL MATCH (o:Observation)-[:CITES]->(:Segment)-[:PART_OF]->(s)
+  OPTIONAL MATCH (o)-[:CORROBORATES]-(:Observation)-[:CITES]->(:Segment)-[:PART_OF]->(s2:Source)
+  WITH collect(DISTINCT s2.publisher) AS a
+  RETURN [x IN a WHERE x IS NOT NULL] AS corr }
+CALL { WITH s
+  OPTIONAL MATCH (o:Observation)-[:CITES]->(:Segment)-[:PART_OF]->(s)
+  OPTIONAL MATCH (o)-[:SUGGESTS_RISK]->(r:Risk)
+  WITH collect(DISTINCT r.name) AS a
+  RETURN [x IN a WHERE x IS NOT NULL] AS risks }
+RETURN s.filename AS fn, s.publisher AS pub, s.kind AS kind,
+       e.name AS ev, e.kind AS evkind, toString(e.date) AS evdate,
+       segs, [x IN obsRaw WHERE x.text IS NOT NULL] AS obs, topics, ents, corr, risks
+ORDER BY pub`;
+
+async function loadDeduced() {
+  const j = await api('POST', '/api/graph/query', { cypher: CORPUS_CYPHER });
+  deduced = {};
+  (j.rows || []).forEach(r => { if (r.fn) deduced[r.fn] = r; });
+}
+
+const SCALE = { units: 1, tens: 10, hundreds: 100, thousands: 1e3, millions: 1e6, billions: 1e9 };
+const SYM   = { GBP: '£', USD: '$', EUR: '€' };
+
+function figure(o) {
+  const v = (o.value || 0) * (SCALE[o.scale] || 1);
+  const sym = SYM[o.cur] || '';
+  let n;
+  if (Math.abs(v) >= 1e9)      n = +(v / 1e9).toFixed(2) + 'bn';
+  else if (Math.abs(v) >= 1e6) n = +(v / 1e6).toFixed(2) + 'm';
+  else                         n = Math.round(v).toLocaleString('en-GB');
+  return sym + n;
+}
+const words = s => String(s || '').replace(/_/g, ' ');
+function ukDate(iso) {
+  if (!iso) return '';
+  const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const p = iso.split('-');
+  return p.length === 3 ? `${+p[2]} ${M[+p[1] - 1]} ${p[0]}` : iso;
+}
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+
 function durOf(videoId) { return (vidDur || {})[videoId]; }
+
+function setGroup(g) { groupBy = g; renderLocal(); }
+
+/* Three ways to cut the same six rows. Event is the default because it is the
+   cut that shows the odd one out: five clips are the runway decision, one is a
+   water outage nine months later. */
+function grouping(rows) {
+  if (groupBy === 'publisher') {
+    const g = {};
+    rows.forEach(r => {
+      const k = r.d ? r.d.pub : chan(r.name);
+      (g[k] = g[k] || { name: k, sub: r.d ? words(r.d.kind) : 'not in the graph', rows: [] }).rows.push(r);
+    });
+    return Object.values(g).sort((a, b) => a.name.localeCompare(b.name));
+  }
+  if (groupBy === 'yield') {
+    const buckets = [
+      { name: 'Figures extracted', sub: 'numbers pulled off the tape and typed', rows: [], test: r => r.d && r.d.obs.length },
+      { name: 'Context only', sub: 'indexed and searchable, nothing quantified', rows: [], test: r => r.d && !r.d.obs.length },
+      { name: 'Not in the graph', sub: 'file present, never read', rows: [], test: r => !r.d },
+    ];
+    rows.forEach(r => (buckets.find(b => b.test(r)) || buckets[2]).rows.push(r));
+    return buckets.filter(b => b.rows.length);
+  }
+  const g = {};
+  rows.forEach(r => {
+    const k = (r.d && r.d.ev) || 'No event linked';
+    (g[k] = g[k] || {
+      name: k,
+      sub: r.d && r.d.ev ? `${words(r.d.evkind)} · ${ukDate(r.d.evdate)}` : 'not tied to a dated event',
+      date: (r.d && r.d.evdate) || '',
+      rows: [],
+    }).rows.push(r);
+  });
+  return Object.values(g).sort((a, b) => b.rows.length - a.rows.length || a.date.localeCompare(b.date));
+}
 
 function renderLocal() {
   const names = new Set(localFiles.map(v => v.name));
   const extra = Object.entries(indexedByName)
     .filter(([n]) => !names.has(n))
     .map(([n, id]) => ({ name: n, remote: true, duration: durOf(id) }));
-  const rows = [...localFiles, ...extra];
+  const rows = [...localFiles, ...extra].map(v => ({
+    name: v.name,
+    duration: v.duration,
+    vid: indexedByName[v.name],
+    d: deduced[v.name] || null,
+  }));
 
-  $('libCount').textContent = rows.length ? `${rows.length} clips` : '';
+  const figs = rows.reduce((a, r) => a + (r.d ? r.d.obs.length : 0), 0);
+  $('libCount').textContent = rows.length
+    ? `${plural(rows.length, 'clip')} · ${plural(figs, 'figure')}`
+    : '';
 
-  $('localList').innerHTML = '';
-  rows.forEach(v => {
-    const vid = indexedByName[v.name];
-    const d = document.createElement('div');
-    d.className = 'item' + (vid && vid === curVideo ? ' sel' : '');
-    const right = vid ? `<span class="m">${mmss(v.duration)}</span>`
-                      : `<span class="badge">not indexed</span>`;
-    d.innerHTML = `<span class="n">${vid ? '' : '<span class="dot"></span>'}${short(v.name)}</span>
-                   <span class="m">${right}</span>`;
-    if (vid) {
-      d.title = 'click to open in the viewer';
-      d.onclick = () => selectVideo(vid, v.name);
-    } else {
-      d.title = 'present locally, not in the index';
-      d.style.cursor = 'default';
-    }
-    $('localList').appendChild(d);
+  [...document.querySelectorAll('#grouper .seg button')]
+    .forEach(b => b.classList.toggle('on', b.dataset.g === groupBy));
+
+  const list = $('localList');
+  list.innerHTML = '';
+
+  grouping(rows).forEach(grp => {
+    const gd = document.createElement('div');
+    gd.className = 'grp';
+    gd.innerHTML = `<div class="gh">
+        <div class="gt"><span class="gn">${esc(grp.name)}</span>
+        <span class="gc">${plural(grp.rows.length, 'clip')}</span></div>
+        <div class="gs">${esc(grp.sub)}</div>
+      </div>`;
+
+    grp.rows
+      .sort((a, b) => (b.d ? b.d.obs.length : 0) - (a.d ? a.d.obs.length : 0)
+                   || (b.d ? b.d.segs : 0) - (a.d ? a.d.segs : 0))
+      .forEach(r => gd.appendChild(sourceRow(r)));
+
+    list.appendChild(gd);
   });
+}
+
+function sourceRow(r) {
+  const d = r.d, vid = r.vid, dur = r.duration;
+  const el = document.createElement('div');
+  el.className = 'src' + (vid && vid === curVideo ? ' sel' : '');
+
+  // In publisher mode the group head already carries the outlet, so the entry
+  // leads with the headline instead of repeating it.
+  const lead = groupBy === 'publisher' ? titl(r.name) : (d ? d.pub : chan(r.name));
+  // the group head already carries whatever the cut is made on; the entry
+  // never repeats it back
+  const facts = [groupBy === 'publisher' || !d ? null : words(d.kind),
+                 d ? plural(d.segs, 'moment') : 'not indexed']
+    .filter(Boolean).join(' · ');
+
+  let h = `<div class="hd"><span class="pn">${esc(lead)}</span>
+             <span class="du">${vid ? '' : '<span class="dot"></span>'}${esc(mmss(dur))}</span></div>
+           <div class="sb">${esc(facts)}</div>`;
+
+  if (!d) {
+    h += `<div class="nil">not in the graph — present as a file, never read</div>`;
+  } else if (d.obs.length) {
+    h += '<div class="figs">' + d.obs.map((o, i) => `
+      <div class="fig" data-i="${i}" title="jump to the frame this was read off">
+        <span class="fl"><span class="fv">${esc(figure(o))}</span>
+          <span class="fk">${esc(words(o.cc))}</span></span>
+        <span class="ft">${esc(mmss(o.start))}</span>
+      </div>`).join('') + '</div>';
+  } else {
+    h += `<div class="nil">no figures — nothing quantified in ${plural(d.segs, 'moment')}</div>`;
+  }
+
+  const meta = [];
+  if (d && d.topics.length) meta.push(['covers', d.topics.map(t => t.name).join(' · '), '']);
+  if (d && !d.obs.length && d.ents.length) meta.push(['names', d.ents.map(t => t.name).join(' · '), '']);
+  if (d && d.corr.length) meta.push(['agrees', d.corr.join(', '), 'ac']);
+  if (d && d.risks.length) meta.push(['risk', d.risks.join(' · '), '']);
+  if (meta.length) {
+    h += '<div class="meta">' + meta.map(([k, v, c]) =>
+      `<span class="k">${esc(k)}</span><span class="v ${c}">${esc(v)}</span>`).join('') + '</div>';
+  }
+
+  el.innerHTML = h;
+
+  if (vid) {
+    el.title = 'click to open in the viewer';
+    el.onclick = () => selectVideo(vid, r.name);
+    el.querySelectorAll('.fig').forEach(f => {
+      f.onclick = ev => {
+        ev.stopPropagation();
+        seekTo(vid, r.name, d.obs[+f.dataset.i].start);
+      };
+    });
+  } else {
+    el.title = 'present locally, not in the index';
+    el.style.cursor = 'default';
+  }
+  return el;
 }
 
 async function loadVideos() {
@@ -224,6 +520,15 @@ function selectVideo(id, fn, el) {
   renderLocal();
 }
 
+// The one path the whole demo turns on: land the player on a given second,
+// whether the clip is already open or has to be loaded first.
+function seekTo(id, fn, t) {
+  if (id !== curVideo) selectVideo(id, fn);
+  const seek = () => { player.currentTime = t; player.play(); };
+  if (player.readyState >= 1) seek();
+  else player.addEventListener('loadedmetadata', seek, { once: true });
+}
+
 async function search() {
   if (!curIndex) return stat('no corpus loaded', 'var(--err)');
   const opts = [];
@@ -244,12 +549,7 @@ async function search() {
         <span class="src">${chan(fn)}</span>
         <span class="muted">· #${h.rank}</span></div>
       <div class="x">${h.transcription || '<em>visual match — nothing spoken</em>'}</div>`;
-    d.onclick = () => {
-      if (h.video_id !== curVideo) selectVideo(h.video_id, fn);
-      const seek = () => { player.currentTime = h.start; player.play(); };
-      if (player.readyState >= 1) seek();
-      else player.addEventListener('loadedmetadata', seek, { once: true });
-    };
+    d.onclick = () => seekTo(h.video_id, fn, h.start);
     $('hits').appendChild(d);
   });
 }
@@ -289,10 +589,12 @@ async function analyze() {
 }
 
 // Open loaded, not cold: the run of show requires a clip already in the viewer
-// and paused. Nothing autoplays and nothing seeks.
+// and paused. Nothing autoplays and nothing seeks. The graph read is allowed
+// to fail — the manifest degrades to filenames rather than to a blank panel.
 (async () => {
   await loadLocal();
   await loadIndexes();
+  try { await loadDeduced(); } catch (e) { console.warn('graph read failed', e); }
   renderLocal();
   const first = localFiles.find(v => indexedByName[v.name]);
   if (first) selectVideo(indexedByName[first.name], first.name);

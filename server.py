@@ -437,6 +437,49 @@ async def job_del(job_id: str):
     return {"ok": True}
 
 
+# Research findings → graph proposals. The controlled lane's only route to growth:
+# video is observed by construction and can never produce a Fact, so if a covenant
+# threshold is ever to arrive live rather than pre-loaded, it arrives here — from a
+# prospectus or an RNS that a research call found and a classifier called controlled.
+#
+# Same queue + thread + asyncio.to_thread shape as /api/agent and /api/nl2cypher:
+# the work is a blocking generator on a worker thread and its stages arrive as NDJSON,
+# so the page shows each classification as it lands rather than after a 40s spinner.
+# Everything it writes carries status='proposed'. Nothing here validates anything.
+@app.post("/api/research/ingest")
+async def research_ingest(req: Request):
+    import asyncio, queue, threading
+    b = await req.json()
+    job = JOBS.get(b.get("job_id"))
+    if not job:
+        return JSONResponse({"error": "unknown job"}, status_code=404)
+    if job.get("status") != "done" or not job.get("result"):
+        return JSONResponse({"error": f"job is {job.get('status')} — nothing to ingest"},
+                            status_code=409)
+    dry = bool(b.get("dry"))
+    q = queue.Queue()
+
+    def run():
+        try:
+            from graph.research_ingest import run as ingest_run
+            for ev in ingest_run(job, dry=dry):
+                q.put(ev)
+        except Exception as e:
+            q.put({"error": f"{type(e).__name__}: {str(e)[:400]}"})
+        finally:
+            q.put(None)
+
+    async def gen():
+        threading.Thread(target=run, daemon=True).start()
+        while True:
+            ev = await asyncio.to_thread(q.get)
+            if ev is None:
+                break
+            yield json.dumps(ev, default=str) + "\n"
+
+    return StreamingResponse(gen(), media_type="application/x-ndjson")
+
+
 from neo4j import GraphDatabase
 
 # Defaults are the local container, so nothing changes for local dev. Aura overrides
