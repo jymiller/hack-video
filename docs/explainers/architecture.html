@@ -4,24 +4,25 @@
 <title>Architecture — Material Witness</title>
 
 <style>
+  /* Dark by DEFAULT and aligned to chassis.css's projector skin, so this page does
+     not follow the laptop's appearance setting while every other page is forced dark.
+     Values mirror the app's tokens: ground = --al-lo, card = --glass, ink = --fg,
+     edge = --teal, hot = --err, warn = --warn. Escape hatch: data-theme="light". */
   :root {
-    --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
-    --rule:#C3CCD6; --rule-soft:#DDE3EA;
-    --edge:#1F6F7C; --edge-bg:#DCEDEF;
-    --hot:#B03A16;  --hot-bg:#F8E5DC;
-    --warn:#8A6512; --warn-bg:#F6EDD8;
+    --ground:#050807; --card:#0a0f0d; --ink:#d8f5e3; --ink-soft:#8fc9a8;
+    --rule:#1f3a30; --rule-soft:#16291f;
+    --edge:#3fe08f; --edge-bg:#0e2b1e;
+    --hot:#ff6b5e;  --hot-bg:#2e1512;
+    --warn:#e8b23c; --warn-bg:#2b2210;
     --disp:"Futura","Avenir Next Condensed","Avenir Next",system-ui,sans-serif;
     --body:"Avenir Next","Avenir",-apple-system,"Segoe UI",sans-serif;
     --mono:"SF Mono","IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
   }
-  @media (prefers-color-scheme: dark) {
-    :root { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
-      --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
-      --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
-  }
-  :root[data-theme="dark"] { --ground:#0E141A; --card:#18212A; --ink:#E6ECF2; --ink-soft:#94A4B2;
-    --rule:#2C3945; --rule-soft:#212C36; --edge:#5FC0CC; --edge-bg:#123138;
-    --hot:#F0805A; --hot-bg:#331A11; --warn:#D9AB4E; --warn-bg:#2E2616; }
+  /* No prefers-color-scheme block: the OS setting must not flip this page while the
+     rest of the app is forced dark. data-theme="dark" is kept as an explicit no-op. */
+  :root[data-theme="dark"] { --ground:#050807; --card:#0a0f0d; --ink:#d8f5e3; --ink-soft:#8fc9a8;
+    --rule:#1f3a30; --rule-soft:#16291f; --edge:#3fe08f; --edge-bg:#0e2b1e;
+    --hot:#ff6b5e; --hot-bg:#2e1512; --warn:#e8b23c; --warn-bg:#2b2210; }
   :root[data-theme="light"] { --ground:#E8ECF1; --card:#F8FAFC; --ink:#121A24; --ink-soft:#5A6875;
     --rule:#C3CCD6; --rule-soft:#DDE3EA; --edge:#1F6F7C; --edge-bg:#DCEDEF;
     --hot:#B03A16; --hot-bg:#F8E5DC; --warn:#8A6512; --warn-bg:#F6EDD8; }
