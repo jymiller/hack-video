@@ -53,10 +53,7 @@
 <body>
 
 <header>
-  <a class="brand" href="/">
-    <span class="bn">Material Witness</span>
-    <span class="bk">evidence review</span>
-  </a>
+  <span class="brand">MATERIAL WITNESS</span>
   <nav>
     <a href="/story.html">So what</a>
     <a href="/">News analysis</a>
@@ -312,7 +309,7 @@ function propCard(p) {
   (p.covenant_claims || []).forEach(c => edges.push(
     `<div class="edge"><span class="et">MAY_SOURCE_THRESHOLD</span>
        <span>${esc(c.covenant_code)} = <b>${esc(c.stated_value)}</b>
-       (${esc(c.direction)})</span></div>
+       <span class="badge">${esc(c.value_kind)}</span> (${esc(c.direction)})</span></div>
      <div class="quote">“${esc(c.quote)}”</div>`));
   return `<div class="prop ${ctl ? 'ctl' : ''}">
     <div class="hd">
@@ -330,6 +327,15 @@ function propCard(p) {
     ${edges.join('')}</div>`;
 }
 
+// A search for "Senior RAR" returns Rarotonga flights. Say so and write nothing.
+function skipCard(i) {
+  return `<div class="prop seen"><div class="hd">
+    <span class="badge">not this deal</span>
+    <span class="pub">${esc(i.publisher || '?')}</span></div>
+    <div class="u">${esc(i.url)}</div>
+    <div class="why">${esc(i.why)} — nothing written.</div></div>`;
+}
+
 function refCard(r) {
   return `<div class="prop ref">
     <div class="hd">
@@ -338,7 +344,8 @@ function refCard(r) {
       <span class="muted">${esc(r.lane)}</span>
     </div>
     <div class="edge"><span class="et">${esc(r.covenant_code)}</span>
-      <span>= ${esc(r.stated_value)} — not written</span></div>
+      <span>= ${esc(r.stated_value)}
+      <span class="badge">${esc(r.value_kind)}</span> — not written</span></div>
     <div class="quote">“${esc(r.quote)}”</div>
     <div class="why">${esc(r.why)}</div></div>`;
 }
@@ -351,15 +358,17 @@ async function ingest(dry) {
   $('ingMeta').textContent = dry ? 'dry run' : 'proposing';
   stat(dry ? 'dry run' : 'sending to the graph', 'var(--warn)');
 
-  let nProp = 0, nCtl = 0, nEdge = 0, nRef = 0;
-  const tally = add(`<div class="tally">
+  let nProp = 0, nCtl = 0, nEdge = 0, nRef = 0, nSkip = 0;
+  add(`<div class="tally">
       <div>sources<b id="tSrc">0</b></div>
       <div>controlled<b id="tCtl">0</b></div>
       <div>edges<b id="tEdge">0</b></div>
-      <div>refused<b id="tRef">0</b></div></div>`);
+      <div>refused<b id="tRef">0</b></div>
+      <div>off topic<b id="tSkip">0</b></div></div>`);
   const bump = () => {
     $('tSrc').textContent = nProp; $('tCtl').textContent = nCtl;
     $('tEdge').textContent = nEdge; $('tRef').textContent = nRef;
+    $('tSkip').textContent = nSkip;
   };
 
   try {
@@ -410,6 +419,9 @@ async function ingest(dry) {
         } else if (e.refused) {
           nRef++; bump();
           add(refCard(e.refused));
+        } else if (e.irrelevant) {
+          nSkip++; bump();
+          add(skipCard(e.irrelevant));
         } else if (e.dropped) {
           add(`<div class="muted">dropped [${e.dropped.n}] ${esc(e.dropped.why)}</div>`);
         } else if (e.error) {
